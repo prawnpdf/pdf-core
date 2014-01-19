@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-puts "Prawn specs: Running on Ruby Version: #{RUBY_VERSION}"
+puts "PDF::Core specs: Running on Ruby Version: #{RUBY_VERSION}"
 
 require "bundler"
 Bundler.setup
