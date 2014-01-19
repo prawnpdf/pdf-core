@@ -20,7 +20,8 @@ Gem::Specification.new do |spec|
   spec.add_dependency('ttfunk', '~>1.0.3')
   spec.add_dependency('ruby-rc4')
   spec.add_development_dependency('pdf-inspector', '~> 1.1.0')
-  spec.add_development_dependency('rdoc')
+  spec.add_development_dependency('rspec')
+  spec.add_development_dependency('rake')
   spec.homepage = "http://prawn.majesticseacreature.com"
   spec.description = "PDF::Core is used by Prawn to render PDF documents"
 end
