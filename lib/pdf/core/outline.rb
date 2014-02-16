@@ -1,3 +1,5 @@
+require "forwardable"
+
 module PDF
   module Core
     # The Outline class organizes the outline tree items for the document.
