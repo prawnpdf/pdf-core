@@ -6,9 +6,6 @@
 #
 # This is free software. Please see the LICENSE and COPYING files for details.
 
-
-require 'pdf/reader'
-
 module PDF
   module Core
     class ObjectStore #:nodoc:
