@@ -18,14 +18,13 @@ module PDF
         @compress                = options.fetch(:compress, false)
         @encrypt                 = options.fetch(:encrypt, false)
         @encryption_key          = options[:encryption_key]
-        @optimize_objects        = options.fetch(:optimize_objects, false)
         @skip_encoding           = options.fetch(:skip_encoding, false)
         @before_render_callbacks = []
         @on_page_create_callback = nil
       end
 
       attr_accessor :store, :version, :pages, :page, :trailer, :compress,
-        :encrypt, :encryption_key, :optimize_objects, :skip_encoding,
+        :encrypt, :encryption_key, :skip_encoding,
         :before_render_callbacks, :on_page_create_callback
 
       def populate_pages_from_store(document)
@@ -66,7 +65,6 @@ module PDF
       end
 
       def render_body(output)
-        store.compact if optimize_objects
         store.each do |ref|
           ref.offset = output.size
           output << (@encrypt ? ref.encrypted_object(@encryption_key) :

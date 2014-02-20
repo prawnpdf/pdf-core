@@ -13,8 +13,6 @@ module PDF
 
       attr_reader :min_version
 
-      BASE_OBJECTS = %w[info pages root]
-
       def initialize(opts = {})
         @objects = {}
         @identifiers = []
@@ -83,35 +81,6 @@ module PDF
         @identifiers.size
       end
       alias_method :length, :size
-
-      def compact
-        # Clear live markers
-        each { |o| o.live = false }
-
-        # Recursively mark reachable objects live, starting from the roots
-        # (the only objects referenced in the trailer)
-        root.mark_live
-        info.mark_live
-
-        # Renumber live objects to eliminate gaps (shrink the xref table)
-        if @objects.any?{ |_, o| !o.live }
-          new_id = 1
-          new_objects = {}
-          new_identifiers = []
-
-          each do |obj|
-            if obj.live
-              obj.identifier = new_id
-              new_objects[new_id] = obj
-              new_identifiers << new_id
-              new_id += 1
-            end
-          end
-
-          @objects = new_objects
-          @identifiers = new_identifiers
-        end
-      end
 
       # returns the object ID for a particular page in the document. Pages
       # are indexed starting at 1 (not 0!).

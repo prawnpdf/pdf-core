@@ -11,7 +11,7 @@ module PDF
   module Core
     class Reference #:nodoc:
 
-      attr_accessor :gen, :data, :offset, :stream, :live, :identifier
+      attr_accessor :gen, :data, :offset, :stream, :identifier
 
       def initialize(id, data)
         @identifier = id
@@ -67,31 +67,6 @@ module PDF
         @data   = other_ref.data
         @stream = other_ref.stream
       end
-
-      # Marks this and all referenced objects live, recursively.
-      def mark_live
-        return if defined?(@live) && @live
-        @live = true
-        referenced_objects.each { |o| o.mark_live }
-      end
-
-      private
-
-      # All objects referenced by this one. Used for GC.
-      def referenced_objects(obj=@data)
-        case obj
-        when self.class
-          []
-        when ::Hash
-          obj.values.map{|v| [v] + referenced_objects(v) }
-        when Array
-          obj.map{|v| [v] + referenced_objects(v) }
-        when PDF::Core::OutlineRoot, PDF::Core::OutlineItem
-          referenced_objects(obj.to_hash)
-        else []
-        end.flatten.grep(self.class)
-      end
-
     end
 
     module_function
