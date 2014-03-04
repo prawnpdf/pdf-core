@@ -13,7 +13,6 @@ require_relative "core/document_state"
 require_relative "core/name_tree"
 require_relative "core/graphics_state"
 require_relative "core/page_geometry"
-require_relative "core/outline"
 
 module PDF
   module Core
