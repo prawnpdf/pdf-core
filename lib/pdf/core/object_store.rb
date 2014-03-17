@@ -17,8 +17,6 @@ module PDF
         @objects = {}
         @identifiers = []
 
-        load_file(opts[:template]) if opts[:template]
-
         @info  ||= ref(opts[:info] || {}).identifier
         @root  ||= ref(:Type => :Catalog).identifier
         if opts[:print_scaling] == :none
