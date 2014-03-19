@@ -3,7 +3,9 @@ Gem::Specification.new do |spec|
   spec.version = File.read(File.expand_path('VERSION', File.dirname(__FILE__))).strip
   spec.platform = Gem::Platform::RUBY
   spec.summary = "PDF::Core is used by Prawn to render PDF documents"
-  spec.files =  Dir.glob("{lib}/**/**/*") +
+  spec.files =  Dir.glob("{lib,spec}/**/**/*") +
+                ["COPYING", "GPLv2", "GPLv3", "LICENSE"] +
+                ["Gemfile", "Rakefile"] +
                 ["pdf-core.gemspec"]
   spec.require_path = "lib"
   spec.required_ruby_version = '>= 1.9.3'
