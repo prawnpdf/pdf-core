@@ -96,6 +96,9 @@ module PDF
         PdfObject(obj.name) + " " + PdfObject(obj.value)
       when PDF::Core::OutlineRoot, PDF::Core::OutlineItem
         PdfObject(obj.to_hash)
+      when PDF::Core::Metadata
+        output = PdfObject(obj.dictionary, in_content_stream)
+        output << obj.content
       else
         raise PDF::Core::Errors::FailedObjectConversion,
           "This object cannot be serialized to PDF (#{obj.inspect})"
