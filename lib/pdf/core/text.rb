@@ -9,7 +9,6 @@
 module PDF
   module Core
     module Text #:nodoc:
-
       # These should be used as a base. Extensions may build on this list
       #
       VALID_OPTIONS = [:kerning, :size, :style]
@@ -18,14 +17,6 @@ module PDF
                 :clip => 7 }
 
       attr_reader :skip_encoding
-
-      # Low level text placement method. All font and size alterations
-      # should already be set
-      #
-      def draw_text!(text, options)
-        x,y = map_to_absolute(options[:at])
-        add_text_content(text,x,y,options)
-      end
 
       # Low level call to set the current font style and extract text options from
       # an options hash. Should be called from within a save_font block
@@ -244,8 +235,6 @@ module PDF
           @word_spacing = original_word_spacing
         end
       end
-
-      private
 
       def add_text_content(text, x, y, options)
         chunks = font.encode_text(text,options)
