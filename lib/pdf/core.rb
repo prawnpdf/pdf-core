@@ -22,9 +22,6 @@ module PDF
       # This error is raised when PdfObject() fails
       FailedObjectConversion = Class.new(StandardError)
 
-      # This error is raised when object store fails to load a template file
-      TemplateError = Class.new(StandardError)
-
       # This error is raise when trying to restore a graphic state that
       EmptyGraphicStateStack = Class.new(StandardError)
 

@@ -4,19 +4,11 @@ module PDF
       def initialize(options)
         normalize_metadata(options)
 
-        if options[:template]
-          if options[:print_scaling]
-            @store = PDF::Core::ObjectStore.new(:template => options[:template], :print_scaling => options[:print_scaling])
-          else
-            @store = PDF::Core::ObjectStore.new(:template => options[:template])
-          end
-          @store.info.data.merge!(options[:info]) if options[:info]
+        if options[:print_scaling]
+          @store = PDF::Core::ObjectStore.new(:info => options[:info], 
+                                              :print_scaling => options[:print_scaling])
         else
-          if options[:print_scaling]
-            @store = PDF::Core::ObjectStore.new(:info => options[:info], :print_scaling => options[:print_scaling])
-          else
-            @store = PDF::Core::ObjectStore.new(:info => options[:info])
-          end
+          @store = PDF::Core::ObjectStore.new(:info => options[:info])
         end
 
         @version                 = 1.3
