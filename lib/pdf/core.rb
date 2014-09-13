@@ -15,6 +15,7 @@ require_relative "core/graphics_state"
 require_relative "core/page_geometry"
 require_relative "core/outline_root"
 require_relative "core/outline_item"
+require_relative "core/renderer"
 
 module PDF
   module Core
