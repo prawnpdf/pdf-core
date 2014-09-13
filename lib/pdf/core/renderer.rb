@@ -3,8 +3,8 @@ require "stringio"
 module PDF
   module Core
     class Renderer
-      def initialize(options)
-        @state = PDF::Core::DocumentState.new(options)
+      def initialize(state)
+        @state = state
         @state.populate_pages_from_store(self)
         
         min_version(state.store.min_version) if state.store.min_version
