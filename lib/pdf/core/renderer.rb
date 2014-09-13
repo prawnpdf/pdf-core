@@ -109,17 +109,11 @@ module PDF
         state.insert_page(state.page, @page_number)
         @page_number += 1
 
-        use_graphic_settings
-
         state.on_page_create_action(self)
       end
 
       def page_count
         state.page_count
-      end
-
-      def use_graphic_settings(override_settings = false)
-        # ... going to need this
       end
 
       # Re-opens the page with the given (1-based) page number so that you can
@@ -244,9 +238,11 @@ module PDF
         end
       end
 
-      # FIXME: stub
+      # Returns true if content streams will be compressed before rendering,
+      # false otherwise
+      #
       def compression_enabled?
-        false
+        !!state.compress
       end
 
       # Pops the last saved graphics state off the graphics state stack and
