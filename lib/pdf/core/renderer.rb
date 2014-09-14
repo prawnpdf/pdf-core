@@ -129,7 +129,6 @@ module PDF
       def finalize_all_page_contents
         (1..page_count).each do |i|
           go_to_page i
-          yield if block_given?
           while graphic_stack.present?
             restore_graphics_state
           end
