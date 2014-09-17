@@ -180,10 +180,10 @@ module PDF
         state.before_render_actions(self)
 
         # pdf version
-        output << "%PDF-#{state.version}\n"
+        output << "%PDF-#{state.version}\n".freeze
 
         # 4 binary chars, as recommended by the spec
-        output << "%\xFF\xFF\xFF\xFF\n"
+        output << "%\xFF\xFF\xFF\xFF\n".freeze
       end
 
       # Write out the PDF Body, as per spec 3.4.2
@@ -196,12 +196,12 @@ module PDF
       #
       def render_xref(output)
         @xref_offset = output.size
-        output << "xref\n"
-        output << "0 #{state.store.size + 1}\n"
-        output << "0000000000 65535 f \n"
+        output << "xref\n".freeze
+        output << "0 #{state.store.size + 1}\n".freeze
+        output << "0000000000 65535 f \n".freeze
         state.store.each do |ref|
-          output.printf("%010d", ref.offset)
-          output << " 00000 n \n"
+          output.printf("%010d".freeze, ref.offset)
+          output << " 00000 n \n".freeze
         end
       end
 
@@ -213,19 +213,19 @@ module PDF
                         :Info => state.store.info}
         trailer_hash.merge!(state.trailer) if state.trailer
 
-        output << "trailer\n"
-        output << PDF::Core::PdfObject(trailer_hash) << "\n"
-        output << "startxref\n"
-        output << @xref_offset << "\n"
-        output << "%%EOF" << "\n"
+        output << "trailer\n".freeze
+        output << PDF::Core::PdfObject(trailer_hash) << "\n".freeze
+        output << "startxref\n".freeze
+        output << @xref_offset << "\n".freeze
+        output << "%%EOF" << "\n".freeze
       end
 
       def open_graphics_state
-        add_content "q"
+        add_content "q".freeze
       end
 
       def close_graphics_state
-        add_content "Q"
+        add_content "Q".freeze
       end
 
       def save_graphics_state(graphic_state = nil)
@@ -249,7 +249,7 @@ module PDF
       def restore_graphics_state
         if graphic_stack.empty?
           raise PDF::Core::Errors::EmptyGraphicStateStack,
-            "\n You have reached the end of the graphic state stack"
+            "\n You have reached the end of the graphic state stack".freeze
         end
         close_graphics_state
         graphic_stack.restore_graphic_state
