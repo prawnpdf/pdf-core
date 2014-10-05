@@ -63,15 +63,16 @@ module PDF
       end
 
       def dash_setting
+        return "[] 0 d" unless @dash[:dash]
+
         if @dash[:dash].kind_of?(Array)
-          array = @dash[:dash].map { |e| e.round(4) }
+          array = @dash[:dash]
         else
-          array = [@dash[:dash].round(4), @dash[:space].round(4)]
+          array = [@dash[:dash], @dash[:space]]
         end
         
-        phase = @dash[:phase].round(4)
         
-        "[#{array.join(' ')}] #{phase} d"
+        "[#{PDF::Core.real_array(array).join(' ')}] #{PDF::Core.real(phase)} d"
       end
 
       private
