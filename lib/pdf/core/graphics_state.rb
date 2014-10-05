@@ -72,7 +72,8 @@ module PDF
         end
         
         
-        "[#{PDF::Core.real_array(array).join(' ')}] #{PDF::Core.real(phase)} d"
+        "[#{PDF::Core.real_array(array).join(' ')}] "+
+        "#{PDF::Core.real(@dash[:phase])} d"
       end
 
       private
