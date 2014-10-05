@@ -64,10 +64,14 @@ module PDF
 
       def dash_setting
         if @dash[:dash].kind_of?(Array)
-          "[#{@dash[:dash].join(' ')}] #{@dash[:phase]} d"
+          array = @dash[:dash].map { |e| e.round(4) }
         else
-          "[#{@dash[:dash]} #{@dash[:space]}] #{@dash[:phase]} d"
+          array = [@dash[:dash].round(4), @dash[:space].round(4)]
         end
+        
+        phase = @dash[:phase].round(4)
+        
+        "[#{array.join(' ')}] #{phase} d"
       end
 
       private
