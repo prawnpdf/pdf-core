@@ -17,7 +17,7 @@ module PDF
     end
 
     def real_params(array)
-      real_array(array).join(" ")
+      array.map { |e| real(e) }.join(" ")
     end
 
     def utf8_to_utf16(str)
