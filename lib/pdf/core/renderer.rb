@@ -47,8 +47,9 @@ module PDF
       #
       #  # Raw line drawing example:
       #  x1,y1,x2,y2 = 100,500,300,550
-      #  pdf.add_content("%.3f %.3f m" % [ x1, y1 ])  # move
-      #  pdf.add_content("%.3f %.3f l" % [ x2, y2 ])  # draw path
+      #
+      #  pdf.add_content("#{PDF::Core.real_params([x1, y1])} m")   # move
+      #  pdf.add_content("#{PDF::Core.real_params([ x2, y2 ])} l") # draw path
       #  pdf.add_content("S") # stroke
       #
       def add_content(str)

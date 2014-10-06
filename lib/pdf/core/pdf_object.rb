@@ -16,8 +16,8 @@ module PDF
       num.to_f.round(4)
     end
 
-    def real_array(array)
-      array.map { |num| real(num) }
+    def real_params(array)
+      real_array(array).join(" ")
     end
 
     def utf8_to_utf16(str)

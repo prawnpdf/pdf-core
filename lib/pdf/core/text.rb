@@ -204,9 +204,9 @@ module PDF
           yield
         else
           @character_spacing = amount
-          add_content "\n%.3f Tc" % amount
+          add_content "\n#{PDF::Core.real(amount)} Tc"
           yield
-          add_content "\n%.3f Tc" % original_character_spacing
+          add_content "\n#{PDF::Core.real(original_character_spacing)} Tc"
           @character_spacing = original_character_spacing
         end
       end
@@ -222,9 +222,10 @@ module PDF
           yield
         else
           @word_spacing = amount
-          add_content "\n%.3f Tw" % amount
+          add_content "\n#{PDF::Core.real(amount)} Tw"
           yield
-          add_content "\n%.3f Tw" % original_word_spacing
+          add_content "\n#{PDF::Core.real(original_word_spacing)} Tw"
+
           @word_spacing = original_word_spacing
         end
       end
@@ -237,7 +238,7 @@ module PDF
         if options[:rotate]
           rad = options[:rotate].to_f * Math::PI / 180
           arr = [ Math.cos(rad), Math.sin(rad), -Math.sin(rad), Math.cos(rad), x, y ]
-          add_content "%.3f %.3f %.3f %.3f %.3f %.3f Tm" % arr
+          add_content "#{PDF::Core.real_params(array)} Tm"
         else
           add_content "#{x} #{y} Td"
         end

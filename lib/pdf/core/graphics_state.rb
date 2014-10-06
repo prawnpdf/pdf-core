@@ -72,7 +72,7 @@ module PDF
         end
         
         
-        "[#{PDF::Core.real_array(array).join(' ')}] "+
+        "[#{PDF::Core.real_params(array)}] "+
         "#{PDF::Core.real(@dash[:phase])} d"
       end
 
