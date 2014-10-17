@@ -63,11 +63,17 @@ module PDF
       end
 
       def dash_setting
+        return "[] 0 d" unless @dash[:dash]
+
         if @dash[:dash].kind_of?(Array)
-          "[#{@dash[:dash].join(' ')}] #{@dash[:phase]} d"
+          array = @dash[:dash]
         else
-          "[#{@dash[:dash]} #{@dash[:space]}] #{@dash[:phase]} d"
+          array = [@dash[:dash], @dash[:space]]
         end
+        
+        
+        "[#{PDF::Core.real_params(array)}] "+
+        "#{PDF::Core.real(@dash[:phase])} d"
       end
 
       private

@@ -14,10 +14,10 @@ describe "PDF Object Serialization" do
   end
 
   it "should convert a Ruby number to PDF number" do
-    PDF::Core::PdfObject(1).should == "1"
-    PDF::Core::PdfObject(1.214112421).should == "1.214112421"
-    # scientific notation is not valid in PDF
-    PDF::Core::PdfObject(0.000005).should == "0.000005"
+    PDF::Core::PdfObject(42).should == "42"
+
+    # numbers are rounded to four decimal places
+    PDF::Core::PdfObject(1.214112421).should == "1.2141"
   end
 
   it "should convert a Ruby time object to a PDF timestamp" do

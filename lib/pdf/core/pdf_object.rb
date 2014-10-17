@@ -12,6 +12,14 @@ module PDF
   module Core
     module_function
 
+    def real(num)
+      num.to_f.round(4)
+    end
+
+    def real_params(array)
+      array.map { |e| real(e) }.join(" ")
+    end
+
     def utf8_to_utf16(str)
       "\xFE\xFF".force_encoding(::Encoding::UTF_16BE) + str.encode(::Encoding::UTF_16BE)
     end
@@ -43,12 +51,10 @@ module PDF
       when TrueClass  then "true"
       when FalseClass then "false"
       when Numeric
-        if (str = String(obj)) =~ /e/i
-          # scientific notation is not supported in PDF
-          sprintf("%.16f", obj).gsub(/\.?0+\z/, "")
-        else
-          str
-        end
+        obj = real(obj) unless obj.kind_of?(Integer)
+
+        String(obj) # NOTE: this can fail on huge floating point numbers,
+                    # but it seems unlikely to ever happen in practice.
       when Array
         "[" << obj.map { |e| PdfObject(e, in_content_stream) }.join(' ') << "]"
       when PDF::Core::LiteralString
