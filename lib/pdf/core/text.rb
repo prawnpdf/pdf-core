@@ -237,7 +237,7 @@ module PDF
 
         if options[:rotate]
           rad = options[:rotate].to_f * Math::PI / 180
-          arr = [ Math.cos(rad), Math.sin(rad), -Math.sin(rad), Math.cos(rad), x, y ]
+          array = [ Math.cos(rad), Math.sin(rad), -Math.sin(rad), Math.cos(rad), x, y ]
           add_content "#{PDF::Core.real_params(array)} Tm"
         else
           add_content "#{x} #{y} Td"
