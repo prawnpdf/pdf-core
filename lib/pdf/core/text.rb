@@ -240,7 +240,7 @@ module PDF
           array = [ Math.cos(rad), Math.sin(rad), -Math.sin(rad), Math.cos(rad), x, y ]
           add_content "#{PDF::Core.real_params(array)} Tm"
         else
-          add_content "#{x} #{y} Td"
+          add_content "#{PDF::Core.real_params([x,y])} Td"
         end
 
         chunks.each do |(subset, string)|
