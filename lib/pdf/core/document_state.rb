@@ -16,7 +16,7 @@ module PDF
         @version                 = 1.3
         @pages                   = []
         @page                    = nil
-        @trailer                 = options.fetch(:trailer, default_trailer)
+        @trailer                 = options.fetch(:trailer, {})
         @compress                = options.fetch(:compress, false)
         @encrypt                 = options.fetch(:encrypt, false)
         @encryption_key          = options[:encryption_key]
@@ -72,13 +72,6 @@ module PDF
           output << (@encrypt ? ref.encrypted_object(@encryption_key) :
                                 ref.object)
         end
-      end
-
-      private
-
-      # Document ID is required by PDF-X spec, presence ok for standard PDF
-      def default_trailer
-        { :ID => 2.times.map { SecureRandom.hex(8) }}
       end
 
     end
