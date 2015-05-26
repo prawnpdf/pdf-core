@@ -15,6 +15,12 @@ describe "PDF Document State" do
   end
 
   describe "default trailer" do
+    before do
+      @state = PDF::Core::DocumentState.new({
+        trailer: { :ID => ["myDoc","versionA"] }
+      })
+    end
+
     it "should contain an ID entry with two values in trailer" do
       expect(@state.trailer[:ID].count).to eq(2)
     end
