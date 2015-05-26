@@ -141,7 +141,7 @@ module PDF
         end
       end
 
-      def bleed_dimensions
+      def trim_dimensions
         x1, y1, x2, y2 = dimensions
         [x1 + bleed, y1 + bleed, x2 - bleed, y2 - bleed]
       end
@@ -175,7 +175,7 @@ module PDF
                                    :MediaBox    => dimensions,
                                    :CropBox     => dimensions,
                                    :BleedBox    => dimensions,
-                                   :TrimBox     => bleed_dimensions,
+                                   :TrimBox     => trim_dimensions,
                                    :Contents    => content)
 
         resources[:ProcSet] = [:PDF, :Text, :ImageB, :ImageC, :ImageI]
