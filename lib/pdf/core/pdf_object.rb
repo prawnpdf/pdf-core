@@ -97,7 +97,7 @@ module PDF
       when PDF::Core::OutlineRoot, PDF::Core::OutlineItem
         PdfObject(obj.to_hash)
       when PDF::Core::Stream
-        obj.content
+        obj.object
       when PDF::Core::Metadata
         output = PdfObject(obj.dictionary, in_content_stream)
         output << obj.content
