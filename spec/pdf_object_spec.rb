@@ -169,4 +169,21 @@ describe "PDF Object Serialization" do
     res = PDF::Inspector.parse(data)
     res.should == {:Names => ["hello", 1.0, "world", 2.0]}
   end
+
+  it "should convert a metadata input string to stream" do
+    input = "<foo>bar</foo>"
+    xml  = PDF::Core::Metadata.new(input)
+    data = PDF::Core::PdfObject(xml)
+    data.inspect.should match(input)
+    dict = PDF::Inspector.parse(data)
+    dict.should eq({:Length=>input.length, :Type=>:Metadata, :Subtype=>:XML})
+  end
+
+  it "should handle a plain content stream" do
+    input = "foo bar"
+    stream  = PDF::Core::Stream.new.tap{|s| s << input }
+    data = PDF::Core::PdfObject(stream)
+    data.should match(input)
+    PDF::Inspector.parse(data).should eq("stream")
+  end
 end
