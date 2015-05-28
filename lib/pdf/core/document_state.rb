@@ -1,5 +1,3 @@
-require "securerandom"
-
 module PDF
   module Core
     class DocumentState #:nodoc:
@@ -7,7 +5,7 @@ module PDF
         normalize_metadata(options)
 
         if options[:print_scaling]
-          @store = PDF::Core::ObjectStore.new(:info => options[:info], 
+          @store = PDF::Core::ObjectStore.new(:info => options[:info],
                                               :print_scaling => options[:print_scaling])
         else
           @store = PDF::Core::ObjectStore.new(:info => options[:info])
