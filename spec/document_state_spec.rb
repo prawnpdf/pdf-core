@@ -14,14 +14,14 @@ describe "PDF Document State" do
     it { expect(@state.store.info.data[:Producer]).to eq("Prawn") }
   end
 
-  describe "default trailer" do
+  describe "given a trailer ID with two values" do
     before do
       @state = PDF::Core::DocumentState.new({
         trailer: { :ID => ["myDoc","versionA"] }
       })
     end
 
-    it "should contain an ID entry with two values in trailer" do
+    it "should contain the ID entry with two values in trailer" do
       expect(@state.trailer[:ID].count).to eq(2)
     end
   end
