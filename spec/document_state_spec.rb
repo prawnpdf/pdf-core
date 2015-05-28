@@ -7,6 +7,7 @@ describe "PDF Document State" do
     it { expect(@state.compress).to eq(false) }
     it { expect(@state.encrypt).to eq(false) }
     it { expect(@state.skip_encoding).to eq(false) }
+    it { expect(@state.trailer).to eq({}) }
   end
 
   describe "normalize_metadata" do
