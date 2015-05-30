@@ -5,7 +5,7 @@ module PDF
         normalize_metadata(options)
 
         if options[:print_scaling]
-          @store = PDF::Core::ObjectStore.new(:info => options[:info], 
+          @store = PDF::Core::ObjectStore.new(:info => options[:info],
                                               :print_scaling => options[:print_scaling])
         else
           @store = PDF::Core::ObjectStore.new(:info => options[:info])
@@ -14,7 +14,7 @@ module PDF
         @version                 = 1.3
         @pages                   = []
         @page                    = nil
-        @trailer                 = {}
+        @trailer                 = options.fetch(:trailer, {})
         @compress                = options.fetch(:compress, false)
         @encrypt                 = options.fetch(:encrypt, false)
         @encryption_key          = options[:encryption_key]
@@ -71,6 +71,7 @@ module PDF
                                 ref.object)
         end
       end
+
     end
   end
 end
