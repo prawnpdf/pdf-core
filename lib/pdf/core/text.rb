@@ -230,6 +230,22 @@ module PDF
         end
       end
 
+      # Set the horizontal scaling. amount is a number specifying the
+      # percentage of the normal width.
+      def horizontal_scaling(amount=nil)
+        return defined?(@horizontal_scaling) && @horizontal_scaling || 100 if amount.nil?
+        original_horizontal_scaling = horizontal_scaling
+        if original_horizontal_scaling == amount
+          yield
+        else
+          @horizontal_scaling = amount
+          add_content "\n#{PDF::Core.real(amount)} Tz"
+          yield
+          add_content "\n#{PDF::Core.real(original_horizontal_scaling)} Tz"
+          @horizontal_scaling = original_horizontal_scaling
+        end
+      end
+
       def add_text_content(text, x, y, options)
         chunks = font.encode_text(text,options)
 
