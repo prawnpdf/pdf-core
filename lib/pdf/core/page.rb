@@ -12,15 +12,19 @@ require_relative 'graphics_state'
 module PDF
   module Core
     class Page #:nodoc:
-      attr_accessor :document, :margins, :stack
+      attr_accessor :document, :margins, :bleeds, :stack
       attr_writer :content, :dictionary
 
       def initialize(document, options={})
         @document = document
-        @margins  = options[:margins] || { :left    => 36,
-                                           :right   => 36,
-                                           :top     => 36,
-                                           :bottom  => 36  }
+        @margins  = options[:margins] || { :left   => 36,
+                                           :right  => 36,
+                                           :top    => 36,
+                                           :bottom => 36  }
+        @bleeds    = options[:bleeds] || { :left   => 0,
+                                           :right  => 0,
+                                           :top    => 0,
+                                           :bottom => 0  }
         @stack = GraphicStateStack.new(options[:graphic_state])
         if options[:object_id]
           init_from_object(options)
@@ -140,6 +144,12 @@ module PDF
         end
       end
 
+      def trimbox_dimensions
+        x1, y1, x2, y2 = dimensions
+        [x1 + bleeds[:left],  y1 + bleeds[:bottom],
+         x2 - bleeds[:right], y2 - bleeds[:top]]
+      end
+
       private
 
       def init_from_object(options)
@@ -167,6 +177,9 @@ module PDF
         @dictionary = document.ref(:Type        => :Page,
                                    :Parent      => document.state.store.pages,
                                    :MediaBox    => dimensions,
+                                   :CropBox     => dimensions,
+                                   :BleedBox    => dimensions,
+                                   :TrimBox     => trimbox_dimensions,
                                    :Contents    => content)
 
         resources[:ProcSet] = [:PDF, :Text, :ImageB, :ImageC, :ImageI]
