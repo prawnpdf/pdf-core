@@ -18,7 +18,7 @@ require "pdf/reader"
 require "pdf/inspector"
 
 RSpec.configure do |config|
-  config.treat_symbols_as_metadata_keys_with_true_values = true
+  config.disable_monkey_patching!
 end
 
 RSpec::Matchers.define :have_parseable_xobjects do

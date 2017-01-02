@@ -1,6 +1,6 @@
 require_relative "spec_helper"
 
-describe "PDF Document State" do
+RSpec.describe "PDF Document State" do
   before { @state = PDF::Core::DocumentState.new({}) }
 
   describe "initialization" do

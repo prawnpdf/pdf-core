@@ -2,48 +2,44 @@
 
 require_relative "spec_helper"
 
-describe "PDF::Core::ObjectStore" do
-  before(:each) do
-    @store = PDF::Core::ObjectStore.new
-  end
+RSpec.describe "PDF::Core::ObjectStore" do
+  let(:store) { PDF::Core::ObjectStore.new }
 
-  it "should create required roots by default, including info passed to new" do
+  it "creates required roots by default, including info passed to new" do
     store = PDF::Core::ObjectStore.new(:info => {:Test => 3})
-    store.size.should == 3 # 3 default roots
-    store.info.data[:Test].should == 3
-    store.pages.data[:Count].should == 0
-    store.root.data[:Pages].should == store.pages
+    expect(store.size).to eq 3 # 3 default roots
+    expect(store.info.data[:Test]).to eq 3
+    expect(store.pages.data[:Count]).to eq 0
+    expect(store.root.data[:Pages]).to eq store.pages
   end
 
- 
-  it "should add to its objects when ref() is called" do
-    count = @store.size
-    @store.ref("blah")
-    @store.size.should == count + 1
+  it "adds to its objects when ref() is called" do
+    count = store.size
+    store.ref("blah")
+    expect(store.size).to eq count + 1
   end
 
-  it "should accept push with a Prawn::Reference" do
+  it "accepts push with a Prawn::Reference" do
     r = PDF::Core::Reference(123, "blah")
-    @store.push(r)
-    @store[r.identifier].should == r
+    store.push(r)
+    expect(store[r.identifier]).to eq r
   end
 
-  it "should accept arbitrary data and use it to create a Prawn::Reference" do
-    @store.push(123, "blahblah")
-    @store[123].data.should == "blahblah"
+  it "accepts arbitrary data and use it to create a Prawn::Reference" do
+    store.push(123, "blahblah")
+    expect(store[123].data).to eq "blahblah"
   end
 
-  it "should be Enumerable, yielding in order of submission" do
+  it "is Enumerable, yielding in order of submission" do
     # higher IDs to bypass the default roots
     [10, 11, 12].each do |id|
-      @store.push(id, "some data #{id}")
+      store.push(id, "some data #{id}")
     end
-    @store.map{|ref| ref.identifier}[-3..-1].should == [10, 11, 12]
+    expect(store.map{|ref| ref.identifier}[-3..-1]).to eq [10, 11, 12]
   end
 
-  it "should accept option to disabling PDF scaling in PDF clients" do
-    @store = PDF::Core::ObjectStore.new(:print_scaling => :none)
-    @store.root.data[:ViewerPreferences].should == {:PrintScaling => :None}
+  it "accepts option to disabling PDF scaling in PDF clients" do
+    store = PDF::Core::ObjectStore.new(:print_scaling => :none)
+    expect(store.root.data[:ViewerPreferences]).to eq :PrintScaling => :None
   end
-
 end

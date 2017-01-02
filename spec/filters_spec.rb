@@ -10,24 +10,24 @@ FILTERS = {
 FILTERS.each do |filter_name, examples|
   filter = PDF::Core::Filters.const_get(filter_name)
 
-  describe "#{filter_name} filter" do
-    it "should encode stream" do
+  RSpec.describe "#{filter_name} filter" do
+    it "encodes stream" do
       examples.each do |in_stream, out_stream|
-        filter.encode(in_stream).should == out_stream
+        expect(filter.encode(in_stream)).to eq out_stream
       end
     end
 
-    it "should decode stream" do
+    it "decodes stream" do
       examples.each do |in_stream, out_stream|
-        filter.decode(out_stream).should == in_stream
+        expect(filter.decode(out_stream)).to eq in_stream
       end
     end
 
-    it "should be symmetric" do
+    it "is symmetric" do
       examples.each do |in_stream, out_stream|
-        filter.decode(filter.encode(in_stream)).should == in_stream
+        expect(filter.decode(filter.encode(in_stream))).to eq in_stream
 
-        filter.encode(filter.decode(out_stream)).should == out_stream
+        expect(filter.encode(filter.decode(out_stream))).to eq out_stream
       end
     end
   end
