@@ -12,8 +12,15 @@ require_relative 'graphics_state'
 module PDF
   module Core
     class Page #:nodoc:
-      attr_accessor :document, :margins, :stack
+      attr_accessor :art_indents, :bleeds, :crops, :document, :margins, :stack, :trims
       attr_writer :content, :dictionary
+
+      ZERO_INDENTS = {
+        left: 0,
+        bottom: 0,
+        right: 0,
+        top: 0
+      }.freeze
 
       def initialize(document, options={})
         @document = document
@@ -21,6 +28,10 @@ module PDF
                                            :right   => 36,
                                            :top     => 36,
                                            :bottom  => 36  }
+        @crops = options[:crops] || ZERO_INDENTS
+        @bleeds = options[:bleeds] || ZERO_INDENTS
+        @trims = options[:trims] || ZERO_INDENTS
+        @art_indents = options[:art_indents] || ZERO_INDENTS
         @stack = GraphicStateStack.new(options[:graphic_state])
         @size     = options[:size]    ||  "LETTER"
         @layout   = options[:layout]  || :portrait
@@ -30,10 +41,16 @@ module PDF
 
         @content    = document.ref({})
         content << "q" << "\n"
-        @dictionary = document.ref(:Type        => :Page,
-                                   :Parent      => document.state.store.pages,
-                                   :MediaBox    => dimensions,
-                                   :Contents    => content)
+        @dictionary = document.ref(
+          Type: :Page,
+          Parent: document.state.store.pages,
+          MediaBox: dimensions,
+          CropBox: crop_box,
+          BleedBox: bleed_box,
+          TrimBox: trim_box,
+          ArtBox: art_box,
+          Contents: content
+        )
 
         resources[:ProcSet] = [:PDF, :Text, :ImageB, :ImageC, :ImageI]
       end
@@ -141,6 +158,46 @@ module PDF
           raise PDF::Core::Errors::InvalidPageLayout,
             "Layout must be either :portrait or :landscape"
         end
+      end
+
+      def art_box
+        left, bottom, right, top = dimensions
+        [
+          left + art_indents[:left],
+          bottom + art_indents[:bottom],
+          right - art_indents[:right],
+          top - art_indents[:top]
+        ]
+      end
+
+      def bleed_box
+        left, bottom, right, top = dimensions
+        [
+          left + bleeds[:left],
+          bottom + bleeds[:bottom],
+          right - bleeds[:right],
+          top - bleeds[:top]
+        ]
+      end
+
+      def crop_box
+        left, bottom, right, top = dimensions
+        [
+          left + crops[:left],
+          bottom + crops[:bottom],
+          right - crops[:right],
+          top - crops[:top]
+        ]
+      end
+
+      def trim_box
+        left, bottom, right, top = dimensions
+        [
+          left + trims[:left],
+          bottom + trims[:bottom],
+          right - trims[:right],
+          top - trims[:top]
+        ]
       end
 
       private
