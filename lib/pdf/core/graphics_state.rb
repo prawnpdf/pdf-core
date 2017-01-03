@@ -7,7 +7,6 @@
 # This is free software. Please see the LICENSE and COPYING files for details
 #
 
-
 module PDF
   module Core
     class GraphicStateStack
@@ -34,28 +33,27 @@ module PDF
       end
 
       def present?
-        stack.size > 0
+        !stack.empty?
       end
 
       def empty?
         stack.empty?
       end
-
     end
 
     # NOTE: This class may be a good candidate for a copy-on-write hash.
     class GraphicState
-      attr_accessor :color_space, :dash, :cap_style, :join_style, :line_width, 
-                    :fill_color, :stroke_color
+      attr_accessor :color_space, :dash, :cap_style, :join_style, :line_width,
+        :fill_color, :stroke_color
 
       def initialize(previous_state = nil)
         if previous_state
           initialize_copy(previous_state)
         else
           @color_space  = {}
-          @fill_color   = "000000"
-          @stroke_color = "000000"
-          @dash         = { :dash => nil, :space => nil, :phase => 0 }
+          @fill_color   = '000000'
+          @stroke_color = '000000'
+          @dash         = { dash: nil, space: nil, phase: 0 }
           @cap_style    = :butt
           @join_style   = :miter
           @line_width   = 1
@@ -63,17 +61,16 @@ module PDF
       end
 
       def dash_setting
-        return "[] 0 d" unless @dash[:dash]
+        return '[] 0 d' unless @dash[:dash]
 
-        if @dash[:dash].kind_of?(Array)
-          array = @dash[:dash]
-        else
-          array = [@dash[:dash], @dash[:space]]
-        end
-        
-        
-        "[#{PDF::Core.real_params(array)}] "+
-        "#{PDF::Core.real(@dash[:phase])} d"
+        array = if @dash[:dash].is_a?(Array)
+                  @dash[:dash]
+                else
+                  [@dash[:dash], @dash[:space]]
+                end
+
+        "[#{PDF::Core.real_params(array)}] "\
+          "#{PDF::Core.real(@dash[:phase])} d"
       end
 
       private
@@ -93,4 +90,3 @@ module PDF
     end
   end
 end
-

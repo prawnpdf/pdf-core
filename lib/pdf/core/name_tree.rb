@@ -16,7 +16,7 @@ module PDF
         attr_accessor :parent
         attr_accessor :ref
 
-        def initialize(document, limit, parent=nil)
+        def initialize(document, limit, parent = nil)
           @document = document
           @children = []
           @limit = limit
@@ -29,7 +29,7 @@ module PDF
         end
 
         def size
-          leaf? ? children.size : children.inject(0) { |sum, child| sum + child.size }
+          leaf? ? children.size : children.map(&:size).reduce(:+)
         end
 
         def leaf?
@@ -47,10 +47,10 @@ module PDF
           if leaf?
             hash[:Names] = children if leaf?
           else
-            hash[:Kids] = children.map { |child| child.ref }
+            hash[:Kids] = children.map(&:ref)
           end
 
-          return hash
+          hash
         end
 
         def least
@@ -84,15 +84,16 @@ module PDF
           value
         end
 
-        def >=(value)
-          children.empty? || children.last >= value
+        def >=(other)
+          children.empty? || children.last >= other
         end
 
         def split!
           if parent
             parent.split(self)
           else
-            left, right = new_node(self), new_node(self)
+            left = new_node(self)
+            right = new_node(self)
             split_children(self, left, right)
             children.replace([left, right])
           end
@@ -103,51 +104,52 @@ module PDF
         #
         def deep_copy
           node = dup
-          node.instance_variable_set("@children",
-                                     Marshal.load(Marshal.dump(children)))
-          node.instance_variable_set("@ref",
-                                     node.ref ? node.ref.deep_copy : nil)
+          node.instance_variable_set('@children',
+            Marshal.load(Marshal.dump(children)))
+          node.instance_variable_set('@ref',
+            node.ref ? node.ref.deep_copy : nil)
           node
         end
 
         protected
 
-          def split(node)
-            new_child = new_node(self)
-            split_children(node, node, new_child)
-            index = children.index(node)
-            children.insert(index+1, new_child)
-            split! if children.length > limit
-          end
+        def split(node)
+          new_child = new_node(self)
+          split_children(node, node, new_child)
+          index = children.index(node)
+          children.insert(index + 1, new_child)
+          split! if children.length > limit
+        end
 
         private
 
-          def new_node(parent=nil)
-            node = Node.new(document, limit, parent)
-            node.ref = document.ref!(node)
-            return node
+        def new_node(parent = nil)
+          node = Node.new(document, limit, parent)
+          node.ref = document.ref!(node)
+          node
+        end
+
+        def split_children(node, left, right)
+          half = (node.limit + 1) / 2
+
+          left_children = node.children[0...half]
+          right_children = node.children[half..-1]
+
+          left.children.replace(left_children)
+          right.children.replace(right_children)
+
+          unless node.leaf?
+            left_children.each { |child| child.parent = left }
+            right_children.each { |child| child.parent = right }
           end
+        end
 
-          def split_children(node, left, right)
-            half = (node.limit+1)/2
-
-            left_children, right_children = node.children[0...half], node.children[half..-1]
-
-            left.children.replace(left_children)
-            right.children.replace(right_children)
-
-            unless node.leaf?
-              left_children.each { |child| child.parent = left }
-              right_children.each { |child| child.parent = right }
-            end
+        def insertion_point(value)
+          children.each_with_index do |child, index|
+            return index if child >= value
           end
-
-          def insertion_point(value)
-            children.each_with_index do |child, index|
-              return index if child >= value
-            end
-            return children.length
-          end
+          children.length
+        end
       end
 
       class Value #:nodoc:
@@ -157,11 +159,12 @@ module PDF
         attr_reader :value
 
         def initialize(name, value)
-          @name, @value = PDF::Core::LiteralString.new(name), value
+          @name = PDF::Core::LiteralString.new(name)
+          @value = value
         end
 
-        def <=>(leaf)
-          name <=> leaf.name
+        def <=>(other)
+          name <=> other.name
         end
 
         def inspect

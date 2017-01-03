@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 # prawn/core/page.rb : Implements low-level representation of a PDF page
 #
 # Copyright February 2010, Gregory Brown.  All Rights Reserved.
@@ -12,7 +10,8 @@ require_relative 'graphics_state'
 module PDF
   module Core
     class Page #:nodoc:
-      attr_accessor :art_indents, :bleeds, :crops, :document, :margins, :stack, :trims
+      attr_accessor :art_indents, :bleeds, :crops, :document, :margins, :stack,
+        :trims
       attr_writer :content, :dictionary
 
       ZERO_INDENTS = {
@@ -22,25 +21,25 @@ module PDF
         top: 0
       }.freeze
 
-      def initialize(document, options={})
+      def initialize(document, options = {})
         @document = document
-        @margins  = options[:margins] || { :left    => 36,
-                                           :right   => 36,
-                                           :top     => 36,
-                                           :bottom  => 36  }
+        @margins  = options[:margins] || { left: 36,
+                                           right: 36,
+                                           top: 36,
+                                           bottom: 36 }
         @crops = options[:crops] || ZERO_INDENTS
         @bleeds = options[:bleeds] || ZERO_INDENTS
         @trims = options[:trims] || ZERO_INDENTS
         @art_indents = options[:art_indents] || ZERO_INDENTS
         @stack = GraphicStateStack.new(options[:graphic_state])
-        @size     = options[:size]    ||  "LETTER"
-        @layout   = options[:layout]  || :portrait
+        @size     = options[:size] || 'LETTER'
+        @layout   = options[:layout] || :portrait
 
         @stamp_stream      = nil
         @stamp_dictionary  = nil
 
-        @content    = document.ref({})
-        content << "q" << "\n"
+        @content = document.ref({})
+        content << 'q' << "\n"
         @dictionary = document.ref(
           Type: :Page,
           Parent: document.state.store.pages,
@@ -71,15 +70,15 @@ module PDF
       end
 
       def size
-        defined?(@size) && @size || dimensions[2,2]
+        defined?(@size) && @size || dimensions[2, 2]
       end
 
       def in_stamp_stream?
-        !!@stamp_stream
+        !@stamp_stream.nil?
       end
 
       def stamp_stream(dictionary)
-        @stamp_stream     = ""
+        @stamp_stream     = ''
         @stamp_dictionary = dictionary
         graphic_stack_size = stack.stack.size
 
@@ -102,7 +101,8 @@ module PDF
       end
 
       def dictionary
-        defined?(@stamp_dictionary) && @stamp_dictionary || document.state.store[@dictionary]
+        defined?(@stamp_dictionary) && @stamp_dictionary ||
+          document.state.store[@dictionary]
       end
 
       def resources
@@ -142,22 +142,23 @@ module PDF
           dictionary.data[:Contents].each do |stream|
             stream.stream.compress! if document.compression_enabled?
           end
-        else
-          content.stream.compress! if document.compression_enabled?
+        elsif document.compression_enabled?
+          content.stream.compress!
         end
       end
 
       def dimensions
         coords = PDF::Core::PageGeometry::SIZES[size] || size
-        [0,0] + case(layout)
-        when :portrait
-          coords
-        when :landscape
-          coords.reverse
-        else
-          raise PDF::Core::Errors::InvalidPageLayout,
-            "Layout must be either :portrait or :landscape"
-        end
+        [0, 0] +
+          case layout
+          when :portrait
+            coords
+          when :landscape
+            coords.reverse
+          else
+            raise PDF::Core::Errors::InvalidPageLayout,
+              'Layout must be either :portrait or :landscape'
+          end
       end
 
       def art_box
@@ -213,12 +214,10 @@ module PDF
       def inherited_dictionary_value(key, local_dict = nil)
         local_dict ||= dictionary.data
 
-        if local_dict.has_key?(key)
+        if local_dict.key?(key)
           local_dict[key]
-        elsif local_dict.has_key?(:Parent)
+        elsif local_dict.key?(:Parent)
           inherited_dictionary_value(key, local_dict[:Parent].data)
-        else
-          nil
         end
       end
     end

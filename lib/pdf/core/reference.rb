@@ -1,16 +1,12 @@
-# encoding: utf-8
-
 # reference.rb : Implementation of PDF indirect objects
 #
 # Copyright April 2008, Gregory Brown.  All Rights Reserved.
 #
 # This is free software. Please see the LICENSE and COPYING files for details.
 
-
 module PDF
   module Core
     class Reference #:nodoc:
-
       attr_accessor :gen, :data, :offset, :stream, :identifier
 
       def initialize(id, data)
@@ -22,17 +18,20 @@ module PDF
 
       def object
         output = "#{@identifier} #{gen} obj\n"
-        unless @stream.empty?
-          output << PDF::Core::PdfObject(data.merge @stream.data) << "\n" << @stream.object
+        if @stream.empty?
+          output << PDF::Core.pdf_object(data) << "\n"
         else
-          output << PDF::Core::PdfObject(data) << "\n"
+          output << PDF::Core.pdf_object(data.merge(@stream.data)) <<
+            "\n" << @stream.object
         end
 
         output << "endobj\n"
       end
 
       def <<(io)
-        raise "Cannot attach stream to non-dictionary object" unless @data.is_a?(::Hash)
+        unless @data.is_a?(::Hash)
+          raise 'Cannot attach stream to non-dictionary object'
+        end
         (@stream ||= Stream.new) << io
       end
 
@@ -43,7 +42,7 @@ module PDF
       # Creates a deep copy of this ref. If +share+ is provided, shares the
       # given dictionary entries between the old ref and the new.
       #
-      def deep_copy(share=[])
+      def deep_copy(share = [])
         r = dup
 
         case r.data
@@ -67,12 +66,6 @@ module PDF
         @data   = other_ref.data
         @stream = other_ref.stream
       end
-    end
-
-    module_function
-
-    def Reference(*args, &block) #:nodoc:
-      Reference.new(*args, &block)
     end
   end
 end

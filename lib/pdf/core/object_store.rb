@@ -18,12 +18,12 @@ module PDF
         @identifiers = []
 
         @info  ||= ref(opts[:info] || {}).identifier
-        @root  ||= ref(:Type => :Catalog).identifier
+        @root  ||= ref(Type: :Catalog).identifier
         if opts[:print_scaling] == :none
-          root.data[:ViewerPreferences] = {:PrintScaling => :None}
+          root.data[:ViewerPreferences] = { PrintScaling: :None }
         end
         if pages.nil?
-          root.data[:Pages] = ref(:Type => :Pages, :Count => 0, :Kids => [])
+          root.data[:Pages] = ref(Type: :Pages, Count: 0, Kids: [])
         end
       end
 
@@ -48,22 +48,23 @@ module PDF
       end
 
       # Adds the given reference to the store and returns the reference object.
-      # If the object provided is not a PDF::Core::Reference, one is created from the
-      # arguments provided.
+      # If the object provided is not a PDF::Core::Reference, one is created
+      # from the arguments provided.
       #
       def push(*args, &block)
-        reference = if args.first.is_a?(PDF::Core::Reference)
-          args.first
-        else
-          PDF::Core::Reference.new(*args, &block)
-        end
+        reference =
+          if args.first.is_a?(PDF::Core::Reference)
+            args.first
+          else
+            PDF::Core::Reference.new(*args, &block)
+          end
 
         @objects[reference.identifier] = reference
         @identifiers << reference.identifier
         reference
       end
 
-      alias_method :<<, :push
+      alias << push
 
       def each
         @identifiers.each do |id|
@@ -78,7 +79,7 @@ module PDF
       def size
         @identifiers.size
       end
-      alias_method :length, :size
+      alias length size
 
       # returns the object ID for a particular page in the document. Pages
       # are indexed starting at 1 (not 0!).
@@ -95,12 +96,6 @@ module PDF
         flat_page_ids = get_page_objects(pages).flatten
         flat_page_ids[k]
       end
-
-      def is_utf8?(str)
-        str.force_encoding(::Encoding::UTF_8)
-        str.valid_encoding?
-      end
     end
   end
 end
-

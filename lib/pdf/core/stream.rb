@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 # prawn/core/stream.rb : Implements Stream objects
 #
 # Copyright February 2013, Alexander Mankuta.  All Rights Reserved.
@@ -44,7 +42,8 @@ module PDF
             @filtered_stream = @stream.dup
 
             @filters.each do |(filter_name, params)|
-              if filter = PDF::Core::Filters.const_get(filter_name)
+              filter = PDF::Core::Filters.const_get(filter_name)
+              if filter
                 @filtered_stream = filter.encode @filtered_stream, params
               end
             end
@@ -52,8 +51,6 @@ module PDF
 
           @filtered_stream
           # XXX Fillter stream
-        else
-          nil
         end
       end
 
@@ -75,12 +72,12 @@ module PDF
           filter_params = @filters.decode_params
 
           d = {
-            :Length => filtered_stream.length
+            Length: filtered_stream.length
           }
           if filter_names.any?
             d[:Filter] = filter_names
           end
-          if filter_params.any? {|f| !f.nil? }
+          if filter_params.any? { |f| !f.nil? }
             d[:DecodeParms] = filter_params
           end
 
@@ -91,7 +88,8 @@ module PDF
       end
 
       def inspect
-        "#<#{self.class.name}:0x#{'%014x' % object_id} @stream=#{@stream.inspect}, @filters=#{@filters.inspect}>"
+        "#<#{self.class.name}:0x#{format '%014x', object_id} "\
+          "@stream=#{@stream.inspect}, @filters=#{@filters.inspect}>"
       end
     end
   end

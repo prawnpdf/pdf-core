@@ -8,7 +8,7 @@ module PDF
       end
 
       def to_hash
-        {:Type => :Outlines, :Count => count, :First => first, :Last => last}
+        { Type: :Outlines, Count: count, First: first, Last: last }
       end
     end
   end

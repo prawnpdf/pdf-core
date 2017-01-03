@@ -1,4 +1,4 @@
-module PDF 
+module PDF
   module Core
     class FilterList
       def initialize
@@ -23,7 +23,7 @@ module PDF
       def normalized
         @list
       end
-      alias_method :to_a, :normalized
+      alias to_a normalized
 
       def names
         @list.map do |(name, _)|
@@ -41,9 +41,9 @@ module PDF
         @list.inspect
       end
 
-      def each(&block)
+      def each
         @list.each do |filter|
-          block.call(filter)
+          yield(filter)
         end
       end
     end

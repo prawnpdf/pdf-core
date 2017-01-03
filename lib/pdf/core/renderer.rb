@@ -1,4 +1,4 @@
-require "stringio"
+require 'stringio'
 
 module PDF
   module Core
@@ -6,7 +6,7 @@ module PDF
       def initialize(state)
         @state = state
         @state.populate_pages_from_store(self)
-        
+
         min_version(state.store.min_version) if state.store.min_version
 
         @page_number = 0
@@ -14,8 +14,8 @@ module PDF
 
       attr_reader :state
 
-      # Creates a new Reference and adds it to the Document's object
-      # list.  The +data+ argument is anything that Prawn::PdfObject() can convert.
+      # Creates a new Reference and adds it to the Document's object list.  The
+      # +data+ argument is anything that Prawn.pdf_object() can convert.
       #
       # Returns the identifier which points to the reference in the ObjectStore
       #
@@ -50,7 +50,7 @@ module PDF
       #
       #  pdf.add_content("#{PDF::Core.real_params([x1, y1])} m")   # move
       #  pdf.add_content("#{PDF::Core.real_params([ x2, y2 ])} l") # draw path
-      #  pdf.add_content("S") # stroke
+      #  pdf.add_content('S') # stroke
       #
       def add_content(str)
         save_graphics_state if graphic_state.nil?
@@ -62,7 +62,7 @@ module PDF
       # dictionary do not incur the additional overhead.
       #
       def names
-        state.store.root.data[:Names] ||= ref!(:Type => :Names)
+        state.store.root.data[:Names] ||= ref!(Type: :Names)
       end
 
       # Returns true if the Names dictionary is in use for this document.
@@ -80,29 +80,36 @@ module PDF
       # Defines a block to be called just before a new page is started.
       #
       def on_page_create(&block)
-         if block_given?
-            state.on_page_create_callback = block
-         else
-            state.on_page_create_callback = nil
-         end
+        state.on_page_create_callback =
+          if block_given?
+            block
+          end
       end
 
       def start_new_page(options = {})
-        if last_page = state.page
+        last_page = state.page
+        if last_page
           last_page_size    = last_page.size
           last_page_layout  = last_page.layout
           last_page_margins = last_page.margins
         end
 
-        page_options = {:size => options[:size] || last_page_size,
-                        :layout  => options[:layout] || last_page_layout,
-                        :margins => last_page_margins}
+        page_options = {
+          size: options[:size] || last_page_size,
+          layout: options[:layout] || last_page_layout,
+          margins: last_page_margins
+        }
         if last_page
-          new_graphic_state = last_page.graphic_state.dup  if last_page.graphic_state
+          if last_page.graphic_state
+            new_graphic_state = last_page.graphic_state.dup
+          end
 
-          #erase the color space so that it gets reset on new page for fussy pdf-readers
-          new_graphic_state.color_space = {} if new_graphic_state
-          page_options.merge!(:graphic_state => new_graphic_state)
+          # Erase the color space so that it gets reset on new page for fussy
+          # pdf-readers
+          if new_graphic_state
+            new_graphic_state.color_space = {}
+          end
+          page_options[:graphic_state] = new_graphic_state
         end
 
         state.page = PDF::Core::Page.new(self, page_options)
@@ -121,10 +128,10 @@ module PDF
       # draw on it.
       #
       # See Prawn::Document#number_pages for a sample usage of this capability.
-      
+
       def go_to_page(k)
         @page_number = k
-        state.page = state.pages[k-1]
+        state.page = state.pages[k - 1]
       end
 
       def finalize_all_page_contents
@@ -169,10 +176,10 @@ module PDF
 
       # Renders the PDF document to file.
       #
-      #   pdf.render_file "foo.pdf"
+      #   pdf.render_file 'foo.pdf'
       #
       def render_file(filename)
-        File.open(filename, "wb") { |f| render(f) }
+        File.open(filename, 'wb') { |f| render(f) }
       end
 
       # Write out the PDF Header, as per spec 3.4.1
@@ -201,7 +208,7 @@ module PDF
         output << "0 #{state.store.size + 1}\n"
         output << "0000000000 65535 f \n"
         state.store.each do |ref|
-          output.printf("%010d", ref.offset)
+          output.printf('%010d', ref.offset)
           output << " 00000 n \n"
         end
       end
@@ -209,24 +216,26 @@ module PDF
       # Write out the PDF Trailer, as per spec 3.4.4
       #
       def render_trailer(output)
-        trailer_hash = {:Size => state.store.size + 1,
-                        :Root => state.store.root,
-                        :Info => state.store.info}
+        trailer_hash = {
+          Size: state.store.size + 1,
+          Root: state.store.root,
+          Info: state.store.info
+        }
         trailer_hash.merge!(state.trailer) if state.trailer
 
         output << "trailer\n"
-        output << PDF::Core::PdfObject(trailer_hash) << "\n"
+        output << PDF::Core.pdf_object(trailer_hash) << "\n"
         output << "startxref\n"
         output << @xref_offset << "\n"
-        output << "%%EOF" << "\n"
+        output << '%%EOF' << "\n"
       end
 
       def open_graphics_state
-        add_content "q"
+        add_content 'q'
       end
 
       def close_graphics_state
-        add_content "Q"
+        add_content 'Q'
       end
 
       def save_graphics_state(graphic_state = nil)
@@ -242,7 +251,7 @@ module PDF
       # false otherwise
       #
       def compression_enabled?
-        !!state.compress
+        state.compress
       end
 
       # Pops the last saved graphics state off the graphics state stack and

@@ -1,21 +1,18 @@
-# encoding: utf-8
-
 puts "PDF::Core specs: Running on Ruby Version: #{RUBY_VERSION}"
 
-require "bundler"
+require 'bundler'
 Bundler.setup
 
-if ENV["COVERAGE"]
-  require "simplecov"
-  SimpleCov.start 
+if ENV['COVERAGE']
+  require 'simplecov'
+  SimpleCov.start
 end
 
-require_relative "../lib/pdf/core"
+require_relative '../lib/pdf/core'
 
-
-require "rspec"
-require "pdf/reader"
-require "pdf/inspector"
+require 'rspec'
+require 'pdf/reader'
+require 'pdf/inspector'
 
 RSpec.configure do |config|
   config.disable_monkey_patching!

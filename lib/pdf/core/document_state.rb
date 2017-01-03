@@ -5,10 +5,12 @@ module PDF
         normalize_metadata(options)
 
         if options[:print_scaling]
-          @store = PDF::Core::ObjectStore.new(:info => options[:info],
-                                              :print_scaling => options[:print_scaling])
+          @store = PDF::Core::ObjectStore.new(
+            info: options[:info],
+            print_scaling: options[:print_scaling]
+          )
         else
-          @store = PDF::Core::ObjectStore.new(:info => options[:info])
+          @store = PDF::Core::ObjectStore.new(info: options[:info])
         end
 
         @version                 = 1.3
@@ -28,20 +30,19 @@ module PDF
         :before_render_callbacks, :on_page_create_callback
 
       def populate_pages_from_store(document)
-        return 0 if @store.page_count <= 0 || @pages.size > 0
+        return 0 if @store.page_count <= 0 || !@pages.empty?
 
         count = (1..@store.page_count)
         @pages = count.map do |index|
           orig_dict_id = @store.object_id_for_page(index)
-          PDF::Core::Page.new(document, :object_id => orig_dict_id)
+          PDF::Core::Page.new(document, object_id: orig_dict_id)
         end
-
       end
 
       def normalize_metadata(options)
         options[:info] ||= {}
-        options[:info][:Creator] ||= "Prawn"
-        options[:info][:Producer] ||= "Prawn"
+        options[:info][:Creator] ||= 'Prawn'
+        options[:info][:Producer] ||= 'Prawn'
 
         options[:info]
       end
@@ -56,8 +57,8 @@ module PDF
         on_page_create_callback[doc] if on_page_create_callback
       end
 
-      def before_render_actions(doc)
-        before_render_callbacks.each{ |c| c.call(self) }
+      def before_render_actions(_doc)
+        before_render_callbacks.each { |c| c.call(self) }
       end
 
       def page_count
@@ -67,11 +68,14 @@ module PDF
       def render_body(output)
         store.each do |ref|
           ref.offset = output.size
-          output << (@encrypt ? ref.encrypted_object(@encryption_key) :
-                                ref.object)
+          output <<
+            if @encrypt
+              ref.encrypted_object(@encryption_key)
+            else
+              ref.object
+            end
         end
       end
-
     end
   end
 end
