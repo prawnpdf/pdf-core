@@ -19,6 +19,7 @@ Gem::Specification.new do |spec|
   spec.email = ["gregory.t.brown@gmail.com","brad@bradediger.com","dnelson@bluejade.com","greenberg@entryway.net","jimmy@deefa.com"]
   spec.rubyforge_project = "prawn"
   spec.licenses = %w(PRAWN GPL-2.0 GPL-3.0)
+  spec.add_development_dependency('bundler')
   spec.add_development_dependency('pdf-reader', '~>1.2')
   spec.add_development_dependency('simplecov')
   spec.add_development_dependency('pdf-inspector', '~> 1.1.0')
