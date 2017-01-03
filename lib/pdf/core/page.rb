@@ -22,11 +22,20 @@ module PDF
                                            :top     => 36,
                                            :bottom  => 36  }
         @stack = GraphicStateStack.new(options[:graphic_state])
-        if options[:object_id]
-          init_from_object(options)
-        else
-          init_new_page(options)
-        end
+        @size     = options[:size]    ||  "LETTER"
+        @layout   = options[:layout]  || :portrait
+
+        @stamp_stream      = nil
+        @stamp_dictionary  = nil
+
+        @content    = document.ref({})
+        content << "q" << "\n"
+        @dictionary = document.ref(:Type        => :Page,
+                                   :Parent      => document.state.store.pages,
+                                   :MediaBox    => dimensions,
+                                   :Contents    => content)
+
+        resources[:ProcSet] = [:PDF, :Text, :ImageB, :ImageC, :ImageI]
       end
 
       def graphic_state
@@ -121,13 +130,7 @@ module PDF
         end
       end
 
-      def imported_page?
-        @imported_page
-      end
-
       def dimensions
-        return inherited_dictionary_value(:MediaBox) if imported_page?
-
         coords = PDF::Core::PageGeometry::SIZES[size] || size
         [0,0] + case(layout)
         when :portrait
@@ -141,36 +144,6 @@ module PDF
       end
 
       private
-
-      def init_from_object(options)
-        @dictionary = options[:object_id].to_i
-
-        unless dictionary.data[:Contents].is_a?(Array) # content only on leafs
-          @content    = dictionary.data[:Contents].identifier
-        end
-
-        @stamp_stream      = nil
-        @stamp_dictionary  = nil
-        @imported_page     = true
-      end
-
-      def init_new_page(options)
-        @size     = options[:size]    ||  "LETTER"
-        @layout   = options[:layout]  || :portrait
-
-        @stamp_stream      = nil
-        @stamp_dictionary  = nil
-        @imported_page     = false
-
-        @content    = document.ref({})
-        content << "q" << "\n"
-        @dictionary = document.ref(:Type        => :Page,
-                                   :Parent      => document.state.store.pages,
-                                   :MediaBox    => dimensions,
-                                   :Contents    => content)
-
-        resources[:ProcSet] = [:PDF, :Text, :ImageB, :ImageC, :ImageI]
-      end
 
       # some entries in the Page dict can be inherited from parent Pages dicts.
       #
