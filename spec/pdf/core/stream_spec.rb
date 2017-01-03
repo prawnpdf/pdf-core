@@ -1,11 +1,12 @@
-require_relative 'spec_helper'
+require 'spec_helper'
 
 RSpec.describe PDF::Core::Stream do
+  subject(:stream) { described_class.new }
+
   it 'compresses a stream upon request' do
-    stream = PDF::Core::Stream.new
     stream << 'Hi There ' * 20
 
-    cstream = PDF::Core::Stream.new
+    cstream = described_class.new
     cstream << 'Hi There ' * 20
     cstream.compress!
 
@@ -14,7 +15,6 @@ RSpec.describe PDF::Core::Stream do
   end
 
   it 'exposes compression state' do
-    stream = PDF::Core::Stream.new
     stream << 'Hello'
     stream.compress!
 
@@ -22,7 +22,6 @@ RSpec.describe PDF::Core::Stream do
   end
 
   it 'detects from filters if stream is compressed' do
-    stream = PDF::Core::Stream.new
     stream << 'Hello'
     stream.filters << :FlateDecode
 
@@ -30,14 +29,12 @@ RSpec.describe PDF::Core::Stream do
   end
 
   it 'has Length if in data' do
-    stream = PDF::Core::Stream.new
     stream << 'hello'
 
     expect(stream.data[:Length]).to eq 5
   end
 
   it 'updates Length when updated' do
-    stream = PDF::Core::Stream.new
     stream << 'hello'
     expect(stream.data[:Length]).to eq 5
 
@@ -46,7 +43,6 @@ RSpec.describe PDF::Core::Stream do
   end
 
   it 'corecly handles decode params' do
-    stream = PDF::Core::Stream.new
     stream << 'Hello'
     stream.filters << { FlateDecode: { Predictor: 15 } }
 

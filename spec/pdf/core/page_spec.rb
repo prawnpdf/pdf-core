@@ -1,6 +1,7 @@
-require_relative 'spec_helper'
+require 'spec_helper'
 
 RSpec.describe PDF::Core::Page do
+  # rubocop: disable RSpec/InstanceVariable
   class Document
     def initialize
       @store = PDF::Core::ObjectStore.new
@@ -13,6 +14,7 @@ RSpec.describe PDF::Core::Page do
       @renderer.ref(*args)
     end
   end
+  # rubocop: enable RSpec/InstanceVariable
 
   let(:doc) { Document.new }
 

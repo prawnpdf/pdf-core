@@ -1,10 +1,10 @@
-require_relative 'spec_helper'
+require 'spec_helper'
 
-RSpec.describe 'PDF::Core::ObjectStore' do
-  let(:store) { PDF::Core::ObjectStore.new }
+RSpec.describe PDF::Core::ObjectStore do
+  subject(:store) { described_class.new }
 
   it 'creates required roots by default, including info passed to new' do
-    store = PDF::Core::ObjectStore.new(info: { Test: 3 })
+    store = described_class.new(info: { Test: 3 })
     expect(store.size).to eq 3 # 3 default roots
     expect(store.info.data[:Test]).to eq 3
     expect(store.pages.data[:Count]).to eq 0
@@ -37,7 +37,7 @@ RSpec.describe 'PDF::Core::ObjectStore' do
   end
 
   it 'accepts option to disabling PDF scaling in PDF clients' do
-    store = PDF::Core::ObjectStore.new(print_scaling: :none)
+    store = described_class.new(print_scaling: :none)
     expect(store.root.data[:ViewerPreferences]).to eq PrintScaling: :None
   end
 end

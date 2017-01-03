@@ -1,26 +1,26 @@
-require_relative 'spec_helper'
+require 'spec_helper'
 
-RSpec.describe 'A Reference object' do
+RSpec.describe PDF::Core::Reference do
   it 'produces a PDF reference on #to_s call' do
-    ref = PDF::Core::Reference.new(1, true)
+    ref = described_class.new(1, true)
     expect(ref.to_s).to eq '1 0 R'
   end
 
   it 'allows changing generation number' do
-    ref = PDF::Core::Reference.new(1, true)
+    ref = described_class.new(1, true)
     ref.gen = 1
     expect(ref.to_s).to eq '1 1 R'
   end
 
   it 'generates a valid PDF object for the referenced data' do
-    ref = PDF::Core::Reference.new(2, [1, 'foo'])
+    ref = described_class.new(2, [1, 'foo'])
     expect(ref.object).to eq(
       "2 0 obj\n#{PDF::Core.pdf_object([1, 'foo'])}\nendobj\n"
     )
   end
 
   it 'includes stream fileds in dictionary when serializing' do
-    ref = PDF::Core::Reference.new(1, {})
+    ref = described_class.new(1, {})
     ref.stream << 'Hello'
     expect(ref.object).to eq(
       "1 0 obj\n<< /Length 5\n>>\nstream\nHello\nendstream\nendobj\n"
@@ -28,7 +28,7 @@ RSpec.describe 'A Reference object' do
   end
 
   it 'appends data to stream when #<< is used' do
-    ref = PDF::Core::Reference.new(1, {})
+    ref = described_class.new(1, {})
     ref << "BT\n/F1 12 Tf\n72 712 Td\n( A stream ) Tj\nET"
     expect(ref.object).to eq(
       "1 0 obj\n<< /Length 41\n>>\nstream"\
@@ -38,10 +38,10 @@ RSpec.describe 'A Reference object' do
   end
 
   it 'copies the data and stream from another ref on #replace' do
-    from = PDF::Core::Reference.new(3, foo: 'bar')
+    from = described_class.new(3, foo: 'bar')
     from << 'has a stream too'
 
-    to = PDF::Core::Reference.new(4, foo: 'baz')
+    to = described_class.new(4, foo: 'baz')
     to.replace from
 
     # preserves identifier but copies data and stream
@@ -51,11 +51,11 @@ RSpec.describe 'A Reference object' do
   end
 
   it 'copies a compressed stream from a compressed ref on #replace' do
-    from = PDF::Core::Reference.new(5, foo: 'bar')
+    from = described_class.new(5, foo: 'bar')
     from << 'has a stream too ' * 20
     from.stream.compress!
 
-    to = PDF::Core::Reference.new(6, foo: 'baz')
+    to = described_class.new(6, foo: 'baz')
     to.replace from
 
     expect(to.identifier).to eq 6

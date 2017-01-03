@@ -1,6 +1,6 @@
-require_relative 'spec_helper'
+require 'spec_helper'
 
-RSpec.describe 'Name Tree' do
+RSpec.describe PDF::Core::NameTree do
   def tree_dump(tree)
     if tree.is_a?(PDF::Core::NameTree::Node)
       '[' + tree.children.map { |child| tree_dump(child) }.join(',') + ']'
@@ -22,6 +22,7 @@ RSpec.describe 'Name Tree' do
   # FIXME: This is a dummy that's meant to stand in for a Prawn::Document.
   # It causes the tests to pass but I have no idea if it's really a
   # sufficient test double or not.
+  # rubocop: disable RSpec/InstanceVariable
   class RefExposingDocument
     def initialize
       @object_store = []
@@ -33,49 +34,48 @@ RSpec.describe 'Name Tree' do
       @object_store << obj
     end
   end
+  # rubocop: enable RSpec/InstanceVariable
 
-  before(:each) do
-    @pdf = RefExposingDocument.new
-  end
+  let(:pdf) { RefExposingDocument.new }
 
   it 'has no children when first initialized' do
-    node = PDF::Core::NameTree::Node.new(@pdf, 3)
+    node = PDF::Core::NameTree::Node.new(pdf, 3)
     expect(node.children.length).to eq 0
   end
 
   it 'has no subtrees while child limit is not reached' do
-    node = PDF::Core::NameTree::Node.new(@pdf, 3)
+    node = PDF::Core::NameTree::Node.new(pdf, 3)
     tree_add(node, ['one', 1], ['two', 2], ['three', 3])
     expect(tree_dump(node)).to eq '[one=1,three=3,two=2]'
   end
 
   it 'splits into subtrees when limit is exceeded' do
-    node = PDF::Core::NameTree::Node.new(@pdf, 3)
+    node = PDF::Core::NameTree::Node.new(pdf, 3)
     tree_add(node, ['one', 1], ['two', 2], ['three', 3], ['four', 4])
     expect(tree_dump(node)).to eq '[[four=4,one=1],[three=3,two=2]]'
   end
 
   it 'creates a two new references when root is split' do
-    ref_count = @pdf.object_store.length
-    node = PDF::Core::NameTree::Node.new(@pdf, 3)
+    ref_count = pdf.object_store.length
+    node = PDF::Core::NameTree::Node.new(pdf, 3)
     tree_add(node, ['one', 1], ['two', 2], ['three', 3], ['four', 4])
-    expect(@pdf.object_store.length).to eq ref_count + 2
+    expect(pdf.object_store.length).to eq ref_count + 2
   end
 
   it 'creates a one new reference when subtree is split' do
-    node = PDF::Core::NameTree::Node.new(@pdf, 3)
+    node = PDF::Core::NameTree::Node.new(pdf, 3)
     tree_add(node, ['one', 1], ['two', 2], ['three', 3], ['four', 4])
 
-    ref_count = @pdf.object_store.length # save when root is split
+    ref_count = pdf.object_store.length # save when root is split
     tree_add(node, ['five', 5], ['six', 6], ['seven', 7])
     expect(tree_dump(node)).to eq(
       '[[five=5,four=4,one=1],[seven=7,six=6],[three=3,two=2]]'
     )
-    expect(@pdf.object_store.length).to eq ref_count + 1
+    expect(pdf.object_store.length).to eq ref_count + 1
   end
 
   it 'keeps tree balanced when subtree split cascades to root' do
-    node = PDF::Core::NameTree::Node.new(@pdf, 3)
+    node = PDF::Core::NameTree::Node.new(pdf, 3)
     tree_add(node, ['one', 1], ['two', 2], ['three', 3], ['four', 4])
     tree_add(node, ['five', 5], ['six', 6], ['seven', 7], ['eight', 8])
     expect(tree_dump(node)).to eq(
@@ -84,7 +84,7 @@ RSpec.describe 'Name Tree' do
   end
 
   it 'maintains order of already properly ordered nodes' do
-    node = PDF::Core::NameTree::Node.new(@pdf, 3)
+    node = PDF::Core::NameTree::Node.new(pdf, 3)
     tree_add(node, ['eight', 8], ['five', 5], ['four', 4], ['one', 1])
     tree_add(node, ['seven', 7], ['six', 6], ['three', 3], ['two', 2])
     expect(tree_dump(node)).to eq(
@@ -93,7 +93,7 @@ RSpec.describe 'Name Tree' do
   end
 
   it 'emits only :Names key with to_hash if root is only node' do
-    node = PDF::Core::NameTree::Node.new(@pdf, 3)
+    node = PDF::Core::NameTree::Node.new(pdf, 3)
     tree_add(node, ['one', 1], ['two', 2], ['three', 3])
     expect(node.to_hash).to eq(
       Names: [
@@ -103,13 +103,13 @@ RSpec.describe 'Name Tree' do
   end
 
   it 'emits only :Kids key with to_hash if root has children' do
-    node = PDF::Core::NameTree::Node.new(@pdf, 3)
+    node = PDF::Core::NameTree::Node.new(pdf, 3)
     tree_add(node, ['one', 1], ['two', 2], ['three', 3], ['four', 4])
     expect(node.to_hash).to eq Kids: node.children.map(&:ref)
   end
 
   it 'emits :Limits and :Names keys with to_hash for leaf node' do
-    node = PDF::Core::NameTree::Node.new(@pdf, 3)
+    node = PDF::Core::NameTree::Node.new(pdf, 3)
     tree_add(node, ['one', 1], ['two', 2], ['three', 3], ['four', 4])
     expect(node.children.first.to_hash).to eq(
       Limits: %w[four one],
@@ -118,7 +118,7 @@ RSpec.describe 'Name Tree' do
   end
 
   it 'emits :Limits and :Kids keys with to_hash for inner node' do
-    node = PDF::Core::NameTree::Node.new(@pdf, 3)
+    node = PDF::Core::NameTree::Node.new(pdf, 3)
     tree_add(node, ['one', 1], ['two', 2], ['three', 3], ['four', 4])
     tree_add(node, ['five', 5], ['six', 6], ['seven', 7], ['eight', 8])
     tree_add(node, ['nine', 9], ['ten', 10], ['eleven', 11], ['twelve', 12])

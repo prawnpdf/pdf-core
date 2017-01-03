@@ -1,8 +1,8 @@
 # encoding: ASCII-8BIT
-require_relative 'spec_helper'
+require 'spec_helper'
 
 # See PDF Reference, Sixth Edition (1.7) pp51-60 for details
-RSpec.describe 'PDF Object Serialization' do
+RSpec.describe PDF::Core, '.pdf_object' do
   it "converts Ruby's nil to PDF null" do
     expect(PDF::Core.pdf_object(nil)).to eq 'null'
   end

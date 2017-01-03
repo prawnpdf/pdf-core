@@ -1,6 +1,7 @@
-require_relative 'spec_helper'
+require 'spec_helper'
 
 RSpec.describe PDF::Core::Text do
+  # rubocop: disable RSpec/InstanceVariable
   class TextMock
     include PDF::Core::Text
 
@@ -11,6 +12,7 @@ RSpec.describe PDF::Core::Text do
       @text << str
     end
   end
+  # rubocop: enable RSpec/InstanceVariable
 
   let(:mock) { TextMock.new }
 

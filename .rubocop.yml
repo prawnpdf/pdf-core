@@ -1,3 +1,5 @@
+require: rubocop-rspec
+
 AllCops:
   Include:
     - '**/Rakefile'
@@ -26,6 +28,12 @@ Metrics/ModuleLength:
   Enabled: false
 
 Metrics/PerceivedComplexity:
+  Enabled: false
+
+RSpec/ExampleLength:
+  Max: 19
+
+RSpec/MultipleExpectations:
   Enabled: false
 
 # set_ methods are the part of PDF::Reader API
