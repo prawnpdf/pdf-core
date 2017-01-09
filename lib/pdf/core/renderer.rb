@@ -149,15 +149,21 @@ module PDF
       # Pass an open file descriptor to render to file.
       #
       def render(output = StringIO.new)
+        buffer = StringIO.new
+        finalize_all_page_contents
+
+        render_header(buffer)
+        render_body(buffer)
+        render_xref(buffer)
+        render_trailer(buffer)
+
         if output.instance_of?(StringIO)
           output.set_encoding(::Encoding::ASCII_8BIT)
         end
-        finalize_all_page_contents
 
-        render_header(output)
-        render_body(output)
-        render_xref(output)
-        render_trailer(output)
+        buffer.rewind
+        output.write buffer.read
+
         if output.instance_of?(StringIO)
           str = output.string
           str.force_encoding(::Encoding::ASCII_8BIT)
@@ -181,10 +187,10 @@ module PDF
         state.before_render_actions(self)
 
         # pdf version
-        output << "%PDF-#{state.version}\n"
+        output.write "%PDF-#{state.version}\n"
 
         # 4 binary chars, as recommended by the spec
-        output << "%\xFF\xFF\xFF\xFF\n"
+        output.write "%\xFF\xFF\xFF\xFF\n"
       end
 
       # Write out the PDF Body, as per spec 3.4.2
@@ -197,12 +203,12 @@ module PDF
       #
       def render_xref(output)
         @xref_offset = output.size
-        output << "xref\n"
-        output << "0 #{state.store.size + 1}\n"
-        output << "0000000000 65535 f \n"
+        output.write "xref\n"
+        output.write "0 #{state.store.size + 1}\n"
+        output.write "0000000000 65535 f \n"
         state.store.each do |ref|
-          output.printf("%010d", ref.offset)
-          output << " 00000 n \n"
+          output.write sprintf("%010d", ref.offset)
+          output.write " 00000 n \n"
         end
       end
 
@@ -214,11 +220,14 @@ module PDF
                         :Info => state.store.info}
         trailer_hash.merge!(state.trailer) if state.trailer
 
-        output << "trailer\n"
-        output << PDF::Core::PdfObject(trailer_hash) << "\n"
-        output << "startxref\n"
-        output << @xref_offset << "\n"
-        output << "%%EOF" << "\n"
+        output.write "trailer\n"
+        output.write PDF::Core::PdfObject(trailer_hash)
+        output.write "\n"
+        output.write "startxref\n"
+        output.write @xref_offset
+        output.write "\n"
+        output.write "%%EOF"
+        output.write "\n"
       end
 
       def open_graphics_state
