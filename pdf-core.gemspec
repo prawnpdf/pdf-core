@@ -3,7 +3,7 @@ Gem::Specification.new do |spec|
   spec.version = '0.6.2'
   spec.platform = Gem::Platform::RUBY
   spec.summary = 'PDF::Core is used by Prawn to render PDF documents'
-  spec.files =  Dir.glob('{lib,spec}/**/**/*') +
+  spec.files =  Dir.glob('lib/**/**/*') +
                 %w[COPYING GPLv2 GPLv3 LICENSE] +
                 %w[Gemfile Rakefile] +
                 ['pdf-core.gemspec']
@@ -16,7 +16,6 @@ Gem::Specification.new do |spec|
     spec.signing_key = File.expand_path('~/.ssh/gem-private_key.pem')
   end
 
-  # spec.test_files = Dir[ "spec/*_spec.rb" ]
   # spec.extra_rdoc_files = %w{README.md LICENSE COPYING GPLv2 GPLv3}
   # spec.rdoc_options << '--title' << 'Prawn Documentation' <<
   #                     '--main'  << 'README.md' << '-q'
