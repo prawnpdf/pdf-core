@@ -4,6 +4,8 @@
 #
 # This is free software. Please see the LICENSE and COPYING files for details.
 
+require 'pdf/core/utils'
+
 module PDF
   module Core
     class Reference #:nodoc:
@@ -49,15 +51,15 @@ module PDF
         when ::Hash
           # Copy each entry not in +share+.
           (r.data.keys - share).each do |k|
-            r.data[k] = Marshal.load(Marshal.dump(r.data[k]))
+            r.data[k] = Utils.deep_clone(r.data[k])
           end
         when PDF::Core::NameTree::Node
           r.data = r.data.deep_copy
         else
-          r.data = Marshal.load(Marshal.dump(r.data))
+          r.data = Utils.deep_clone(r.data)
         end
 
-        r.stream = Marshal.load(Marshal.dump(r.stream))
+        r.stream = Utils.deep_clone(r.stream)
         r
       end
 
