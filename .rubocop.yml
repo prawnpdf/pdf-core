@@ -48,9 +48,6 @@ Style/AlignParameters:
 Style/AsciiComments:
   Enabled: false
 
-#Style/BlockDelimiters:
-#  EnforcedStyle: semantic
-
 Style/Documentation:
   Enabled: false
 
