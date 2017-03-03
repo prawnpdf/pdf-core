@@ -1,6 +1,6 @@
 Gem::Specification.new do |spec|
   spec.name = 'pdf-core'
-  spec.version = '0.6.2'
+  spec.version = '0.7.0'
   spec.platform = Gem::Platform::RUBY
   spec.summary = 'PDF::Core is used by Prawn to render PDF documents'
   spec.files =  Dir.glob('lib/**/**/*') +
