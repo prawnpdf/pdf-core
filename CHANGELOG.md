@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+### Fixed
+
+* Use `require` instead of `require_relative` to avoid dual loading files
+
 ## [0.7.0][] - 2017-03-03
 
 ### Changed
