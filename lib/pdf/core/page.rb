@@ -51,7 +51,7 @@ module PDF
           Contents: content
         )
 
-        resources[:ProcSet] = [:PDF, :Text, :ImageB, :ImageC, :ImageI]
+        resources[:ProcSet] = %i[PDF Text ImageB ImageC ImageI]
       end
 
       def graphic_state

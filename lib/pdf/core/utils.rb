@@ -1,7 +1,6 @@
 module PDF
   module Core
     module Utils
-      # rubocop: disable Security/MarshalLoad
       def deep_clone(object)
         Marshal.load(Marshal.dump(object))
       end

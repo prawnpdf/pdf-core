@@ -1,4 +1,5 @@
 # encoding: utf-8
+
 #
 # Implements graphics state saving and restoring
 #

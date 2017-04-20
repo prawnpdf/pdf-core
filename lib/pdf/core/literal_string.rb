@@ -1,4 +1,5 @@
 # encoding: utf-8
+
 module PDF
   module Core
     # This is used to differentiate strings that must be encoded as
