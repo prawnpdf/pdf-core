@@ -36,6 +36,10 @@ RSpec/ExampleLength:
 RSpec/MultipleExpectations:
   Enabled: false
 
+Style/FileName:
+  Exclude:
+    - 'Gemfile'
+
 # set_ methods are the part of PDF::Reader API
 Style/AccessorMethodName:
   Enabled: false
