@@ -5,7 +5,7 @@ RSpec.describe PDF::Core::ObjectStore do
 
   it 'creates required roots by default, including info passed to new' do
     store = described_class.new(info: { Test: 3 })
-    expect(store.size).to eq 3 # 3 default roots
+    expect(store.size).to eq 4 # 4 default roots
     expect(store.info.data[:Test]).to eq 3
     expect(store.pages.data[:Count]).to eq 0
     expect(store.root.data[:Pages]).to eq store.pages

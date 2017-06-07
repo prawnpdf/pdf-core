@@ -4,15 +4,12 @@ module PDF
       def initialize(options)
         normalize_metadata(options)
 
-        @store =
-          if options[:print_scaling]
-            PDF::Core::ObjectStore.new(
-              info: options[:info],
-              print_scaling: options[:print_scaling]
-            )
-          else
-            PDF::Core::ObjectStore.new(info: options[:info])
-          end
+        store_params = {
+          info: options[:info]
+        }
+        store_params[:print_scaling] = options[:print_scaling] if options[:print_scaling]
+        store_params[:enable_pdfa_1b] = options[:enable_pdfa_1b] if options[:enable_pdfa_1b]
+        @store = PDF::Core::ObjectStore.new(store_params)
 
         @version                 = 1.3
         @pages                   = []

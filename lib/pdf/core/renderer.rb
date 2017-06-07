@@ -1,4 +1,5 @@
 require 'stringio'
+require 'securerandom'
 
 module PDF
   module Core
@@ -216,10 +217,12 @@ module PDF
       # Write out the PDF Trailer, as per spec 3.4.4
       #
       def render_trailer(output)
+        trailer_id = PDF::Core::ByteString.new(SecureRandom.random_bytes(16))
         trailer_hash = {
           Size: state.store.size + 1,
           Root: state.store.root,
-          Info: state.store.info
+          Info: state.store.info,
+          ID: [trailer_id, trailer_id] # PDF/A-1b requirement
         }
         trailer_hash.merge!(state.trailer) if state.trailer
 
