@@ -163,9 +163,20 @@ module PDF
         finalize_all_page_contents
 
         render_header(output)
-        body_hash = render_body(output)
+
+        # We render the body into a temporary buffer to avoid
+        # two render passes for output and hashing.
+        # We must have the same offset as in output, otherwise
+        # the refs won't match.
+        body_output = StringIO.new(' ' * output.tell)
+        body_output.set_encoding(::Encoding::ASCII_8BIT)
+        body_output.seek(output.tell)
+        render_body(body_output)
+        body_output = body_output.string[output.tell..-1]
+        output.write(body_output)
+
         render_xref(output)
-        render_trailer(output, body_hash)
+        render_trailer(output, hash_body(body_output))
         if output.instance_of?(StringIO)
           str = output.string
           str.force_encoding(::Encoding::ASCII_8BIT)
@@ -198,13 +209,13 @@ module PDF
       # Write out the PDF Body, as per spec 3.4.2
       #
       def render_body(output)
-        body_start = output.tell
         state.render_body(output)
-        body_end = output.tell
-        output.seek body_start
-        body_hash = Digest::MD5.digest output.read(body_end - body_start)
-        output.seek body_end
-        body_hash
+      end
+
+      # Create a hash from the body data. Needed for creating the trailer ID.
+      #
+      def hash_body(body_data)
+        Digest::MD5.digest(body_data)
       end
 
       # Write out the PDF Cross Reference Table, as per spec 3.4.3
