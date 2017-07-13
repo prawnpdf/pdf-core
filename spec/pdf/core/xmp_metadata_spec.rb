@@ -24,7 +24,8 @@ RSpec.describe PDF::Core::XmpMetadata do
 
     it 'empty metadata' do
       expect(metadata.render).to eq(
-        '<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"/>'
+        "<rdf:RDF xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\">\n" \
+        '</rdf:RDF>'
       )
     end
 
@@ -48,6 +49,21 @@ RSpec.describe PDF::Core::XmpMetadata do
         "    <dc:title>\n" \
         "      <rdf:Alt>\n" \
         "        <rdf:li xml:lang=\"x-default\">Some title</rdf:li>\n" \
+        "      </rdf:Alt>\n" \
+        "    </dc:title>\n" \
+        "  </rdf:Description>\n" \
+        '</rdf:RDF>'
+      )
+    end
+
+    it 'title set with special characters' do
+      metadata.dc_title = 'This is & some< title with speci&al <characters'
+      expect(metadata.render).to eq(
+        "<rdf:RDF xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\">\n" \
+        "  <rdf:Description xmlns:dc=\"http://purl.org/dc/elements/1.1/\" rdf:about=\"\">\n" \
+        "    <dc:title>\n" \
+        "      <rdf:Alt>\n" \
+        "        <rdf:li xml:lang=\"x-default\">This is &amp; some&lt; title with speci&amp;al &lt;characters</rdf:li>\n" \
         "      </rdf:Alt>\n" \
         "    </dc:title>\n" \
         "  </rdf:Description>\n" \

@@ -1,5 +1,3 @@
-require 'nokogiri'
-
 module PDF
   module Core
     class XmpMetadata
@@ -12,10 +10,6 @@ module PDF
         :xmp_create_date, :xmp_modify_date
 
       def initialize(options = {})
-        @xml_doc = Nokogiri::XML(
-          "<rdf:RDF xmlns:rdf='http://www.w3.org/1999/02/22-rdf-syntax-ns#'/>"
-        )
-
         # Convert options for the document information dictionary to their
         # counterparts in XMP.
         @dc_title = options[:Title] if options[:Title]
@@ -29,85 +23,70 @@ module PDF
       end
 
       def render
-        render_pdfaid if @enable_pdfa_1b
-        render_xmp if @xmp_creator_tool || @xmp_create_date || @xmp_modify_date
-        render_pdf if @pdf_keywords || @pdf_producer
-        render_dc if @dc_title || @dc_creator || @dc_description
-        @xml_doc.root.to_xml
+        result = "<rdf:RDF xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\">\n"
+        result << render_pdfaid if @enable_pdfa_1b
+        result << render_xmp if @xmp_creator_tool || @xmp_create_date || @xmp_modify_date
+        result << render_pdf if @pdf_keywords || @pdf_producer
+        result << render_dc if @dc_title || @dc_creator || @dc_description
+        result << '</rdf:RDF>'
       end
 
       private
 
       def render_pdfaid
-        description_node = @xml_doc.root.add_child(
-          "<rdf:Description rdf:about='' xmlns:pdfaid='http://www.aiim.org/pdfa/ns/id/'/>"
-        ).first
-        part_node = description_node.add_child('<pdfaid:part/>').first
-        part_node.content = '1'
-        conformance_node = description_node.add_child('<pdfaid:conformance/>').first
-        conformance_node.content = 'B'
+        "  <rdf:Description xmlns:pdfaid=\"http://www.aiim.org/pdfa/ns/id/\" rdf:about=\"\">\n" \
+        "    <pdfaid:part>1</pdfaid:part>\n" \
+        "    <pdfaid:conformance>B</pdfaid:conformance>\n" \
+        "  </rdf:Description>\n"
       end
 
       def render_xmp
-        description_node = @xml_doc.root.add_child(
-          "<rdf:Description rdf:about='' xmlns:xmp='http://ns.adobe.com/xap/1.0/'/>"
-        ).first
-        if @xmp_creator_tool
-          node = description_node.add_child('<xmp:CreatorTool/>').first
-          node.content = @xmp_creator_tool
-        end
-        if @xmp_create_date
-          node = description_node.add_child('<xmp:CreateDate/>').first
-          node.content = to_xmp_timestamp @xmp_create_date
-        end
-        if @xmp_modify_date
-          node = description_node.add_child('<xmp:ModifyDate/>').first
-          node.content = to_xmp_timestamp @xmp_modify_date
-        end
+        result = "  <rdf:Description xmlns:xmp=\"http://ns.adobe.com/xap/1.0/\" rdf:about=\"\">\n"
+        result << "    <xmp:CreatorTool>#{xml_char_data(@xmp_creator_tool)}</xmp:CreatorTool>\n" if @xmp_creator_tool
+        result << "    <xmp:CreateDate>#{xml_char_data(to_xmp_timestamp (@xmp_create_date))}</xmp:CreateDate>\n" if @xmp_create_date
+        result << "    <xmp:ModifyDate>#{xml_char_data(to_xmp_timestamp (@xmp_modify_date))}</xmp:ModifyDate>\n" if @xmp_modify_date
+        result << "  </rdf:Description>\n"
       end
 
       def render_pdf
-        description_node = @xml_doc.root.add_child(
-          "<rdf:Description rdf:about='' xmlns:pdf='http://ns.adobe.com/pdf/1.3/'/>"
-        ).first
-        if @pdf_keywords
-          node = description_node.add_child('<pdf:Keywords/>').first
-          node.content = @pdf_keywords
-        end
-        if @pdf_producer
-          node = description_node.add_child('<pdf:Producer/>').first
-          node.content = @pdf_producer
-        end
+        result = "  <rdf:Description xmlns:pdf=\"http://ns.adobe.com/pdf/1.3/\" rdf:about=\"\">\n"
+        result << "    <pdf:Keywords>#{xml_char_data(@pdf_keywords)}</pdf:Keywords>\n" if @pdf_keywords
+        result << "    <pdf:Producer>#{xml_char_data(@pdf_producer)}</pdf:Producer>\n" if @pdf_producer
+        result << "  </rdf:Description>\n"
       end
 
       def render_dc
-        description_node = @xml_doc.root.add_child(
-          "<rdf:Description rdf:about='' xmlns:dc='http://purl.org/dc/elements/1.1/'/>"
-        ).first
+        result = "  <rdf:Description xmlns:dc=\"http://purl.org/dc/elements/1.1/\" rdf:about=\"\">\n"
         if @dc_title
-          title_node = description_node.add_child('<dc:title/>').first
-          alt_node = title_node.add_child('<rdf:Alt/>').first
-          li_node = alt_node.add_child('<rdf:li/>').first
-          li_node['xml:lang'] = 'x-default'
-          li_node.content = @dc_title
+          result << "    <dc:title>\n"
+          result << "      <rdf:Alt>\n"
+          result << "        <rdf:li xml:lang=\"x-default\">#{xml_char_data(@dc_title)}</rdf:li>\n"
+          result << "      </rdf:Alt>\n"
+          result << "    </dc:title>\n"
         end
         if @dc_creator
-          creator_node = description_node.add_child('<dc:creator/>').first
-          seq_node = creator_node.add_child('<rdf:Seq/>').first
-          li_node = seq_node.add_child('<rdf:li/>').first
-          li_node.content = @dc_creator
+          result << "    <dc:creator>\n"
+          result << "      <rdf:Seq>\n"
+          result << "        <rdf:li>#{xml_char_data(@dc_creator)}</rdf:li>\n"
+          result << "      </rdf:Seq>\n"
+          result << "    </dc:creator>\n"
         end
         if @dc_description
-          description_node = description_node.add_child('<dc:description/>').first
-          alt_node = description_node.add_child('<rdf:Alt/>').first
-          li_node = alt_node.add_child('<rdf:li/>').first
-          li_node['xml:lang'] = 'x-default'
-          li_node.content = @dc_description
+          result << "    <dc:description>\n"
+          result << "      <rdf:Alt>\n"
+          result << "        <rdf:li xml:lang=\"x-default\">#{xml_char_data(@dc_description)}</rdf:li>\n"
+          result << "      </rdf:Alt>\n"
+          result << "    </dc:description>\n"
         end
+        result << "  </rdf:Description>\n" \
       end
 
       def to_xmp_timestamp(time)
         time.strftime('%Y-%m-%dT%H:%M:%S')
+      end
+
+      def xml_char_data(string)
+        string.gsub('&', '&amp;').gsub('<', '&lt;')
       end
     end
   end
