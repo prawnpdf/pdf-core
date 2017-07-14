@@ -120,7 +120,7 @@ module PDF
 
         icc_profile_stream = ref(N: 3)
         icc_profile_stream.stream = Stream.new
-        icc_profile_stream << File.binread(File.join(File.dirname(__FILE__), icc_profile_name))
+        icc_profile_stream << File.binread(File.join(File.dirname(__FILE__), '..', '..', '..', 'data', icc_profile_name))
 
         root.data[:OutputIntents] = [{
           Type: :OutputIntent,
