@@ -43,8 +43,8 @@ module PDF
       def render_xmp
         result = "  <rdf:Description xmlns:xmp=\"http://ns.adobe.com/xap/1.0/\" rdf:about=\"\">\n"
         result << "    <xmp:CreatorTool>#{xml_char_data(@xmp_creator_tool)}</xmp:CreatorTool>\n" if @xmp_creator_tool
-        result << "    <xmp:CreateDate>#{xml_char_data(to_xmp_timestamp (@xmp_create_date))}</xmp:CreateDate>\n" if @xmp_create_date
-        result << "    <xmp:ModifyDate>#{xml_char_data(to_xmp_timestamp (@xmp_modify_date))}</xmp:ModifyDate>\n" if @xmp_modify_date
+        result << "    <xmp:CreateDate>#{xml_char_data(to_xmp_timestamp(@xmp_create_date))}</xmp:CreateDate>\n" if @xmp_create_date
+        result << "    <xmp:ModifyDate>#{xml_char_data(to_xmp_timestamp(@xmp_modify_date))}</xmp:ModifyDate>\n" if @xmp_modify_date
         result << "  </rdf:Description>\n"
       end
 
