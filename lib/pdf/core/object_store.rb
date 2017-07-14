@@ -20,16 +20,18 @@ module PDF
         @info  ||= ref(opts[:info] || {}).identifier
         @root  ||= ref(Type: :Catalog).identifier
 
-        # PDF/A-1b requirement: XMP metadata
-        @xmp_metadata ||= ref(Type: :Metadata, Subtype: :XML).identifier
-        root.data[:Metadata] = xmp_metadata
-        xmp_metadata_content = XmpMetadata.new(opts[:info] || {})
-        xmp_metadata_content.enable_pdfa_1b = opts[:enable_pdfa_1b] || false
-        xmp_metadata.stream = Stream.new
-        xmp_metadata.stream << xmp_metadata_content.render
+        if opts[:enable_pdfa_1b]
+          # PDF/A-1b requirement: XMP metadata
+          @xmp_metadata ||= ref(Type: :Metadata, Subtype: :XML).identifier
+          root.data[:Metadata] = xmp_metadata
+          xmp_metadata_content = XmpMetadata.new(opts[:info] || {})
+          xmp_metadata_content.enable_pdfa_1b = true
+          xmp_metadata.stream = Stream.new
+          xmp_metadata.stream << xmp_metadata_content.render
 
-        # PDF/A-1b requirement: OutputIntent with ICC profile stream
-        initialize_output_intent if opts[:enable_pdfa_1b]
+          # PDF/A-1b requirement: OutputIntent with ICC profile stream
+          initialize_output_intent
+        end
 
         if opts[:print_scaling] == :none
           root.data[:ViewerPreferences] = { PrintScaling: :None }
