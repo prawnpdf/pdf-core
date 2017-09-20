@@ -84,7 +84,7 @@ module PDF
       end
 
       def to_xmp_timestamp(time)
-        time.strftime('%Y-%m-%dT%H:%M:%S')
+        time.strftime('%Y-%m-%dT%H:%M:%S%:z')
       end
 
       def xml_char_data(string)

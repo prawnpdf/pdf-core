@@ -7,16 +7,16 @@ RSpec.describe PDF::Core::XmpMetadata do
     it 'document information dictionary to XMP conversion' do
       options = {
         Creator: 'Prawn Creator',
-        CreationDate: Time.new(2017, 4, 13, 9, 31, 54),
-        ModDate: Time.new(2016, 3, 12, 8, 30, 53),
+        CreationDate: Time.new(2017, 4, 13, 9, 31, 54, '+03:00'),
+        ModDate: Time.new(2016, 3, 12, 8, 30, 53, '+01:00'),
         Producer: 'Prawn Producer',
         Keywords: 'Archived',
         Author: 'John Doe'
       }
       metadata = described_class.new(options)
       expect(metadata.xmp_creator_tool).to eq 'Prawn Creator'
-      expect(metadata.xmp_create_date).to eq Time.new(2017, 4, 13, 9, 31, 54)
-      expect(metadata.xmp_modify_date).to eq Time.new(2016, 3, 12, 8, 30, 53)
+      expect(metadata.xmp_create_date).to eq Time.new(2017, 4, 13, 9, 31, 54, '+03:00')
+      expect(metadata.xmp_modify_date).to eq Time.new(2016, 3, 12, 8, 30, 53, '+01:00')
       expect(metadata.pdf_producer).to eq 'Prawn Producer'
       expect(metadata.pdf_keywords).to eq 'Archived'
       expect(metadata.dc_creator).to eq 'John Doe'
@@ -153,12 +153,12 @@ RSpec.describe PDF::Core::XmpMetadata do
     end
 
     it 'create date set' do
-      metadata.xmp_create_date = Time.new(2017, 4, 13, 9, 31, 54)
+      metadata.xmp_create_date = Time.new(2017, 4, 13, 9, 31, 54, '+03:00')
       expect(metadata.render).to eq(
         "<?xpacket begin=\"\" id=\"W5M0MpCehiHzreSzNTczkc9d\"?>\n" \
         "<rdf:RDF xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\">\n" \
         "  <rdf:Description xmlns:xmp=\"http://ns.adobe.com/xap/1.0/\" rdf:about=\"\">\n" \
-        "    <xmp:CreateDate>2017-04-13T09:31:54</xmp:CreateDate>\n" \
+        "    <xmp:CreateDate>2017-04-13T09:31:54+03:00</xmp:CreateDate>\n" \
         "  </rdf:Description>\n" \
         "</rdf:RDF>\n" \
         '<?xpacket end="r"?>'
@@ -166,12 +166,12 @@ RSpec.describe PDF::Core::XmpMetadata do
     end
 
     it 'modify date set' do
-      metadata.xmp_modify_date = Time.new(2017, 4, 13, 9, 31, 54)
+      metadata.xmp_modify_date = Time.new(2017, 4, 13, 9, 31, 54, '+01:00')
       expect(metadata.render).to eq(
         "<?xpacket begin=\"\" id=\"W5M0MpCehiHzreSzNTczkc9d\"?>\n" \
         "<rdf:RDF xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\">\n" \
         "  <rdf:Description xmlns:xmp=\"http://ns.adobe.com/xap/1.0/\" rdf:about=\"\">\n" \
-        "    <xmp:ModifyDate>2017-04-13T09:31:54</xmp:ModifyDate>\n" \
+        "    <xmp:ModifyDate>2017-04-13T09:31:54+01:00</xmp:ModifyDate>\n" \
         "  </rdf:Description>\n" \
         "</rdf:RDF>\n" \
         '<?xpacket end="r"?>'
@@ -186,8 +186,8 @@ RSpec.describe PDF::Core::XmpMetadata do
       metadata.pdf_keywords = 'Testing, PDF/A'
       metadata.xmp_creator_tool = 'Prawn'
       metadata.pdf_producer = 'Prawn'
-      metadata.xmp_create_date = Time.new(2017, 4, 13, 9, 31, 54)
-      metadata.xmp_modify_date = Time.new(2017, 4, 13, 9, 31, 54)
+      metadata.xmp_create_date = Time.new(2017, 4, 13, 9, 31, 54, '+03:00')
+      metadata.xmp_modify_date = Time.new(2017, 4, 13, 9, 31, 54, '+01:00')
       expect(metadata.render).to eq(
         "<?xpacket begin=\"\" id=\"W5M0MpCehiHzreSzNTczkc9d\"?>\n" \
         "<rdf:RDF xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\">\n" \
@@ -197,8 +197,8 @@ RSpec.describe PDF::Core::XmpMetadata do
         "  </rdf:Description>\n" \
         "  <rdf:Description xmlns:xmp=\"http://ns.adobe.com/xap/1.0/\" rdf:about=\"\">\n" \
         "    <xmp:CreatorTool>Prawn</xmp:CreatorTool>\n" \
-        "    <xmp:CreateDate>2017-04-13T09:31:54</xmp:CreateDate>\n" \
-        "    <xmp:ModifyDate>2017-04-13T09:31:54</xmp:ModifyDate>\n" \
+        "    <xmp:CreateDate>2017-04-13T09:31:54+03:00</xmp:CreateDate>\n" \
+        "    <xmp:ModifyDate>2017-04-13T09:31:54+01:00</xmp:ModifyDate>\n" \
         "  </rdf:Description>\n" \
         "  <rdf:Description xmlns:pdf=\"http://ns.adobe.com/pdf/1.3/\" rdf:about=\"\">\n" \
         "    <pdf:Keywords>Testing, PDF/A</pdf:Keywords>\n" \
