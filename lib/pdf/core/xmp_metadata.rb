@@ -23,12 +23,14 @@ module PDF
       end
 
       def render
-        result = "<rdf:RDF xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\">\n"
+        result = "<?xpacket begin=\"\" id=\"W5M0MpCehiHzreSzNTczkc9d\"?>\n"
+        result << "<rdf:RDF xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\">\n"
         result << render_pdfaid if @enable_pdfa_1b
         result << render_xmp if @xmp_creator_tool || @xmp_create_date || @xmp_modify_date
         result << render_pdf if @pdf_keywords || @pdf_producer
         result << render_dc if @dc_title || @dc_creator || @dc_description
-        result << '</rdf:RDF>'
+        result << "</rdf:RDF>\n"
+        result << '<?xpacket end="r"?>'
       end
 
       private
