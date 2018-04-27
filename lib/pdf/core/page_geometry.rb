@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Describes PDF page geometries
 #
 # Copyright April 2008, Gregory Brown.  All Rights Reserved.

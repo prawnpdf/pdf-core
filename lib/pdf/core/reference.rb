@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # reference.rb : Implementation of PDF indirect objects
 #
 # Copyright April 2008, Gregory Brown.  All Rights Reserved.
@@ -19,7 +21,7 @@ module PDF
       end
 
       def object
-        output = "#{@identifier} #{gen} obj\n"
+        output = +"#{@identifier} #{gen} obj\n"
         if @stream.empty?
           output << PDF::Core.pdf_object(data) << "\n"
         else

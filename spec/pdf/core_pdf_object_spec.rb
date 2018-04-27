@@ -1,4 +1,7 @@
 # encoding: ASCII-8BIT
+
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 # See PDF Reference, Sixth Edition (1.7) pp51-60 for details
@@ -145,7 +148,7 @@ RSpec.describe PDF::Core, '.pdf_object' do
       {
         :foo  => :bar,
         'baz' => [1, 2, 3],
-        :bang => { a: 'what', b: [:you, :say] }
+        :bang => { a: 'what', b: %i[you say] }
       },
       true
     )
@@ -154,7 +157,7 @@ RSpec.describe PDF::Core, '.pdf_object' do
 
     expect(res[:foo]).to eq :bar
     expect(res[:baz]).to eq [1, 2, 3]
-    expect(res[:bang]).to eq(a: 'what', b: [:you, :say])
+    expect(res[:bang]).to eq(a: 'what', b: %i[you say])
   end
 
   it 'converts a Ruby hash to a PDF Dictionary when outside a content stream' do
@@ -163,7 +166,7 @@ RSpec.describe PDF::Core, '.pdf_object' do
       {
         foo: :bar,
         'baz' => [1, 2, 3],
-        bang: { a: 'what', b: [:you, :say] }
+        bang: { a: 'what', b: %i[you say] }
       },
       false
     )
@@ -172,7 +175,7 @@ RSpec.describe PDF::Core, '.pdf_object' do
 
     expect(res[:foo]).to eq :bar
     expect(res[:baz]).to eq [1, 2, 3]
-    expect(res[:bang]).to eq(a: what, b: [:you, :say])
+    expect(res[:bang]).to eq(a: what, b: %i[you say])
   end
 
   it 'does not allow keys other than strings or symbols for PDF dicts' do

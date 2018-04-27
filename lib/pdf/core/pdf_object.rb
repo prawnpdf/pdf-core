@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # pdf_object.rb : Handles Ruby to PDF object serialization
 #
 # Copyright April 2008, Gregory Brown.  All Rights Reserved.
@@ -19,7 +21,7 @@ module PDF
     end
 
     def utf8_to_utf16(str)
-      "\xFE\xFF".force_encoding(::Encoding::UTF_16BE) +
+      (+"\xFE\xFF").force_encoding(::Encoding::UTF_16BE) +
         str.encode(::Encoding::UTF_16BE)
     end
 
@@ -59,7 +61,7 @@ module PDF
         # Truncate trailing fraction zeroes
         num_string.sub(/(\d*)((\.0*$)|(\.0*[1-9]*)0*$)/, '\1\4')
       when Array
-        '[' << obj.map { |e| pdf_object(e, in_content_stream) }.join(' ') << ']'
+        '[' + obj.map { |e| pdf_object(e, in_content_stream) }.join(' ') + ']'
       when PDF::Core::LiteralString
         obj = obj.gsub(/[\\\n\r\t\b\f\(\)]/) { |m| "\\#{m}" }
         "(#{obj})"
@@ -68,10 +70,10 @@ module PDF
         obj = obj.gsub(/[\\\n\r\t\b\f\(\)]/) { |m| "\\#{m}" }
         "(#{obj})"
       when PDF::Core::ByteString
-        '<' << obj.unpack('H*').first << '>'
+        "<#{obj.unpack('H*').first}>"
       when String
         obj = utf8_to_utf16(obj) unless in_content_stream
-        '<' << string_to_hex(obj) << '>'
+        "<#{string_to_hex(obj)}>"
       when Symbol
         '/' + obj.to_s.unpack('C*').map do |n|
           if n < 33 || n > 126 || [35, 40, 41, 47, 60, 62].include?(n)
@@ -81,7 +83,7 @@ module PDF
           end
         end.join
       when ::Hash
-        output = '<< '
+        output = +'<< '
         obj.each do |k, v|
           unless k.is_a?(String) || k.is_a?(Symbol)
             raise PDF::Core::Errors::FailedObjectConversion,

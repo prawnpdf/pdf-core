@@ -1,4 +1,4 @@
-# encoding: utf-8
+# frozen_string_literal: true
 
 # Implements PDF object repository
 #
@@ -91,10 +91,10 @@ module PDF
       #   object_id_for_page(-11)
       #   => 17
       #
-      def object_id_for_page(k)
-        k -= 1 if k > 0
+      def object_id_for_page(page)
+        page -= 1 if page.positive?
         flat_page_ids = get_page_objects(pages).flatten
-        flat_page_ids[k]
+        flat_page_ids[page]
       end
     end
   end

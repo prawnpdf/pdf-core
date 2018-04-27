@@ -38,10 +38,14 @@ RSpec/MultipleExpectations:
   Enabled: false
 
 # set_ methods are the part of PDF::Reader API
-Style/AccessorMethodName:
+Naming/AccessorMethodName:
   Enabled: false
 
-Style/AlignParameters:
+Naming/FileName:
+  Exclude:
+    - Gemfile
+
+Layout/AlignParameters:
   EnforcedStyle: with_fixed_indentation
 
 # We need to reference non-ascii characters when testing and explaining
@@ -60,7 +64,7 @@ Style/GuardClause:
 Style/IfUnlessModifier:
   Enabled: false
 
-Style/MultilineOperationIndentation:
+Layout/MultilineOperationIndentation:
   Exclude:
     - prawn.gemspec
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative '../lib/pdf/core'
 
 pdf = PDF::Core::Renderer.new(PDF::Core::DocumentState.new({}))

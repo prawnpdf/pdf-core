@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # prawn/core/stream.rb : Implements Stream objects
 #
 # Copyright February 2013, Alexander Mankuta.  All Rights Reserved.
@@ -16,7 +18,7 @@ module PDF
       end
 
       def <<(io)
-        (@stream ||= '') << io
+        (@stream ||= +'') << io
         @filtered_stream = nil
         self
       end

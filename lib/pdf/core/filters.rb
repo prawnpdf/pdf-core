@@ -1,4 +1,4 @@
-# encoding: utf-8
+# frozen_string_literal: true
 
 # prawn/core/filters.rb : Implements stream filters
 #

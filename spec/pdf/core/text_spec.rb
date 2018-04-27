@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 RSpec.describe PDF::Core::Text do
@@ -8,7 +10,7 @@ RSpec.describe PDF::Core::Text do
     attr_reader :text
 
     def add_content(str)
-      @text ||= ''
+      @text ||= +''
       @text << str
     end
   end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # prawn/core/text.rb : Implements low level text helpers for Prawn
 #
 # Copyright January 2010, Daniel Nelson.  All Rights Reserved.
@@ -9,7 +11,7 @@ module PDF
     module Text #:nodoc:
       # These should be used as a base. Extensions may build on this list
       #
-      VALID_OPTIONS = [:kerning, :size, :style].freeze
+      VALID_OPTIONS = %i[kerning size style].freeze
       MODES = {
         fill: 0,
         stroke: 1,
@@ -260,6 +262,7 @@ module PDF
         end
       end
 
+      # rubocop: disable Naming/UncommunicativeMethodParamName
       def add_text_content(text, x, y, options)
         chunks = font.encode_text(text, options)
 
@@ -293,6 +296,7 @@ module PDF
 
         add_content "ET\n"
       end
+      # rubocop: enable Naming/UncommunicativeMethodParamName
     end
   end
 end

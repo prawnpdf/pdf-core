@@ -1,4 +1,4 @@
-# encoding: utf-8
+# frozen_string_literal: true
 
 # annotations.rb : Implements low-level annotation support for PDF
 #

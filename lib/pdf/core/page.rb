@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # prawn/core/page.rb : Implements low-level representation of a PDF page
 #
 # Copyright February 2010, Gregory Brown.  All Rights Reserved.
@@ -51,7 +53,7 @@ module PDF
           Contents: content
         )
 
-        resources[:ProcSet] = [:PDF, :Text, :ImageB, :ImageC, :ImageI]
+        resources[:ProcSet] = %i[PDF Text ImageB ImageC ImageI]
       end
 
       def graphic_state

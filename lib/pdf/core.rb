@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'core/pdf_object'
 require_relative 'core/annotations'
 require_relative 'core/byte_string'

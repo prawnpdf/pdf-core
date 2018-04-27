@@ -1,4 +1,4 @@
-# encoding: utf-8
+# frozen_string_literal: true
 
 require 'pdf/core/utils'
 
@@ -79,7 +79,7 @@ module PDF
             split! if children.length > limit
           else
             fit = children.detect { |child| child >= value }
-            fit = children.last unless fit
+            fit ||= children.last
             fit << value
           end
 

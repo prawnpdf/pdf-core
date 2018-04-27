@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'stringio'
 
 module PDF
@@ -129,9 +131,9 @@ module PDF
       #
       # See Prawn::Document#number_pages for a sample usage of this capability.
 
-      def go_to_page(k)
-        @page_number = k
-        state.page = state.pages[k - 1]
+      def go_to_page(page_number)
+        @page_number = page_number
+        state.page = state.pages[page_number - 1]
       end
 
       def finalize_all_page_contents

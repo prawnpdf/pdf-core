@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Gem::Specification.new do |spec|
   spec.name = 'pdf-core'
   spec.version = '0.7.0'
@@ -30,12 +32,12 @@ Gem::Specification.new do |spec|
   spec.rubyforge_project = 'prawn'
   spec.licenses = %w[PRAWN GPL-2.0 GPL-3.0]
   spec.add_development_dependency('bundler')
-  spec.add_development_dependency('pdf-reader', '~>1.2')
   spec.add_development_dependency('pdf-inspector', '~> 1.1.0')
+  spec.add_development_dependency('pdf-reader', '~>1.2')
   spec.add_development_dependency('rake')
   spec.add_development_dependency('rspec')
-  spec.add_development_dependency('rubocop', '~> 0.46')
-  spec.add_development_dependency('rubocop-rspec', '~> 1.9')
+  spec.add_development_dependency('rubocop', '~> 0.55')
+  spec.add_development_dependency('rubocop-rspec', '~> 1.25')
   spec.add_development_dependency('simplecov')
   spec.homepage = 'http://prawn.majesticseacreature.com'
   spec.description = 'PDF::Core is used by Prawn to render PDF documents'
