@@ -6,6 +6,8 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
+- Minimum Ruby version is 2.3
+  Alexander Mankuta
 - Trailing fraction zeroes are removed from numbers
   Alexander Mankuta
 

@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
                 %w[Gemfile Rakefile] +
                 ['pdf-core.gemspec']
   spec.require_path = 'lib'
-  spec.required_ruby_version = '>= 1.9.3'
+  spec.required_ruby_version = '>= 2.3'
   spec.required_rubygems_version = '>= 1.3.6'
 
   spec.cert_chain = ['certs/pointlessone.pem']
