@@ -281,7 +281,11 @@ module PDF
 
         chunks.each do |(subset, string)|
           font.add_to_current_page(subset)
-          add_content "/#{font.identifier_for(subset)} #{font_size} Tf"
+          add_content [
+            PDF::Core.pdf_object(font.identifier_for(subset), true),
+            PDF::Core.pdf_object(font_size, true),
+            'Tf'
+          ].join(' ')
 
           operation = options[:kerning] && string.is_a?(Array) ? 'TJ' : 'Tj'
           add_content PDF::Core.pdf_object(string, true) << ' ' << operation
