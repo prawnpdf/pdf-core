@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## Unreleased
+
+### Changed
+
+- Trailing fraction zeroes are removed from numbers
+  Alexander Mankuta
+
 ## [0.7.0][] - 2017-03-03
 
 ### Changed

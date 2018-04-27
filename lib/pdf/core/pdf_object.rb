@@ -54,7 +54,10 @@ module PDF
 
         # NOTE: this can fail on huge floating point numbers, but it seems
         # unlikely to ever happen in practice.
-        String(obj)
+        num_string = String(obj)
+
+        # Truncate trailing fraction zeroes
+        num_string.sub(/(\d*)((\.0*$)|(\.0*[1-9]*)0*$)/, '\1\4')
       when Array
         '[' << obj.map { |e| pdf_object(e, in_content_stream) }.join(' ') << ']'
       when PDF::Core::LiteralString

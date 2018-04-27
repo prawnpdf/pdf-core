@@ -19,6 +19,13 @@ RSpec.describe PDF::Core, '.pdf_object' do
     expect(PDF::Core.pdf_object(1.214112421)).to eq '1.2141'
   end
 
+  it 'drops trailing fraction zeros from numbers' do
+    expect(PDF::Core.pdf_object(42.0)).to eq '42'
+
+    # numbers are rounded to four decimal places
+    expect(PDF::Core.pdf_object(1.200000)).to eq '1.2'
+  end
+
   it 'converts a Ruby time object to a PDF timestamp' do
     t = Time.now
     expect(PDF::Core.pdf_object(t))
