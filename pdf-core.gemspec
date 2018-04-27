@@ -15,7 +15,7 @@ Gem::Specification.new do |spec|
 
   spec.cert_chain = ['certs/pointlessone.pem']
   if $PROGRAM_NAME.end_with? 'gem'
-    spec.signing_key = File.expand_path('~/.ssh/gem-private_key.pem')
+    spec.signing_key = File.expand_path('~/.gem/gem-private_key.pem')
   end
 
   # spec.extra_rdoc_files = %w{README.md LICENSE COPYING GPLv2 GPLv3}
