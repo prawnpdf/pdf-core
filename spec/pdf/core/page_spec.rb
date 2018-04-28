@@ -15,6 +15,10 @@ RSpec.describe PDF::Core::Page do
       def ref(*args)
         @renderer.ref(*args)
       end
+
+      def save_graphics_state; end
+
+      def freeze_stamp_graphics; end
     end
     document_class.new
   end
@@ -63,5 +67,20 @@ RSpec.describe PDF::Core::Page do
     )
 
     expect(page.dictionary.data[:ArtBox]).to eq [10, 20, 565.28, 801.89]
+  end
+
+  describe 'stamp_stream' do
+    it 'is writable' do
+      page = described_class.new doc, size: 'A4'
+
+      ref = PDF::Core::Reference.new(1, {})
+
+      expect do
+        page.stamp_stream(ref) do
+          page.content << 'test'
+        end
+      end.not_to raise_error
+      expect(ref.stream.filtered_stream).to eq 'test'
+    end
   end
 end
