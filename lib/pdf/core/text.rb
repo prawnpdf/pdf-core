@@ -296,7 +296,7 @@ module PDF
           ].join(' ')
 
           operation = options[:kerning] && string.is_a?(Array) ? 'TJ' : 'Tj'
-          add_content PDF::Core.pdf_object(string, true) << ' ' << operation
+          add_content PDF::Core.pdf_object(string, true) + ' ' + operation
         end
 
         add_content "ET\n"

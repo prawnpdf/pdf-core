@@ -8,6 +8,8 @@ All notable changes to this project will be documented in this file.
 
 - Make sure stamp streams are fritable
   Alexander Mankuta
+- Handle text rendering from forzen strings
+  Alexander Mankuta
 
 ## [0.8.0][] - 2018-04-27
 

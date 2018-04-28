@@ -13,6 +13,24 @@ RSpec.describe PDF::Core::Text do
         @text ||= +''
         @text << str
       end
+
+      def font
+        @font ||= Class.new do
+          def encode_text(text, _options)
+            [nil, text]
+          end
+
+          def add_to_current_page(_subset); end
+
+          def identifier_for(_subset)
+            :Font
+          end
+        end.new
+      end
+
+      def font_size
+        12
+      end
     end
     text_mock_class.new
   end
@@ -66,6 +84,13 @@ RSpec.describe PDF::Core::Text do
       it 'outputs correct PDF content' do
         expect(mock.text).to eq("\n10.0 TcTEST\n0.0 Tc")
       end
+    end
+  end
+
+  describe '#add_text_content' do
+    it 'handles frozen strings' do
+      expect { mock.add_text_content 'text', 0, 0, {} }
+        .not_to raise_error
     end
   end
 end
