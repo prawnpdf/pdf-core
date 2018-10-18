@@ -39,6 +39,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency('rubocop', '~> 0.55')
   spec.add_development_dependency('rubocop-rspec', '~> 1.25')
   spec.add_development_dependency('simplecov')
-  spec.homepage = 'http://prawn.majesticseacreature.com'
+  spec.homepage = 'http://prawnpdf.org'
   spec.description = 'PDF::Core is used by Prawn to render PDF documents'
 end
