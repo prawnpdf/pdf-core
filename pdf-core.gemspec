@@ -36,8 +36,9 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency('pdf-reader', '~>1.2')
   spec.add_development_dependency('rake')
   spec.add_development_dependency('rspec')
-  spec.add_development_dependency('rubocop', '~> 0.55')
-  spec.add_development_dependency('rubocop-rspec', '~> 1.25')
+  spec.add_development_dependency('rubocop', '~> 0.68')
+  spec.add_development_dependency('rubocop-performance', '~> 1.1')
+  spec.add_development_dependency('rubocop-rspec', '~> 1.32')
   spec.add_development_dependency('simplecov')
   spec.homepage = 'http://prawnpdf.org'
   spec.description = 'PDF::Core is used by Prawn to render PDF documents'

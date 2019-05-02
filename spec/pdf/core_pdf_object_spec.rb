@@ -146,7 +146,7 @@ RSpec.describe PDF::Core, '.pdf_object' do
   it 'converts a Ruby hash to a PDF Dictionary when inside a content stream' do
     dict = PDF::Core.pdf_object(
       {
-        :foo  => :bar,
+        :foo => :bar,
         'baz' => [1, 2, 3],
         :bang => { a: 'what', b: %i[you say] }
       },
