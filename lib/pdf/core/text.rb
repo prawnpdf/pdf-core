@@ -30,6 +30,7 @@ module PDF
       def process_text_options(options)
         if options[:style]
           raise 'Bad font family' unless font.family
+
           font(font.family, style: options[:style])
         end
 
@@ -47,6 +48,7 @@ module PDF
       #
       def default_kerning?
         return true unless defined?(@default_kerning)
+
         @default_kerning
       end
 
@@ -182,6 +184,7 @@ module PDF
         if mode.nil?
           return defined?(@text_rendering_mode) && @text_rendering_mode || :fill
         end
+
         unless MODES.key?(mode)
           raise ArgumentError,
             "mode must be between one of #{MODES.keys.join(', ')} (#{mode})"
@@ -211,6 +214,7 @@ module PDF
         if amount.nil?
           return defined?(@character_spacing) && @character_spacing || 0
         end
+
         original_character_spacing = character_spacing
         if original_character_spacing == amount
           yield
@@ -229,6 +233,7 @@ module PDF
       #
       def word_spacing(amount = nil)
         return defined?(@word_spacing) && @word_spacing || 0 if amount.nil?
+
         original_word_spacing = word_spacing
         if original_word_spacing == amount
           yield

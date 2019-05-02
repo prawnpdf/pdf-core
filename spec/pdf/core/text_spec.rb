@@ -52,6 +52,7 @@ RSpec.describe PDF::Core::Text do
         expect(result).to eq(0)
       end
     end
+
     describe 'called with argument' do
       before do
         mock.character_spacing(10) do

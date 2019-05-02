@@ -36,6 +36,7 @@ module PDF
         unless @data.is_a?(::Hash)
           raise 'Cannot attach stream to non-dictionary object'
         end
+
         (@stream ||= Stream.new) << io
       end
 

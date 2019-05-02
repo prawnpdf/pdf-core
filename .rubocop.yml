@@ -1,12 +1,22 @@
-require: rubocop-rspec
+require:
+  - rubocop-performance
+  - rubocop-rspec
 
 AllCops:
   TargetRubyVersion: 2.3
   Include:
+    - '**/*.rb'
     - '**/Rakefile'
     - '*.gemspec'
   Exclude:
     - 'pkg/**/*'
+
+Layout/AlignArguments:
+  EnforcedStyle: with_fixed_indentation
+
+Layout/MultilineOperationIndentation:
+  Exclude:
+    - prawn.gemspec
 
 # These cops need to remain disabled for valid reasons on this code base
 
@@ -31,12 +41,6 @@ Metrics/ModuleLength:
 Metrics/PerceivedComplexity:
   Enabled: false
 
-RSpec/ExampleLength:
-  Max: 19
-
-RSpec/MultipleExpectations:
-  Enabled: false
-
 # set_ methods are the part of PDF::Reader API
 Naming/AccessorMethodName:
   Enabled: false
@@ -45,8 +49,11 @@ Naming/FileName:
   Exclude:
     - Gemfile
 
-Layout/AlignParameters:
-  EnforcedStyle: with_fixed_indentation
+RSpec/ExampleLength:
+  Max: 19
+
+RSpec/MultipleExpectations:
+  Enabled: false
 
 # We need to reference non-ascii characters when testing and explaining
 # behavior related to win-1252, UTF-8 and UTF-16 encodings for example.
@@ -63,10 +70,6 @@ Style/GuardClause:
 # a line.
 Style/IfUnlessModifier:
   Enabled: false
-
-Layout/MultilineOperationIndentation:
-  Exclude:
-    - prawn.gemspec
 
 Style/PercentLiteralDelimiters:
   PreferredDelimiters:
