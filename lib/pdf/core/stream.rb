@@ -90,8 +90,14 @@ module PDF
       end
 
       def inspect
-        "#<#{self.class.name}:0x#{format '%014x', object_id} "\
-          "@stream=#{@stream.inspect}, @filters=#{@filters.inspect}>"
+        format(
+          '#<%<class>s:0x%<object_id>014x '\
+            '@stream=%<stream>s, @filters=%<filters>s>',
+          class: self.class.name,
+          object_id: object_id,
+          stream: @stream.inspect,
+          filters: @filters.inspect
+        )
       end
     end
   end

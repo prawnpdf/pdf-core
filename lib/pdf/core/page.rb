@@ -25,20 +25,22 @@ module PDF
 
       def initialize(document, options = {})
         @document = document
-        @margins  = options[:margins] || { left: 36,
-                                           right: 36,
-                                           top: 36,
-                                           bottom: 36 }
+        @margins = options[:margins] || {
+          left: 36,
+          right: 36,
+          top: 36,
+          bottom: 36
+        }
         @crops = options[:crops] || ZERO_INDENTS
         @bleeds = options[:bleeds] || ZERO_INDENTS
         @trims = options[:trims] || ZERO_INDENTS
         @art_indents = options[:art_indents] || ZERO_INDENTS
         @stack = GraphicStateStack.new(options[:graphic_state])
-        @size     = options[:size] || 'LETTER'
-        @layout   = options[:layout] || :portrait
+        @size = options[:size] || 'LETTER'
+        @layout = options[:layout] || :portrait
 
-        @stamp_stream      = nil
-        @stamp_dictionary  = nil
+        @stamp_stream = nil
+        @stamp_dictionary = nil
 
         @content = document.ref({})
         content << 'q' << "\n"

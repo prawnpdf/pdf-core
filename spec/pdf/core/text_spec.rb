@@ -3,20 +3,19 @@
 require 'spec_helper'
 
 RSpec.describe PDF::Core::Text do
-  # rubocop: disable RSpec/InstanceVariable
-  class TextMock
-    include PDF::Core::Text
+  let(:mock) do
+    text_mock_class = Class.new do
+      include PDF::Core::Text
 
-    attr_reader :text
+      attr_reader :text
 
-    def add_content(str)
-      @text ||= +''
-      @text << str
+      def add_content(str)
+        @text ||= +''
+        @text << str
+      end
     end
+    text_mock_class.new
   end
-  # rubocop: enable RSpec/InstanceVariable
-
-  let(:mock) { TextMock.new }
 
   describe 'horizontal_text_scaling' do
     describe 'called without argument' do
