@@ -21,24 +21,20 @@ RSpec.describe PDF::Core::NameTree do
     PDF::Core::NameTree::Value.new(name, value)
   end
 
-  # FIXME: This is a dummy that's meant to stand in for a Prawn::Document.
-  # It causes the tests to pass but I have no idea if it's really a
-  # sufficient test double or not.
-  # rubocop: disable RSpec/InstanceVariable
-  class RefExposingDocument
-    def initialize
-      @object_store = []
-    end
+  let(:pdf) do
+    document_class = Class.new do
+      def initialize
+        @object_store = []
+      end
 
-    attr_reader :object_store
+      attr_reader :object_store
 
-    def ref!(obj)
-      @object_store << obj
+      def ref!(obj)
+        @object_store << obj
+      end
     end
+    document_class.new
   end
-  # rubocop: enable RSpec/InstanceVariable
-
-  let(:pdf) { RefExposingDocument.new }
 
   it 'has no children when first initialized' do
     node = PDF::Core::NameTree::Node.new(pdf, 3)

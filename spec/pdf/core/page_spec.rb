@@ -3,22 +3,21 @@
 require 'spec_helper'
 
 RSpec.describe PDF::Core::Page do
-  # rubocop: disable RSpec/InstanceVariable
-  class Document
-    def initialize
-      @store = PDF::Core::ObjectStore.new
-      @state = PDF::Core::DocumentState.new({})
-      @renderer = PDF::Core::Renderer.new(@state)
-    end
-    attr_reader :state
+  let(:doc) do
+    document_class = Class.new do
+      def initialize
+        @store = PDF::Core::ObjectStore.new
+        @state = PDF::Core::DocumentState.new({})
+        @renderer = PDF::Core::Renderer.new(@state)
+      end
+      attr_reader :state
 
-    def ref(*args)
-      @renderer.ref(*args)
+      def ref(*args)
+        @renderer.ref(*args)
+      end
     end
+    document_class.new
   end
-  # rubocop: enable RSpec/InstanceVariable
-
-  let(:doc) { Document.new }
 
   it 'embeds MediaBox' do
     page = described_class.new doc, size: 'A4'

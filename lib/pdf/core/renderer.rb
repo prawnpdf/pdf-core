@@ -210,7 +210,7 @@ module PDF
         output << "0 #{state.store.size + 1}\n"
         output << "0000000000 65535 f \n"
         state.store.each do |ref|
-          output.printf('%010d', ref.offset)
+          output.printf('%<offset>010d', offset: ref.offset)
           output << " 00000 n \n"
         end
       end
