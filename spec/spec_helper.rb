@@ -2,9 +2,6 @@
 
 puts "PDF::Core specs: Running on Ruby Version: #{RUBY_VERSION}"
 
-require 'bundler'
-Bundler.setup
-
 if ENV['COVERAGE']
   require 'simplecov'
   SimpleCov.start
