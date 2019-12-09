@@ -11,7 +11,7 @@ AllCops:
   Exclude:
     - 'pkg/**/*'
 
-Layout/AlignArguments:
+Layout/ArgumentAlignment:
   EnforcedStyle: with_fixed_indentation
 
 Layout/MultilineOperationIndentation:
