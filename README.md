@@ -1,7 +1,7 @@
 # PDF::Core
 
-[![Build Status](https://travis-ci.org/prawnpdf/pdf-core.png?branch=master)](https://travis-ci.org/prawnpdf/pdf-core)
-![Maintained: yes](https://img.shields.io/badge/maintained-yes-brightgreen.png)
+![Maintained: yes](https://img.shields.io/badge/maintained-yes-brightgreen.svg)
+![CI status](https://github.com/prawnpdf/pdf-core/workflows/CI/badge.svg)
 
 This is an experimental gem that extracts low-level PDF functionality from
 Prawn. More details to come soon!
