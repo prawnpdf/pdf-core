@@ -19,6 +19,7 @@ require_relative 'core/outline_root'
 require_relative 'core/outline_item'
 require_relative 'core/renderer'
 require_relative 'core/text'
+require_relative 'core/xmp_metadata'
 
 module PDF
   module Core
