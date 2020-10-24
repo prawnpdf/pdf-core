@@ -13,9 +13,11 @@ require 'rspec'
 require 'pdf/reader'
 require 'pdf/inspector'
 
+# rubocop: disable Style/SymbolProc
 RSpec.configure do |config|
   config.disable_monkey_patching!
 end
+# rubocop: enable Style/SymbolProc
 
 RSpec::Matchers.define :have_parseable_xobjects do
   match do |actual|
