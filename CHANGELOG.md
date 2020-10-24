@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased
 
+## [0.8.1][] - 2018-04-28
+
 ### Fixed
 
 - Make sure stamp streams are fritable
@@ -53,6 +55,7 @@ All notable changes to this project will be documented in this file.
 - A trailer can be assigned to DocumentState
   Robert Bousquet, [#16](https://github.com/prawnpdf/pdf-core/pull/16)
 
+[0.8.1]: https://github.com/prawnpdf/pdf-core/compare/0.8.0...0.8.1
 [0.8.0]: https://github.com/prawnpdf/pdf-core/compare/0.7.0...0.8.0
 [0.7.0]: https://github.com/prawnpdf/pdf-core/compare/0.6.1...0.7.0
 [0.6.1]: https://github.com/prawnpdf/pdf-core/compare/0.6.0...0.6.1
