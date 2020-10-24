@@ -5,10 +5,11 @@ Gem::Specification.new do |spec|
   spec.version = '0.8.1'
   spec.platform = Gem::Platform::RUBY
   spec.summary = 'PDF::Core is used by Prawn to render PDF documents'
-  spec.files =  Dir.glob('lib/**/**/*') +
-                %w[COPYING GPLv2 GPLv3 LICENSE] +
-                %w[Gemfile Rakefile] +
-                ['pdf-core.gemspec']
+  spec.files =
+    Dir.glob('lib/**/**/*') +
+    %w[COPYING GPLv2 GPLv3 LICENSE] +
+    %w[Gemfile Rakefile] +
+    ['pdf-core.gemspec']
   spec.require_path = 'lib'
   spec.required_ruby_version = '>= 2.3'
   spec.required_rubygems_version = '>= 1.3.6'

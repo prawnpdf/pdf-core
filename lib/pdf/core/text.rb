@@ -251,8 +251,7 @@ module PDF
       # percentage of the normal width.
       def horizontal_text_scaling(amount = nil)
         if amount.nil?
-          return defined?(@horizontal_text_scaling) &&
-                 @horizontal_text_scaling || 100
+          return defined?(@horizontal_text_scaling) && @horizontal_text_scaling || 100
         end
 
         original_horizontal_text_scaling = horizontal_text_scaling
