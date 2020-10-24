@@ -17,7 +17,8 @@ module PDF
         stroke: 1,
         fill_stroke: 2,
         invisible: 3,
-        fill_clip: 4, stroke_clip: 5,
+        fill_clip: 4,
+        stroke_clip: 5,
         fill_stroke_clip: 6,
         clip: 7
       }.freeze
