@@ -8,9 +8,9 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
-- Make sure stamp streams are fritable
+- Make sure stamp streams are writable
   Alexander Mankuta
-- Handle text rendering from forzen strings
+- Handle text rendering from frozen strings
   Alexander Mankuta
 
 ## [0.8.0][] - 2018-04-27
