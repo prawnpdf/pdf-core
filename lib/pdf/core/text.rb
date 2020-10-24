@@ -266,7 +266,6 @@ module PDF
         end
       end
 
-      # rubocop: disable Naming/MethodParameterName
       def add_text_content(text, x, y, options)
         chunks = font.encode_text(text, options)
 
@@ -300,7 +299,6 @@ module PDF
 
         add_content "ET\n"
       end
-      # rubocop: enable Naming/MethodParameterName
     end
   end
 end
