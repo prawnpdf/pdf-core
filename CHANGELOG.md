@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased
 
+## Changed
+
+- Dropped 2.3 & 2.4 Ruby support
+  Alexander Mankuta
+- Updated code style
+  Alexander Mankuta
+
 ## [0.8.1][] - 2018-04-28
 
 ### Fixed

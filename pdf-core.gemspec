@@ -11,7 +11,7 @@ Gem::Specification.new do |spec|
     %w[Gemfile Rakefile] +
     ['pdf-core.gemspec']
   spec.require_path = 'lib'
-  spec.required_ruby_version = '>= 2.3'
+  spec.required_ruby_version = '>= 2.5'
   spec.required_rubygems_version = '>= 1.3.6'
 
   spec.cert_chain = ['certs/pointlessone.pem']
@@ -35,9 +35,9 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency('pdf-reader', '~>1.2')
   spec.add_development_dependency('rake')
   spec.add_development_dependency('rspec')
-  spec.add_development_dependency('rubocop', '~> 0.68')
-  spec.add_development_dependency('rubocop-performance', '~> 1.1')
-  spec.add_development_dependency('rubocop-rspec', '~> 1.32')
+  spec.add_development_dependency('rubocop', '~> 0.93')
+  spec.add_development_dependency('rubocop-performance', '~> 1.8')
+  spec.add_development_dependency('rubocop-rspec', '~> 1.44')
   spec.add_development_dependency('simplecov')
   spec.homepage = 'http://prawnpdf.org'
   spec.description = 'PDF::Core is used by Prawn to render PDF documents'
