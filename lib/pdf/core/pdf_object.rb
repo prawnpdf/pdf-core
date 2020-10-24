@@ -61,12 +61,12 @@ module PDF
         # Truncate trailing fraction zeroes
         num_string.sub(/(\d*)((\.0*$)|(\.0*[1-9]*)0*$)/, '\1\4')
       when Array
-        '[' + obj.map { |e| pdf_object(e, in_content_stream) }.join(' ') + ']'
+        "[#{obj.map { |e| pdf_object(e, in_content_stream) }.join(' ')}]"
       when PDF::Core::LiteralString
         obj = obj.gsub(/[\\\n\r\t\b\f\(\)]/) { |m| "\\#{m}" }
         "(#{obj})"
       when Time
-        obj = obj.strftime('D:%Y%m%d%H%M%S%z').chop.chop + "'00'"
+        obj = "#{obj.strftime('D:%Y%m%d%H%M%S%z').chop.chop}'00'"
         obj = obj.gsub(/[\\\n\r\t\b\f\(\)]/) { |m| "\\#{m}" }
         "(#{obj})"
       when PDF::Core::ByteString
@@ -75,13 +75,15 @@ module PDF
         obj = utf8_to_utf16(obj) unless in_content_stream
         "<#{string_to_hex(obj)}>"
       when Symbol
-        '/' + obj.to_s.unpack('C*').map do |n|
-          if n < 33 || n > 126 || [35, 40, 41, 47, 60, 62].include?(n)
-            '#' + n.to_s(16).upcase
-          else
-            [n].pack('C*')
-          end
-        end.join
+        name_string =
+          obj.to_s.unpack('C*').map do |n|
+            if n < 33 || n > 126 || [35, 40, 41, 47, 60, 62].include?(n)
+              "##{n.to_s(16).upcase}"
+            else
+              [n].pack('C*')
+            end
+          end.join
+        "/#{name_string}"
       when ::Hash
         output = +'<< '
         obj.each do |k, v|
@@ -98,7 +100,7 @@ module PDF
       when PDF::Core::NameTree::Node
         pdf_object(obj.to_hash)
       when PDF::Core::NameTree::Value
-        pdf_object(obj.name) + ' ' + pdf_object(obj.value)
+        "#{pdf_object(obj.name)} #{pdf_object(obj.value)}"
       when PDF::Core::OutlineRoot, PDF::Core::OutlineItem
         pdf_object(obj.to_hash)
       else

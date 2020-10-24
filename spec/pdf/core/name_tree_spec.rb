@@ -5,7 +5,7 @@ require 'spec_helper'
 RSpec.describe PDF::Core::NameTree do
   def tree_dump(tree)
     if tree.is_a?(PDF::Core::NameTree::Node)
-      '[' + tree.children.map { |child| tree_dump(child) }.join(',') + ']'
+      "[#{tree.children.map { |child| tree_dump(child) }.join(',')}]"
     else
       "#{tree.name}=#{tree.value}"
     end

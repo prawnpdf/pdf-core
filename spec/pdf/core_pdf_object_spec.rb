@@ -32,7 +32,7 @@ RSpec.describe PDF::Core, '.pdf_object' do
   it 'converts a Ruby time object to a PDF timestamp' do
     t = Time.now
     expect(described_class.pdf_object(t))
-      .to eq t.strftime('(D:%Y%m%d%H%M%S%z').chop.chop + "'00')"
+      .to eq "#{t.strftime('(D:%Y%m%d%H%M%S%z').chop.chop}'00')"
   end
 
   it 'converts a Ruby string to PDF string when inside a content stream' do
@@ -43,7 +43,7 @@ RSpec.describe PDF::Core, '.pdf_object' do
   it 'converts a Ruby string to a UTF-16 PDF string when outside of '\
     'a content stream' do
     s = 'I can has a string'
-    s_utf16 = "\xFE\xFF" + s.unpack('U*').pack('n*')
+    s_utf16 = "\xFE\xFF#{s.unpack('U*').pack('n*')}"
     parsed_s = PDF::Inspector.parse(described_class.pdf_object(s, false))
     expect(parsed_s).to eq s_utf16
   end
@@ -140,9 +140,9 @@ RSpec.describe PDF::Core, '.pdf_object' do
   end
 
   it 'converts a Ruby array to PDF Array when outside a content stream' do
-    bar = "\xFE\xFF" + 'Bar'.unpack('U*').pack('n*')
     expect(described_class.pdf_object([1, 2, 3])).to eq '[1 2 3]'
 
+    bar = "\xFE\xFF\x00B\x00a\x00r"
     expect(
       PDF::Inspector.parse(
         described_class.pdf_object([[1, 2], :foo, 'Bar'], false)
@@ -168,7 +168,7 @@ RSpec.describe PDF::Core, '.pdf_object' do
   end
 
   it 'converts a Ruby hash to a PDF Dictionary when outside a content stream' do
-    what = "\xFE\xFF" + 'what'.unpack('U*').pack('n*')
+    what = "\xFE\xFF\x00w\x00h\x00a\x00t"
     dict = described_class.pdf_object(
       {
         foo: :bar,
