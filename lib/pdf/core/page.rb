@@ -87,7 +87,7 @@ module PDF
         graphic_stack_size = stack.stack.size
 
         document.save_graphics_state
-        document.send(:freeze_stamp_graphics)
+        document.__send__(:freeze_stamp_graphics)
         yield if block_given?
 
         until graphic_stack_size == stack.stack.size
