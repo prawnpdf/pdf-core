@@ -64,11 +64,12 @@ module PDF
       def dash_setting
         return '[] 0 d' unless @dash[:dash]
 
-        array = if @dash[:dash].is_a?(Array)
-                  @dash[:dash]
-                else
-                  [@dash[:dash], @dash[:space]]
-                end
+        array =
+          if @dash[:dash].is_a?(Array)
+            @dash[:dash]
+          else
+            [@dash[:dash], @dash[:space]]
+          end
 
         "[#{PDF::Core.real_params(array)}] "\
           "#{PDF::Core.real(@dash[:phase])} d"

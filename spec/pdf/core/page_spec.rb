@@ -4,22 +4,23 @@ require 'spec_helper'
 
 RSpec.describe PDF::Core::Page do
   let(:doc) do
-    document_class = Class.new do
-      def initialize
-        @store = PDF::Core::ObjectStore.new
-        @state = PDF::Core::DocumentState.new({})
-        @renderer = PDF::Core::Renderer.new(@state)
+    document_class =
+      Class.new do
+        def initialize
+          @store = PDF::Core::ObjectStore.new
+          @state = PDF::Core::DocumentState.new({})
+          @renderer = PDF::Core::Renderer.new(@state)
+        end
+        attr_reader :state
+
+        def ref(*args)
+          @renderer.ref(*args)
+        end
+
+        def save_graphics_state; end
+
+        def freeze_stamp_graphics; end
       end
-      attr_reader :state
-
-      def ref(*args)
-        @renderer.ref(*args)
-      end
-
-      def save_graphics_state; end
-
-      def freeze_stamp_graphics; end
-    end
     document_class.new
   end
 

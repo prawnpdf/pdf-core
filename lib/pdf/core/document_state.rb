@@ -36,10 +36,11 @@ module PDF
         return 0 if @store.page_count <= 0 || !@pages.empty?
 
         count = (1..@store.page_count)
-        @pages = count.map do |index|
-          orig_dict_id = @store.object_id_for_page(index)
-          PDF::Core::Page.new(document, object_id: orig_dict_id)
-        end
+        @pages =
+          count.map do |index|
+            orig_dict_id = @store.object_id_for_page(index)
+            PDF::Core::Page.new(document, object_id: orig_dict_id)
+          end
       end
 
       def normalize_metadata(options)

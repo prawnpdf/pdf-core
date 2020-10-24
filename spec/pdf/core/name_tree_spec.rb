@@ -22,17 +22,18 @@ RSpec.describe PDF::Core::NameTree do
   end
 
   let(:pdf) do
-    document_class = Class.new do
-      def initialize
-        @object_store = []
-      end
+    document_class =
+      Class.new do
+        def initialize
+          @object_store = []
+        end
 
-      attr_reader :object_store
+        attr_reader :object_store
 
-      def ref!(obj)
-        @object_store << obj
+        def ref!(obj)
+          @object_store << obj
+        end
       end
-    end
     document_class.new
   end
 

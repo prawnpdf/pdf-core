@@ -4,34 +4,35 @@ require 'spec_helper'
 
 RSpec.describe PDF::Core::Text do
   let(:mock) do
-    text_mock_class = Class.new do
-      include PDF::Core::Text
+    text_mock_class =
+      Class.new do
+        include PDF::Core::Text
 
-      attr_reader :text
+        attr_reader :text
 
-      def add_content(str)
-        @text ||= +''
-        @text << str
+        def add_content(str)
+          @text ||= +''
+          @text << str
+        end
+
+        def font
+          @font ||= Class.new do
+            def encode_text(text, _options)
+              [nil, text]
+            end
+
+            def add_to_current_page(_subset); end
+
+            def identifier_for(_subset)
+              :Font
+            end
+          end.new
+        end
+
+        def font_size
+          12
+        end
       end
-
-      def font
-        @font ||= Class.new do
-          def encode_text(text, _options)
-            [nil, text]
-          end
-
-          def add_to_current_page(_subset); end
-
-          def identifier_for(_subset)
-            :Font
-          end
-        end.new
-      end
-
-      def font_size
-        12
-      end
-    end
     text_mock_class.new
   end
 
