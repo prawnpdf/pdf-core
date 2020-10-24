@@ -55,10 +55,8 @@ module PDF
         @list.inspect
       end
 
-      def each
-        @list.each do |filter|
-          yield(filter)
-        end
+      def each(&block)
+        @list.each(&block)
       end
     end
   end
