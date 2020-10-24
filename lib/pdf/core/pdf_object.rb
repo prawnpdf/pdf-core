@@ -29,7 +29,7 @@ module PDF
     # with only 0-9 and a-f characters. That result is valid ASCII so tag
     # it as such to account for behaviour of different ruby VMs
     def string_to_hex(str)
-      str.unpack('H*').first.force_encoding(::Encoding::US_ASCII)
+      str.unpack1('H*').force_encoding(::Encoding::US_ASCII)
     end
 
     # Serializes Ruby objects to their PDF equivalents.  Most primitive objects
@@ -70,7 +70,7 @@ module PDF
         obj = obj.gsub(/[\\\n\r\t\b\f()]/) { |m| "\\#{m}" }
         "(#{obj})"
       when PDF::Core::ByteString
-        "<#{obj.unpack('H*').first}>"
+        "<#{obj.unpack1('H*')}>"
       when String
         obj = utf8_to_utf16(obj) unless in_content_stream
         "<#{string_to_hex(obj)}>"
