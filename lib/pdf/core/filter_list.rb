@@ -3,6 +3,18 @@
 module PDF
   module Core
     class FilterList
+      class NotFilter < StandardError
+        DEFAULT_MESSAGE = 'Can not interpret input as a filter'
+        MESSAGE_WITH_FILTER = 'Can not interpret input as a filter: %<filter>s'
+
+        def initialize(message = DEFAULT_MESSAGE, filter: nil)
+          if filter
+            super format(MESSAGE_WITH_FILTER, filter: filter)
+          else
+            super(message)
+          end
+        end
+      end
       def initialize
         @list = []
       end
@@ -16,7 +28,7 @@ module PDF
             @list << [name, params]
           end
         else
-          raise "Can not interpret input as filter: #{filter.inspect}"
+          raise NotFilter.new(filter: filter)
         end
 
         self

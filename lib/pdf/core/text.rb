@@ -22,6 +22,12 @@ module PDF
         clip: 7
       }.freeze
 
+      class BadFontFamily < StandardError
+        def initialize(message = 'Bad font family')
+          super
+        end
+      end
+
       attr_reader :skip_encoding
 
       # Low level call to set the current font style and extract text options
@@ -29,7 +35,7 @@ module PDF
       #
       def process_text_options(options)
         if options[:style]
-          raise 'Bad font family' unless font.family
+          raise BadFontFamily unless font.family
 
           font(font.family, style: options[:style])
         end

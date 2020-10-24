@@ -13,6 +13,12 @@ module PDF
     class Reference #:nodoc:
       attr_accessor :gen, :data, :offset, :stream, :identifier
 
+      class CannotAttachStream < StandardError
+        def initialize(message = 'Cannot attach stream to a non-dictionary object')
+          super
+        end
+      end
+
       def initialize(id, data)
         @identifier = id
         @gen        = 0
@@ -34,7 +40,7 @@ module PDF
 
       def <<(io)
         unless @data.is_a?(::Hash)
-          raise 'Cannot attach stream to non-dictionary object'
+          raise CannotAttachStream
         end
 
         (@stream ||= Stream.new) << io
