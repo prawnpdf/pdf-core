@@ -32,6 +32,8 @@ module PDF
       str.unpack1('H*').force_encoding(::Encoding::US_ASCII)
     end
 
+    ESCAPED_NAME_CHARACTERS = (1..32).to_a + [35, 40, 41, 47, 60, 62] + (127..255).to_a
+
     # Serializes Ruby objects to their PDF equivalents.  Most primitive objects
     # will work as expected, but please note that Name objects are represented
     # by Ruby Symbol objects and Dictionary objects are represented by Ruby
@@ -77,7 +79,7 @@ module PDF
       when Symbol
         name_string =
           obj.to_s.unpack('C*').map do |n|
-            if n < 33 || n > 126 || [35, 40, 41, 47, 60, 62].include?(n)
+            if ESCAPED_NAME_CHARACTERS.include?(n)
               "##{n.to_s(16).upcase}"
             else
               [n].pack('C*')
