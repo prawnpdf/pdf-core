@@ -44,8 +44,7 @@ module PDF
 
     # NOTE: This class may be a good candidate for a copy-on-write hash.
     class GraphicState
-      attr_accessor :color_space, :dash, :cap_style, :join_style, :line_width,
-        :fill_color, :stroke_color
+      attr_accessor :color_space, :dash, :cap_style, :join_style, :line_width, :fill_color, :stroke_color
 
       def initialize(previous_state = nil)
         if previous_state

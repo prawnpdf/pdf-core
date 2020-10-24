@@ -28,9 +28,8 @@ module PDF
         @on_page_create_callback = nil
       end
 
-      attr_accessor :store, :version, :pages, :page, :trailer, :compress,
-        :encrypt, :encryption_key, :skip_encoding,
-        :before_render_callbacks, :on_page_create_callback
+      attr_accessor :store, :version, :pages, :page, :trailer, :compress, :encrypt, :encryption_key, :skip_encoding
+      attr_accessor :before_render_callbacks, :on_page_create_callback
 
       def populate_pages_from_store(document)
         return 0 if @store.page_count <= 0 || !@pages.empty?
