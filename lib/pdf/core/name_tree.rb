@@ -78,7 +78,7 @@ module PDF
             children.insert(insertion_point(value), value)
             split! if children.length > limit
           else
-            fit = children.detect { |child| child >= value }
+            fit = children.find { |child| child >= value }
             fit ||= children.last
             fit << value
           end
