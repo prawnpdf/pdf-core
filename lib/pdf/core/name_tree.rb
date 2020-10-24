@@ -31,7 +31,7 @@ module PDF
         end
 
         def size
-          leaf? ? children.size : children.map(&:size).reduce(:+)
+          leaf? ? children.size : children.sum(&:size)
         end
 
         def leaf?
