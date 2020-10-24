@@ -4,8 +4,7 @@ require_relative 'spec_helper'
 
 FILTERS = {
   FlateDecode: {
-    'test' => (+"x\x9C+I-.\x01\x00\x04]\x01\xC1")
-          .force_encoding(Encoding::ASCII_8BIT)
+    'test' => (+"x\x9C+I-.\x01\x00\x04]\x01\xC1").force_encoding(Encoding::ASCII_8BIT)
   },
   DCTDecode: { 'test' => 'test' }
 }.freeze
