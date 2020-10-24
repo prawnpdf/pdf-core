@@ -6,6 +6,8 @@ All notable changes to this project will be documented in this file.
 
 ## Changed
 
+- Increased precision of real numbers to 5
+  Alexander Mankuta
 - Dropped 2.3 & 2.4 Ruby support
   Alexander Mankuta
 - Updated code style

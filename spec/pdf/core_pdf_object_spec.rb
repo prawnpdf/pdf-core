@@ -15,11 +15,18 @@ RSpec.describe PDF::Core, '.pdf_object' do
     expect(described_class.pdf_object(false)).to eq 'false'
   end
 
-  it 'converts a Ruby number to PDF number' do
-    expect(described_class.pdf_object(42)).to eq '42'
+  describe 'numbers' do
+    it 'converts a n integer to PDF number' do
+      expect(described_class.pdf_object(42)).to eq '42'
+    end
 
-    # numbers are rounded to four decimal places
-    expect(described_class.pdf_object(1.214112421)).to eq '1.2141'
+    it 'rounds a float to five significant digits' do
+      expect(described_class.pdf_object(1.214117421)).to eq '1.21412'
+    end
+
+    it 'produces no trailing zeroes' do
+      expect(described_class.pdf_object(1.200000001)).to eq '1.2'
+    end
   end
 
   it 'drops trailing fraction zeros from numbers' do

@@ -13,7 +13,7 @@ module PDF
     module_function
 
     def real(num)
-      num.to_f.round(4)
+      format('%<number>.5f', number: num).sub(/((?<!\.)0)+\z/, '')
     end
 
     def real_params(array)
