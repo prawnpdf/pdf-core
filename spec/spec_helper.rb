@@ -19,7 +19,7 @@ end
 
 RSpec::Matchers.define :have_parseable_xobjects do
   match do |actual|
-    expect { PDF::Inspector::XObject.analyze(actual.render) }.not_to raise_error
+    expect { PDF::Inspector::XObject.analyze(actual.render) }.to_not raise_error
     true
   end
   failure_message_for_should do |actual|

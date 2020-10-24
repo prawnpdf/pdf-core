@@ -90,7 +90,7 @@ RSpec.describe PDF::Core::Text do
   describe '#add_text_content' do
     it 'handles frozen strings' do
       expect { mock.add_text_content 'text', 0, 0, {} }
-        .not_to raise_error
+        .to_not raise_error
     end
   end
 end

@@ -79,7 +79,7 @@ RSpec.describe PDF::Core::Page do
         page.stamp_stream(ref) do
           page.content << 'test'
         end
-      end.not_to raise_error
+      end.to_not raise_error
       expect(ref.stream.filtered_stream).to eq 'test'
     end
   end
