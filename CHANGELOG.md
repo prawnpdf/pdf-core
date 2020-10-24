@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased
 
+## [0.9.0][]
+
 ## Changed
 
 - Increased precision of real numbers to 5
@@ -64,6 +66,7 @@ All notable changes to this project will be documented in this file.
 - A trailer can be assigned to DocumentState
   Robert Bousquet, [#16](https://github.com/prawnpdf/pdf-core/pull/16)
 
+[0.9.0]: https://github.com/prawnpdf/pdf-core/compare/0.8.1..0.9.0
 [0.8.1]: https://github.com/prawnpdf/pdf-core/compare/0.8.0...0.8.1
 [0.8.0]: https://github.com/prawnpdf/pdf-core/compare/0.7.0...0.8.0
 [0.7.0]: https://github.com/prawnpdf/pdf-core/compare/0.6.1...0.7.0
