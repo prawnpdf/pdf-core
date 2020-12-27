@@ -33,12 +33,7 @@ Gem::Specification.new do |spec|
   spec.licenses = %w[PRAWN GPL-2.0 GPL-3.0]
   spec.add_development_dependency('pdf-inspector', '~> 1.1.0')
   spec.add_development_dependency('pdf-reader', '~>1.2')
-  spec.add_development_dependency('rake')
-  spec.add_development_dependency('rspec')
-  spec.add_development_dependency('rubocop', '~> 0.93')
-  spec.add_development_dependency('rubocop-performance', '~> 1.8')
-  spec.add_development_dependency('rubocop-rspec', '~> 1.44')
-  spec.add_development_dependency('simplecov')
+  spec.add_development_dependency('prawn-dev', '~> 0.1.0')
   spec.homepage = 'http://prawnpdf.org'
   spec.description = 'PDF::Core is used by Prawn to render PDF documents'
 end

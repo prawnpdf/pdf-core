@@ -17,8 +17,8 @@ module PDF
         @objects = {}
         @identifiers = []
 
-        @info  ||= ref(opts[:info] || {}).identifier
-        @root  ||= ref(Type: :Catalog).identifier
+        @info ||= ref(opts[:info] || {}).identifier
+        @root ||= ref(Type: :Catalog).identifier
         if opts[:print_scaling] == :none
           root.data[:ViewerPreferences] = { PrintScaling: :None }
         end

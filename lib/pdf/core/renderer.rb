@@ -82,17 +82,14 @@ module PDF
       # Defines a block to be called just before a new page is started.
       #
       def on_page_create(&block)
-        state.on_page_create_callback =
-          if block_given?
-            block
-          end
+        state.on_page_create_callback = block
       end
 
       def start_new_page(options = {})
         last_page = state.page
         if last_page
-          last_page_size    = last_page.size
-          last_page_layout  = last_page.layout
+          last_page_size = last_page.size
+          last_page_layout = last_page.layout
           last_page_margins = last_page.margins
         end
 

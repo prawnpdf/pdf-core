@@ -21,9 +21,9 @@ module PDF
 
       def initialize(id, data)
         @identifier = id
-        @gen        = 0
-        @data       = data
-        @stream     = Stream.new
+        @gen = 0
+        @data = data
+        @stream = Stream.new
       end
 
       def object
@@ -74,7 +74,7 @@ module PDF
 
       # Replaces the data and stream with that of other_ref.
       def replace(other_ref)
-        @data   = other_ref.data
+        @data = other_ref.data
         @stream = other_ref.stream
       end
     end

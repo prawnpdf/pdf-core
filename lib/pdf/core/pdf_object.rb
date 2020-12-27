@@ -50,8 +50,8 @@ module PDF
     #
     def pdf_object(obj, in_content_stream = false)
       case obj
-      when NilClass   then 'null'
-      when TrueClass  then 'true'
+      when NilClass then 'null'
+      when TrueClass then 'true'
       when FalseClass then 'false'
       when Numeric
         obj = real(obj) unless obj.is_a?(Integer)
@@ -99,12 +99,10 @@ module PDF
         output << '>>'
       when PDF::Core::Reference
         obj.to_s
-      when PDF::Core::NameTree::Node
+      when PDF::Core::NameTree::Node, PDF::Core::OutlineRoot, PDF::Core::OutlineItem
         pdf_object(obj.to_hash)
       when PDF::Core::NameTree::Value
         "#{pdf_object(obj.name)} #{pdf_object(obj.value)}"
-      when PDF::Core::OutlineRoot, PDF::Core::OutlineItem
-        pdf_object(obj.to_hash)
       else
         raise PDF::Core::Errors::FailedObjectConversion,
           "This object cannot be serialized to PDF (#{obj.inspect})"

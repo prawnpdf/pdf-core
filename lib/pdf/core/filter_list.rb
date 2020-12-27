@@ -15,6 +15,7 @@ module PDF
           end
         end
       end
+
       def initialize
         @list = []
       end
