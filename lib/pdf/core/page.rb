@@ -150,7 +150,7 @@ module PDF
 
       def dimensions
         coords = PDF::Core::PageGeometry::SIZES[size] || size
-        [0, 0] +
+        coords =
           case layout
           when :portrait
             coords
@@ -160,6 +160,7 @@ module PDF
             raise PDF::Core::Errors::InvalidPageLayout,
               'Layout must be either :portrait or :landscape'
           end
+        [0, 0].concat(coords)
       end
 
       def art_box
