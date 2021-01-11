@@ -13,7 +13,9 @@ module PDF
     module_function
 
     def real(num)
-      format('%<number>.5f', number: num).sub(/((?<!\.)0)+\z/, '')
+      result = format('%.5f', num)
+      result.sub!(/((?<!\.)0)+\z/, '')
+      result
     end
 
     def real_params(array)
@@ -21,7 +23,7 @@ module PDF
     end
 
     def utf8_to_utf16(str)
-      (+"\xFE\xFF").force_encoding(::Encoding::UTF_16BE) +
+      (+"\xFE\xFF").force_encoding(::Encoding::UTF_16BE) <<
         str.encode(::Encoding::UTF_16BE)
     end
 
@@ -54,14 +56,11 @@ module PDF
       when TrueClass then 'true'
       when FalseClass then 'false'
       when Numeric
-        obj = real(obj) unless obj.is_a?(Integer)
-
-        # NOTE: this can fail on huge floating point numbers, but it seems
-        # unlikely to ever happen in practice.
-        num_string = String(obj)
+        num_string = obj.is_a?(Integer) ? String(obj) : real(obj)
 
         # Truncate trailing fraction zeroes
-        num_string.sub(/(\d*)((\.0*$)|(\.0*[1-9]*)0*$)/, '\1\4')
+        num_string.sub!(/(\d*)((\.0*$)|(\.0*[1-9]*)0*$)/, '\1\4')
+        num_string
       when Array
         "[#{obj.map { |e| pdf_object(e, in_content_stream) }.join(' ')}]"
       when PDF::Core::LiteralString
@@ -77,15 +76,13 @@ module PDF
         obj = utf8_to_utf16(obj) unless in_content_stream
         "<#{string_to_hex(obj)}>"
       when Symbol
-        name_string =
-          obj.to_s.unpack('C*').map do |n|
-            if ESCAPED_NAME_CHARACTERS.include?(n)
-              "##{n.to_s(16).upcase}"
-            else
-              [n].pack('C*')
-            end
-          end.join
-        "/#{name_string}"
+        (@symbol_str_cache ||= {})[obj] ||= (+'/') << obj.to_s.unpack('C*').map do |n|
+          if ESCAPED_NAME_CHARACTERS.include?(n)
+            "##{n.to_s(16).upcase}"
+          else
+            n.chr
+          end
+        end.join
       when ::Hash
         output = +'<< '
         obj.each do |k, v|
