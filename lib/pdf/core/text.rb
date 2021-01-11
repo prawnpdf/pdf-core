@@ -289,7 +289,7 @@ module PDF
           ]
           add_content "#{PDF::Core.real_params(array)} Tm"
         else
-          add_content "#{PDF::Core.real_params([x, y])} Td"
+          add_content "#{PDF::Core.real(x)} #{PDF::Core.real(y)} Td"
         end
 
         chunks.each do |(subset, string)|
