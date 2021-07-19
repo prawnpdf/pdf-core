@@ -28,7 +28,7 @@ module PDF
       end
 
       # Friendly method alias to attach file specifications in the catalog
-      alias :attach_file :add_embedded_file
+      alias attach_file add_embedded_file
     end
   end
 end
