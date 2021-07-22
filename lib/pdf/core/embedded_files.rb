@@ -13,6 +13,8 @@ module PDF
       # 3.8.4 in the PDF spec.)
       #
       def embedded_files
+        bump_min_version
+
         names.data[:EmbeddedFiles] ||= ref!(
           PDF::Core::NameTree::Node.new(self, NAME_TREE_CHILDREN_LIMIT)
         )
@@ -29,6 +31,15 @@ module PDF
 
       # Friendly method alias to attach file specifications in the catalog
       alias attach_file add_embedded_file
+
+      private
+
+      def bump_min_version
+        return if @min_version_bumped
+
+        renderer.min_version(1.4)
+        @min_version_bumped = true
+      end
     end
   end
 end
