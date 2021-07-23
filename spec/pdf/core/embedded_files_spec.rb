@@ -54,6 +54,7 @@ RSpec.describe EmbeddedFiles do
     t.add_embedded_file(file_name, t.ref!(Type: :Filespec))
 
     pdf_object = "4 0 obj\n<< /Names [(my_file) 2 0 R]\n>>\nendobj\n"
+    expect(t.embedded_files.data.size).to eq 1
     expect(t.embedded_files.object).to eq pdf_object
   end
 end
