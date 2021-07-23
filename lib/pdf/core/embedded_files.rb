@@ -35,10 +35,7 @@ module PDF
       private
 
       def bump_min_version
-        return if @min_version_bumped
-
         renderer.min_version(1.4)
-        @min_version_bumped = true
       end
     end
   end
