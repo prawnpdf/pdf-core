@@ -96,6 +96,13 @@ module PDF
         flat_page_ids = get_page_objects(pages).flatten
         flat_page_ids[page]
       end
+
+      private
+
+      # returns an array with the object IDs for all pages
+      def get_page_objects(pages)
+        pages.data[:Kids].map(&:identifier)
+      end
     end
   end
 end
