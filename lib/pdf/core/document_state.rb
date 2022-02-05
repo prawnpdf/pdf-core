@@ -2,7 +2,7 @@
 
 module PDF
   module Core
-    class DocumentState #:nodoc:
+    class DocumentState # :nodoc:
       def initialize(options)
         normalize_metadata(options)
 

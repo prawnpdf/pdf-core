@@ -11,7 +11,7 @@ module PDF
     # annotation; if a hex encoded string is used there, the links
     # do not work (as tested in Mac OS X Preview, and Adobe Acrobat
     # Reader).
-    class LiteralString < String #:nodoc:
+    class LiteralString < String # :nodoc:
     end
   end
 end

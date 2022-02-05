@@ -8,7 +8,7 @@
 
 module PDF
   module Core
-    class ObjectStore #:nodoc:
+    class ObjectStore # :nodoc:
       include Enumerable
 
       attr_reader :min_version
