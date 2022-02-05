@@ -10,7 +10,7 @@ require 'pdf/core/utils'
 
 module PDF
   module Core
-    class Reference #:nodoc:
+    class Reference # :nodoc:
       attr_accessor :gen, :data, :offset, :stream, :identifier
 
       class CannotAttachStream < StandardError

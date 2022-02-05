@@ -10,8 +10,8 @@ require 'pdf/core/utils'
 #
 module PDF
   module Core
-    module NameTree #:nodoc:
-      class Node #:nodoc:
+    module NameTree # :nodoc:
+      class Node # :nodoc:
         attr_reader :children
         attr_reader :limit
         attr_reader :document
@@ -152,7 +152,7 @@ module PDF
         end
       end
 
-      class Value #:nodoc:
+      class Value # :nodoc:
         include Comparable
 
         attr_reader :name

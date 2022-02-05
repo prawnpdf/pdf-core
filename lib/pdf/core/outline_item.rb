@@ -2,7 +2,7 @@
 
 module PDF
   module Core
-    class OutlineItem #:nodoc:
+    class OutlineItem # :nodoc:
       attr_accessor :count, :first, :last, :next, :prev, :parent, :title, :dest, :closed
 
       def initialize(title, parent, options)

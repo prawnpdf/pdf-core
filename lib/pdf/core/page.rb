@@ -11,7 +11,7 @@ require_relative 'graphics_state'
 
 module PDF
   module Core
-    class Page #:nodoc:
+    class Page # :nodoc:
       attr_accessor :art_indents, :bleeds, :crops, :document, :margins, :stack, :trims
       attr_writer :content, :dictionary
 

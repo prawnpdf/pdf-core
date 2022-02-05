@@ -8,7 +8,7 @@
 
 module PDF
   module Core
-    module Text #:nodoc:
+    module Text # :nodoc:
       # These should be used as a base. Extensions may build on this list
       #
       VALID_OPTIONS = %i[kerning size style].freeze

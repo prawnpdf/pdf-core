@@ -8,10 +8,10 @@
 
 module PDF
   module Core
-    module Destinations #:nodoc:
+    module Destinations # :nodoc:
       # The maximum number of children to fit into a single node in the Dests
       # tree.
-      NAME_TREE_CHILDREN_LIMIT = 20 #:nodoc:
+      NAME_TREE_CHILDREN_LIMIT = 20 # :nodoc:
 
       # The Dests name tree in the Name dictionary (see
       # Prawn::Document::Internal#names).  This name tree is used to store named
