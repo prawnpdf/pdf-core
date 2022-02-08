@@ -11,7 +11,7 @@ Gem::Specification.new do |spec|
     %w[Gemfile Rakefile] +
     ['pdf-core.gemspec']
   spec.require_path = 'lib'
-  spec.required_ruby_version = '>= 2.5'
+  spec.required_ruby_version = '>= 2.6'
   spec.required_rubygems_version = '>= 1.3.6'
 
   spec.cert_chain = ['certs/pointlessone.pem']
@@ -33,7 +33,7 @@ Gem::Specification.new do |spec|
   spec.licenses = %w[PRAWN GPL-2.0 GPL-3.0]
   spec.add_development_dependency('pdf-inspector', '~> 1.1.0')
   spec.add_development_dependency('pdf-reader', '~>1.2')
-  spec.add_development_dependency('prawn-dev', '~> 0.1.0')
+  spec.add_development_dependency('prawn-dev', '~> 0.3.0')
   spec.homepage = 'http://prawnpdf.org'
   spec.description = 'PDF::Core is used by Prawn to render PDF documents'
 end
