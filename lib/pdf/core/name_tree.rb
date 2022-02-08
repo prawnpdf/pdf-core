@@ -133,7 +133,7 @@ module PDF
           half = (node.limit + 1) / 2
 
           left_children = node.children[0...half]
-          right_children = node.children[half..-1]
+          right_children = node.children[half..]
 
           left.children.replace(left_children)
           right.children.replace(right_children)
