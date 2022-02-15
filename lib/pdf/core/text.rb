@@ -252,20 +252,6 @@ module PDF
         end
       end
 
-      # Increases or decreases the vertical distance between baselines of
-      # adjacent lines of text.
-      def leading(amount = nil, &block)
-        if amount.nil?
-          return defined?(@leading) && @leading || 0
-        end
-
-        if leading == amount
-          yield
-        else
-          wrap_and_restore_leading(amount, &block)
-        end
-      end
-
       # Move the baseline up or down from its default location.
       # Positive values move the baseline up, negative values
       # move it down, and a zero value resets the baseline to
@@ -380,22 +366,6 @@ module PDF
 
       def update_horizontal_text_scaling_state
         add_content "\n#{PDF::Core.real(horizontal_text_scaling)} Tz"
-      end
-
-      def wrap_and_restore_leading(block_value)
-        original_value = leading
-        @leading = block_value
-        update_leading_state
-        begin
-          yield
-        ensure
-          @leading = original_value
-          update_leading_state
-        end
-      end
-
-      def update_leading_state
-        add_content "\n#{PDF::Core.real(leading)} TL"
       end
 
       def wrap_and_restore_rise(block_value)

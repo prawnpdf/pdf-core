@@ -236,56 +236,6 @@ RSpec.describe PDF::Core::Text do
     end
   end
 
-  describe '#leading' do
-    describe 'called without argument' do
-      let(:result) { mock.leading }
-
-      it 'functions as accessor' do
-        expect(result).to eq(0)
-      end
-    end
-
-    describe 'called with argument' do
-      context 'when the block does not raise an error' do
-        before do
-          mock.leading(16) do
-            mock.add_content('TEST')
-          end
-        end
-
-        it 'resets leading to original value' do
-          expect(mock.leading).to eq(0)
-        end
-
-        it 'outputs correct PDF content' do
-          expect(mock.text).to eq("\n16.0 TLTEST\n0.0 TL")
-        end
-      end
-
-      context 'when the block raises an error' do
-        let(:error_message) { SecureRandom.hex(5) }
-
-        # rubocop:disable RSpec/ExpectInHook
-        before do
-          expect do
-            mock.leading(16) do
-              raise StandardError, error_message
-            end
-          end.to raise_error StandardError, error_message
-        end
-        # rubocop:enable RSpec/ExpectInHook
-
-        it 'resets leading to original value' do
-          expect(mock.leading).to eq(0)
-        end
-
-        it 'outputs correct PDF content' do
-          expect(mock.text).to eq("\n16.0 TL\n0.0 TL")
-        end
-      end
-    end
-  end
-
   describe '#rise' do
     describe 'called without argument' do
       let(:result) { mock.rise }
