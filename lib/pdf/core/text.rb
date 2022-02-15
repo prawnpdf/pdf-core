@@ -252,6 +252,36 @@ module PDF
         end
       end
 
+      # Increases or decreases the vertical distance between baselines of
+      # adjacent lines of text.
+      def leading(amount = nil, &block)
+        if amount.nil?
+          return defined?(@leading) && @leading || 0
+        end
+
+        if leading == amount
+          yield
+        else
+          wrap_and_restore_leading(amount, &block)
+        end
+      end
+
+      # Move the baseline up or down from its default location.
+      # Positive values move the baseline up, negative values
+      # move it down, and a zero value resets the baseline to
+      # its default location.
+      def rise(amount = nil, &block)
+        if amount.nil?
+          return defined?(@rise) && @rise || 0
+        end
+
+        if rise == amount
+          yield
+        else
+          wrap_and_restore_rise(amount, &block)
+        end
+      end
+
       def add_text_content(text, x, y, options)
         chunks = font.encode_text(text, options)
 
@@ -316,6 +346,10 @@ module PDF
         end
       end
 
+      def update_character_spacing_state
+        add_content "\n#{PDF::Core.real(character_spacing)} Tc"
+      end
+
       def wrap_and_restore_word_spacing(block_value)
         original_value = word_spacing
         @word_spacing = block_value
@@ -326,6 +360,10 @@ module PDF
           @word_spacing = original_value
           update_word_spacing_state
         end
+      end
+
+      def update_word_spacing_state
+        add_content "\n#{PDF::Core.real(word_spacing)} Tw"
       end
 
       def wrap_and_restore_horizontal_text_scaling(block_value)
@@ -340,20 +378,40 @@ module PDF
         end
       end
 
-      def update_character_spacing_state
-        update_real_text_state(character_spacing, 'Tc')
-      end
-
-      def update_word_spacing_state
-        update_real_text_state(word_spacing, 'Tw')
-      end
-
       def update_horizontal_text_scaling_state
-        update_real_text_state(horizontal_text_scaling, 'Tz')
+        add_content "\n#{PDF::Core.real(horizontal_text_scaling)} Tz"
       end
 
-      def update_real_text_state(amount, operator)
-        add_content "\n#{PDF::Core.real(amount)} #{operator}"
+      def wrap_and_restore_leading(block_value)
+        original_value = leading
+        @leading = block_value
+        update_leading_state
+        begin
+          yield
+        ensure
+          @leading = original_value
+          update_leading_state
+        end
+      end
+
+      def update_leading_state
+        add_content "\n#{PDF::Core.real(leading)} TL"
+      end
+
+      def wrap_and_restore_rise(block_value)
+        original_value = rise
+        @rise = block_value
+        update_rise_state
+        begin
+          yield
+        ensure
+          @rise = original_value
+          update_rise_state
+        end
+      end
+
+      def update_rise_state
+        add_content "\n#{PDF::Core.real(rise)} Ts"
       end
     end
   end
