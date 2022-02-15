@@ -10,6 +10,7 @@ end
 require_relative '../lib/pdf/core'
 
 require 'rspec'
+require 'securerandom'
 require 'pdf/reader'
 require 'pdf/inspector'
 
