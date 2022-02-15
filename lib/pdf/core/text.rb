@@ -187,7 +187,7 @@ module PDF
       # * :fill_stroke_clip - fill then stroke text, then add to path for
       #                       clipping
       # * :clip             - add text to path for clipping
-      def text_rendering_mode(mode = nil)
+      def text_rendering_mode(mode = nil, &block)
         if mode.nil?
           return defined?(@text_rendering_mode) && @text_rendering_mode || :fill
         end
@@ -196,16 +196,11 @@ module PDF
           raise ArgumentError,
             "mode must be between one of #{MODES.keys.join(', ')} (#{mode})"
         end
-        original_mode = text_rendering_mode
 
-        if original_mode == mode
+        if text_rendering_mode == mode
           yield
         else
-          @text_rendering_mode = mode
-          add_content "\n#{MODES[mode]} Tr"
-          yield
-          add_content "\n#{MODES[original_mode]} Tr"
-          @text_rendering_mode = original_mode
+          wrap_and_restore_text_rendering_mode(mode, &block)
         end
       end
 
@@ -217,20 +212,15 @@ module PDF
       # For horizontal text, a positive value will increase the space.
       # For veritical text, a positive value will decrease the space.
       #
-      def character_spacing(amount = nil)
+      def character_spacing(amount = nil, &block)
         if amount.nil?
           return defined?(@character_spacing) && @character_spacing || 0
         end
 
-        original_character_spacing = character_spacing
-        if original_character_spacing == amount
+        if character_spacing == amount
           yield
         else
-          @character_spacing = amount
-          add_content "\n#{PDF::Core.real(amount)} Tc"
-          yield
-          add_content "\n#{PDF::Core.real(original_character_spacing)} Tc"
-          @character_spacing = original_character_spacing
+          wrap_and_restore_character_spacing(amount, &block)
         end
       end
 
@@ -238,38 +228,27 @@ module PDF
       # For horizontal text, a positive value will increase the space.
       # For veritical text, a positive value will decrease the space.
       #
-      def word_spacing(amount = nil)
+      def word_spacing(amount = nil, &block)
         return defined?(@word_spacing) && @word_spacing || 0 if amount.nil?
 
-        original_word_spacing = word_spacing
-        if original_word_spacing == amount
+        if word_spacing == amount
           yield
         else
-          @word_spacing = amount
-          add_content "\n#{PDF::Core.real(amount)} Tw"
-          yield
-          add_content "\n#{PDF::Core.real(original_word_spacing)} Tw"
-
-          @word_spacing = original_word_spacing
+          wrap_and_restore_word_spacing(amount, &block)
         end
       end
 
       # Set the horizontal scaling. amount is a number specifying the
       # percentage of the normal width.
-      def horizontal_text_scaling(amount = nil)
+      def horizontal_text_scaling(amount = nil, &block)
         if amount.nil?
           return defined?(@horizontal_text_scaling) && @horizontal_text_scaling || 100
         end
 
-        original_horizontal_text_scaling = horizontal_text_scaling
-        if original_horizontal_text_scaling == amount
+        if horizontal_text_scaling == amount
           yield
         else
-          @horizontal_text_scaling = amount
-          add_content "\n#{PDF::Core.real(amount)} Tz"
-          yield
-          add_content "\n#{PDF::Core.real(original_horizontal_text_scaling)} Tz"
-          @horizontal_text_scaling = original_horizontal_text_scaling
+          wrap_and_restore_horizontal_text_scaling(amount, &block)
         end
       end
 
@@ -305,6 +284,76 @@ module PDF
         end
 
         add_content "ET\n"
+      end
+
+      private
+
+      def wrap_and_restore_text_rendering_mode(block_value)
+        original_value = text_rendering_mode
+        @text_rendering_mode = block_value
+        update_text_rendering_mode_state
+        begin
+          yield
+        ensure
+          @text_rendering_mode = original_value
+          update_text_rendering_mode_state
+        end
+      end
+
+      def update_text_rendering_mode_state
+        add_content "\n#{MODES[text_rendering_mode]} Tr"
+      end
+
+      def wrap_and_restore_character_spacing(block_value)
+        original_value = character_spacing
+        @character_spacing = block_value
+        update_character_spacing_state
+        begin
+          yield
+        ensure
+          @character_spacing = original_value
+          update_character_spacing_state
+        end
+      end
+
+      def wrap_and_restore_word_spacing(block_value)
+        original_value = word_spacing
+        @word_spacing = block_value
+        update_word_spacing_state
+        begin
+          yield
+        ensure
+          @word_spacing = original_value
+          update_word_spacing_state
+        end
+      end
+
+      def wrap_and_restore_horizontal_text_scaling(block_value)
+        original_value = horizontal_text_scaling
+        @horizontal_text_scaling = block_value
+        update_horizontal_text_scaling_state
+        begin
+          yield
+        ensure
+          @horizontal_text_scaling = original_value
+          update_horizontal_text_scaling_state
+        end
+      end
+
+      def update_character_spacing_state
+        update_real_text_state(character_spacing, 'Tc')
+      end
+
+      def update_word_spacing_state
+        update_real_text_state(word_spacing, 'Tw')
+      end
+
+      def update_horizontal_text_scaling_state
+        update_real_text_state(horizontal_text_scaling, 'Tz')
+      end
+
+      def update_real_text_state(amount, operator)
+        add_content "\n#{PDF::Core.real(amount)} #{operator}"
       end
     end
   end
