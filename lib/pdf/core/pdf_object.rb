@@ -36,6 +36,8 @@ module PDF
 
     ESCAPED_NAME_CHARACTERS = (1..32).to_a + [35, 40, 41, 47, 60, 62] + (127..255).to_a
 
+    STRING_ESCAPE_MAP = { '(' => '\(', ')' => '\)', '\\' => '\\\\', "\r" => '\r' }.freeze
+
     # Serializes Ruby objects to their PDF equivalents.  Most primitive objects
     # will work as expected, but please note that Name objects are represented
     # by Ruby Symbol objects and Dictionary objects are represented by Ruby
@@ -64,11 +66,11 @@ module PDF
       when Array
         "[#{obj.map { |e| pdf_object(e, in_content_stream) }.join(' ')}]"
       when PDF::Core::LiteralString
-        obj = obj.gsub(/[\\\n\r\t\b\f()]/) { |m| "\\#{m}" }
+        obj = obj.gsub(/[\\\r()]/, STRING_ESCAPE_MAP)
         "(#{obj})"
       when Time
         obj = "#{obj.strftime('D:%Y%m%d%H%M%S%z').chop.chop}'00'"
-        obj = obj.gsub(/[\\\n\r\t\b\f()]/) { |m| "\\#{m}" }
+        obj = obj.gsub(/[\\\r()]/, STRING_ESCAPE_MAP)
         "(#{obj})"
       when PDF::Core::ByteString
         "<#{obj.unpack1('H*')}>"

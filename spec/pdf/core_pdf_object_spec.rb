@@ -85,20 +85,8 @@ RSpec.describe PDF::Core, '.pdf_object' do
     ls = PDF::Core::LiteralString.new('abc')
     expect(described_class.pdf_object(ls)).to eq '(abc)'
 
-    ls = PDF::Core::LiteralString.new("abc\x0Ade") # should escape \n
-    expect(described_class.pdf_object(ls)).to eq "(abc\x5C\x0Ade)"
-
     ls = PDF::Core::LiteralString.new("abc\x0Dde") # should escape \r
-    expect(described_class.pdf_object(ls)).to eq "(abc\x5C\x0Dde)"
-
-    ls = PDF::Core::LiteralString.new("abc\x09de") # should escape \t
-    expect(described_class.pdf_object(ls)).to eq "(abc\x5C\x09de)"
-
-    ls = PDF::Core::LiteralString.new("abc\x08de") # should escape \b
-    expect(described_class.pdf_object(ls)).to eq "(abc\x5C\x08de)"
-
-    ls = PDF::Core::LiteralString.new("abc\x0Cde") # should escape \f
-    expect(described_class.pdf_object(ls)).to eq "(abc\x5C\x0Cde)"
+    expect(described_class.pdf_object(ls)).to eq "(abc\x5Crde)"
 
     ls = PDF::Core::LiteralString.new('abc(de') # should escape \(
     expect(described_class.pdf_object(ls)).to eq "(abc\x5C(de)"
