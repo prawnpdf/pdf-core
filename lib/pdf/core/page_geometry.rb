@@ -65,6 +65,7 @@ module PDF
     # LEGAL:: => 612.00 x 1008.00
     # LETTER:: => 612.00 x 792.00
     # TABLOID:: => 792.00 x 1224.00
+    # TRADE:: => 450.00 x 666.00
     #
     module PageGeometry
       SIZES = {
@@ -117,7 +118,9 @@ module PDF
         'FOLIO' => [612.00, 936.00],
         'LEGAL' => [612.00, 1008.00],
         'LETTER' => [612.00, 792.00],
-        'TABLOID' => [792.00, 1224.00]
+        'TABLOID' => [792.00, 1224.00],
+        'US-TRADE-BLEED' => [450.00, 666.00],
+        'US-TRADE' => [432.00, 648.00]
       }.freeze
     end
   end
