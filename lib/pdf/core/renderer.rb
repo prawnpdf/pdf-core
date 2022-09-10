@@ -155,20 +155,14 @@ module PDF
       # Pass an open file descriptor to render to file.
       #
       def render(output = StringIO.new)
-        if output.instance_of?(StringIO)
-          output.set_encoding(::Encoding::ASCII_8BIT)
-        end
+        output = IoWrapper.wrap(output)
         finalize_all_page_contents
 
         render_header(output)
         render_body(output)
         render_xref(output)
         render_trailer(output)
-        if output.instance_of?(StringIO)
-          str = output.string
-          str.force_encoding(::Encoding::ASCII_8BIT)
-          str
-        end
+        output.string
       end
 
       # Renders the PDF document to file.

@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased
 
+### Changed
+
+- Stop requiring IO objects to have `#printf` and `#size`
+  Max Chernyak
+
 ## [0.9.0][]
 
 ## Changed
