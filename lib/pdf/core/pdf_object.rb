@@ -87,7 +87,9 @@ module PDF
         end.join
       when ::Hash
         output = +'<< '
-        obj.each do |k, v|
+        obj
+          .sort_by { |k, _v| k.to_s }
+          .each do |(k, v)|
           unless k.is_a?(String) || k.is_a?(Symbol)
             raise PDF::Core::Errors::FailedObjectConversion,
               'A PDF Dictionary must be keyed by names'

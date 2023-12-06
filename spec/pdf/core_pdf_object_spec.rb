@@ -185,6 +185,14 @@ RSpec.describe PDF::Core, '.pdf_object' do
       .to raise_error(PDF::Core::Errors::FailedObjectConversion)
   end
 
+  it 'uses stable key order in PDF dicts' do
+    expect(described_class.pdf_object(a: 1, b: 2)).to eq described_class.pdf_object(b: 2, a: 1)
+  end
+
+  it 'orders entris alphabetically in PDF dicts' do
+    expect(described_class.pdf_object(b: 2, a: 1)).to eq "<< /a 1\n/b 2\n>>"
+  end
+
   it 'converts a Prawn::Reference to a PDF indirect object reference' do
     ref = PDF::Core::Reference.new(1, true)
     expect(described_class.pdf_object(ref)).to eq ref.to_s

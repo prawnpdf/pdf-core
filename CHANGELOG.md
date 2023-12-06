@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased
 
+## Changed
+
+- Improved serialization stability of PDF dicts
+  Alexander Mankuta
+
 ## [0.9.0][]
 
 ## Changed
