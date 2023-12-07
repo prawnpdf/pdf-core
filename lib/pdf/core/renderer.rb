@@ -154,21 +154,21 @@ module PDF
       # Renders the PDF document to string.
       # Pass an open file descriptor to render to file.
       #
-      def render(output = StringIO.new)
-        if output.instance_of?(StringIO)
-          output.set_encoding(::Encoding::ASCII_8BIT)
-        end
+      def render(output = nil)
+        buffer = StringIO.new.binmode
+
         finalize_all_page_contents
 
-        render_header(output)
-        render_body(output)
-        render_xref(output)
-        render_trailer(output)
-        if output.instance_of?(StringIO)
-          str = output.string
-          str.force_encoding(::Encoding::ASCII_8BIT)
-          str
+        render_header(buffer)
+        render_body(buffer)
+        render_xref(buffer)
+        render_trailer(buffer)
+
+        if output.respond_to? :<<
+          output << buffer.string
         end
+
+        buffer.string
       end
 
       # Renders the PDF document to file.

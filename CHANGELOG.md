@@ -8,6 +8,9 @@ All notable changes to this project will be documented in this file.
 
 - Improved serialization stability of PDF dicts
   Alexander Mankuta
+- Relaxed requirements for rendering output. Not it only needs to support single
+  #<< method.
+  Alexander Mankuta
 
 ## [0.9.0][]
 
