@@ -11,6 +11,19 @@ All notable changes to this project will be documented in this file.
 - Relaxed requirements for rendering output. Not it only needs to support single
   #<< method.
   Alexander Mankuta
+- CI improvememnts
+  Peter Goldstein
+- Reduced memory allocations and enhanced performance
+  Thomas Leitner
+
+### Fixed
+
+- Implemented `get_page_objects` method
+  Thomas Leitner
+- Document corruption in text operations on exception in user code
+  Peter Goldstein
+- Serialisation of literal strings and Time
+  Thomas Leitner
 
 ## [0.9.0][]
 
@@ -74,7 +87,7 @@ All notable changes to this project will be documented in this file.
 - A trailer can be assigned to DocumentState
   Robert Bousquet, [#16](https://github.com/prawnpdf/pdf-core/pull/16)
 
-[0.9.0]: https://github.com/prawnpdf/pdf-core/compare/0.8.1..0.9.0
+[0.9.0]: https://github.com/prawnpdf/pdf-core/compare/0.8.1...0.9.0
 [0.8.1]: https://github.com/prawnpdf/pdf-core/compare/0.8.0...0.8.1
 [0.8.0]: https://github.com/prawnpdf/pdf-core/compare/0.7.0...0.8.0
 [0.7.0]: https://github.com/prawnpdf/pdf-core/compare/0.6.1...0.7.0
