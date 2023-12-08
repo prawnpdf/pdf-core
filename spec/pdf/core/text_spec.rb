@@ -236,6 +236,56 @@ RSpec.describe PDF::Core::Text do
     end
   end
 
+  describe '#rise' do
+    describe 'called without argument' do
+      let(:result) { mock.rise }
+
+      it 'functions as accessor' do
+        expect(result).to eq(0)
+      end
+    end
+
+    describe 'called with argument' do
+      context 'when the block does not raise an error' do
+        before do
+          mock.rise(2.3) do
+            mock.add_content('TEST')
+          end
+        end
+
+        it 'resets rise to original value' do
+          expect(mock.rise).to eq(0)
+        end
+
+        it 'outputs correct PDF content' do
+          expect(mock.text).to eq("\n2.3 TsTEST\n0.0 Ts")
+        end
+      end
+
+      context 'when the block raises an error' do
+        let(:error_message) { SecureRandom.hex(5) }
+
+        # rubocop:disable RSpec/ExpectInHook
+        before do
+          expect do
+            mock.rise(5) do
+              raise StandardError, error_message
+            end
+          end.to raise_error StandardError, error_message
+        end
+        # rubocop:enable RSpec/ExpectInHook
+
+        it 'resets rise to original value' do
+          expect(mock.rise).to eq(0)
+        end
+
+        it 'outputs correct PDF content' do
+          expect(mock.text).to eq("\n5.0 Ts\n0.0 Ts")
+        end
+      end
+    end
+  end
+
   describe '#add_text_content' do
     it 'handles frozen strings' do
       expect { mock.add_text_content 'text', 0, 0, {} }
