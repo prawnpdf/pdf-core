@@ -1,18 +1,21 @@
 # frozen_string_literal: true
 
-# Implements PDF object repository
-#
-# Copyright August 2009, Brad Ediger.  All Rights Reserved.
-#
-# This is free software. Please see the LICENSE and COPYING files for details.
-
 module PDF
   module Core
-    class ObjectStore # :nodoc:
+    # PDF object repository
+    #
+    # @api private
+    class ObjectStore
       include Enumerable
 
+      # Minimum PDF version
+      # @return [Float]
       attr_reader :min_version
 
+      # @param opts [Hash]
+      # @option opts :info [Hash] Documnt info dict
+      # @option opts :print_scaling [:none, nil] (nil) Print scaling viewer
+      #   option
       def initialize(opts = {})
         @objects = {}
         @identifiers = []
@@ -27,22 +30,39 @@ module PDF
         end
       end
 
+      # Wrap an object into a reference.
+      #
+      # @param data [Hash, Array, Numeric, String, Symbol, Date, Time, nil]
+      #   object data
+      # @return [Reference]
       def ref(data, &block)
         push(size + 1, data, &block)
       end
 
+      # Document info dict reference
+      #
+      # @return [Reference]
       def info
         @objects[@info]
       end
 
+      # Document root dict reference
+      #
+      # @return [Reference]
       def root
         @objects[@root]
       end
 
+      # Document pages reference
+      #
+      # @return [Reference]
       def pages
         root.data[:Pages]
       end
 
+      # Number of pages in the document
+      #
+      # @return [Integer]
       def page_count
         pages.data[:Count]
       end
@@ -51,6 +71,14 @@ module PDF
       # If the object provided is not a PDF::Core::Reference, one is created
       # from the arguments provided.
       #
+      # @overload push(reference)
+      #   @param reference [Reference]
+      #   @return [reference]
+      # @overload push(id, data)
+      #   @param id [Integer] reference identifier
+      #   @param data [Hash, Array, Numeric, String, Symbol, Date, Time, nil]
+      #     object data
+      #   @return [Reference] - the added reference
       def push(*args, &block)
         reference =
           if args.first.is_a?(PDF::Core::Reference)
@@ -66,31 +94,46 @@ module PDF
 
       alias << push
 
+      # Iterate over document object references.
+      #
+      # @yieldparam ref [Reference]
+      # @return [void]
       def each
         @identifiers.each do |id|
           yield @objects[id]
         end
       end
 
+      # Get object reference by its identifier.
+      #
+      # @param id [Integer] object identifier
+      # @return [Reference]
       def [](id)
         @objects[id]
       end
 
+      # Number of object references in the document.
+      #
+      # @return [Integer]
       def size
         @identifiers.size
       end
       alias length size
 
-      # returns the object ID for a particular page in the document. Pages
-      # are indexed starting at 1 (not 0!).
+      # Get page reference identifier by page number.Pages are indexed starting
+      # at 1 (**not 0**).
       #
+      # @example
+      #   !!!ruby
       #   object_id_for_page(1)
-      #   => 5
+      #   #=> 5
       #   object_id_for_page(10)
-      #   => 87
+      #   #=> 87
       #   object_id_for_page(-11)
-      #   => 17
+      #   #=> 17
       #
+      # @param page [Integer] page number
+      # @return [Integer] page object identifier
       def object_id_for_page(page)
         page -= 1 if page.positive?
         flat_page_ids = get_page_objects(pages).flatten

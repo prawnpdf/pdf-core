@@ -8,21 +8,32 @@
 
 module PDF
   module Core
+    # PDF Stream object
     class Stream
+      # Stream filters
+      # @return [PDF::Core::FilterList]
       attr_reader :filters
 
+      # @param io [String] must be mutable
       def initialize(io = nil)
         @filtered_stream = ''
         @stream = io
         @filters = FilterList.new
       end
 
+      # Append data to stream.
+      #
+      # @param io [String]
+      # @return [self]
       def <<(io)
         (@stream ||= +'') << io
         @filtered_stream = nil
         self
       end
 
+      # Set up stream to be compressed when serialized.
+      #
+      # @return [void]
       def compress!
         unless @filters.names.include? :FlateDecode
           @filtered_stream = nil
@@ -30,14 +41,23 @@ module PDF
         end
       end
 
+      # Is this stream compressed?
+      #
+      # @return [Boolean]
       def compressed?
         @filters.names.include? :FlateDecode
       end
 
+      # Is there any data in this stream?
+      #
+      # @return [Boolean]
       def empty?
         @stream.nil?
       end
 
+      # Stream data with filters applied.
+      #
+      # @return [Stream]
       def filtered_stream
         if @stream
           if @filtered_stream.nil?
@@ -52,14 +72,19 @@ module PDF
           end
 
           @filtered_stream
-          # XXX Fillter stream
         end
       end
 
+      # Size of data in the stream
+      #
+      # @return [Integer]
       def length
         @stream.length
       end
 
+      # Serialized stream data
+      #
+      # @return [String]
       def object
         if filtered_stream
           "stream\n#{filtered_stream}\nendstream\n"
@@ -68,6 +93,9 @@ module PDF
         end
       end
 
+      # Stream dictionary
+      #
+      # @return [Hash]
       def data
         if @stream
           filter_names = @filters.names
@@ -89,6 +117,9 @@ module PDF
         end
       end
 
+      # String representation of the stream for debugging purposes.
+      #
+      # @return [String]
       def inspect
         format(
           '#<%<class>s:0x%<object_id>014x '\

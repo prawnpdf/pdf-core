@@ -1,41 +1,54 @@
 # frozen_string_literal: true
 
-# pdf_object.rb : Handles Ruby to PDF object serialization
-#
-# Copyright April 2008, Gregory Brown.  All Rights Reserved.
-#
-# This is free software. Please see the LICENSE and COPYING files for details.
-
-# Top level Module
-#
 module PDF
   module Core
     module_function
 
+    # Serializes floating number into a string
+    #
+    # @param num [Numeric]
+    # @return [String]
     def real(num)
       result = format('%.5f', num)
       result.sub!(/((?<!\.)0)+\z/, '')
       result
     end
 
+    # Serializes a n array of numbers. This is specifically for use in PDF
+    # content streams.
+    #
+    # @param array [Array<Numeric>]
+    # @return [String]
     def real_params(array)
       array.map { |e| real(e) }.join(' ')
     end
 
+    # Converts string to UTF-16BE encoding as expected by PDF.
+    #
+    # @param str [String]
+    # @return [String]
+    # @api private
     def utf8_to_utf16(str)
       (+"\xFE\xFF").force_encoding(::Encoding::UTF_16BE) <<
         str.encode(::Encoding::UTF_16BE)
     end
 
-    # encodes any string into a hex representation. The result is a string
+    # Encodes any string into a hex representation. The result is a string
     # with only 0-9 and a-f characters. That result is valid ASCII so tag
-    # it as such to account for behaviour of different ruby VMs
+    # it as such to account for behaviour of different ruby VMs.
+    #
+    # @param str [String]
+    # @return [String]
     def string_to_hex(str)
       str.unpack1('H*').force_encoding(::Encoding::US_ASCII)
     end
 
+    # Characters to escape in name objects
+    # @api private
     ESCAPED_NAME_CHARACTERS = (1..32).to_a + [35, 40, 41, 47, 60, 62] + (127..255).to_a
 
+    # How to escape special characters in literal strings
+    # @api private
     STRING_ESCAPE_MAP = { '(' => '\(', ')' => '\)', '\\' => '\\\\', "\r" => '\r' }.freeze
 
     # Serializes Ruby objects to their PDF equivalents.  Most primitive objects
@@ -43,7 +56,7 @@ module PDF
     # by Ruby Symbol objects and Dictionary objects are represented by Ruby
     # hashes (keyed by symbols)
     #
-    #  Examples:
+    # Examples:
     #
     #     pdf_object(true)      #=> "true"
     #     pdf_object(false)     #=> "false"
@@ -52,6 +65,15 @@ module PDF
     #     pdf_object(:Symbol)   #=> "/Symbol"
     #     pdf_object(['foo',:bar, [1,2]]) #=> "[foo /bar [1 2]]"
     #
+    # @param obj [nil, Boolean, Numeric, Array, Hash, Time, Symbol, String,
+    #   PDF::Core::ByteString, PDF::Core::LiteralString,
+    #   PDF::Core::NameTree::Node, PDF::Core::NameTree::Value,
+    #   PDF::Core::OutlineRoot, PDF::Core::OutlineItem, PDF::Core::Reference]
+    #   Object to serialise
+    # @param in_content_stream [Boolean] Specifies whther to use content stream
+    #   format or object format
+    # @return [String]
+    # @raise [PDF::Core::Errors::FailedObjectConversion]
     def pdf_object(obj, in_content_stream = false)
       case obj
       when NilClass then 'null'

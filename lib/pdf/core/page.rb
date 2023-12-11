@@ -1,20 +1,59 @@
 # frozen_string_literal: true
 
-# prawn/core/page.rb : Implements low-level representation of a PDF page
-#
-# Copyright February 2010, Gregory Brown.  All Rights Reserved.
-#
-# This is free software. Please see the LICENSE and COPYING files for details.
-#
-
 require_relative 'graphics_state'
 
 module PDF
   module Core
-    class Page # :nodoc:
-      attr_accessor :art_indents, :bleeds, :crops, :document, :margins, :stack, :trims
-      attr_writer :content, :dictionary
+    # Low-level representation of a PDF page
+    #
+    # @api private
+    class Page
+      # Page art box indents relative to page edges.
+      #
+      # @return [Hash<[:left, :right, :top, :bottom], Numeric>
+      attr_accessor :art_indents
 
+      # Page bleed box indents.
+      #
+      # @return [Hash<[:left, :right, :top, :bottom], Numeric>
+      attr_accessor :bleeds
+
+      # Page crop box indents.
+      #
+      # @return [Hash<[:left, :right, :top, :bottom], Numeric>
+      attr_accessor :crops
+
+      # Page trim box indents.
+      #
+      # @return [Hash<[:left, :right, :top, :bottom], Numeric>
+      attr_accessor :trims
+
+      # Page margins.
+      #
+      # @return [Hash<[:left, :right, :top, :bottom], Numeric>
+      attr_accessor :margins
+
+      # Owning document.
+      #
+      # @return [Prawn::Document]
+      attr_accessor :document
+
+      # Graphic state stack.
+      #
+      # @return [GraphicStateStack]
+      attr_accessor :stack
+
+      # Page content stream reference.
+      #
+      # @return [PDF::Core::Reference<Hash>]
+      attr_writer :content
+
+      # Page dictionary reference.
+      #
+      # @return [PDF::Core::Reference<Hash>]
+      attr_writer :dictionary
+
+      # A convenince constant of no indents.
       ZERO_INDENTS = {
         left: 0,
         bottom: 0,
@@ -22,6 +61,26 @@ module PDF
         top: 0
       }.freeze
 
+      # @param document [Prawn::Document]
+      # @param options [Hash]
+      # @option options :margins [Hash{:left, :right, :top, :bottom => Number}, nil]
+      #   ({ left: 0, right: 0, top: 0, bottom: 0 }) Page margins
+      # @option options :crop [Hash{:left, :right, :top, :bottom => Number}, nil] (ZERO_INDENTS)
+      #   Page crop box
+      # @option options :bleed [Hash{:left, :right, :top, :bottom => Number},  nil] (ZERO_INDENTS)
+      #   Page bleed box
+      # @option options :trims [Hash{:left, :right, :top, :bottom => Number}, nil] (ZERO_INDENTS)
+      #   Page trim box
+      # @option options :art_indents [Hash{:left, :right, :top, :bottom => Number}, Numeric>, nil] (ZERO_INDENTS)
+      #   Page art box indents.
+      # @option options :graphic_state [PDF::Core::GraphicState, nil] (nil)
+      #   Initial graphic state
+      # @option options :size [String, Array<Numeric>, nil] ('LETTER')
+      #   Page size. A string identifies a named page size defined in
+      #   {PageGeometry}. An array must be a two element array specifying width
+      #   and height in points.
+      # @option options :layout [:portrait, :landscape, nil] (:portrait)
+      #   Page orientation.
       def initialize(document, options = {})
         @document = document
         @margins = options[:margins] || {
@@ -57,10 +116,17 @@ module PDF
         resources[:ProcSet] = %i[PDF Text ImageB ImageC ImageI]
       end
 
+      # Current graphic state.
+      #
+      # @return [PDF::Core::GraphicState]
       def graphic_state
         stack.current_state
       end
 
+      # Page layout.
+      #
+      # @return [:portrait] if page is talled than wider
+      # @return [:landscape] otherwise
       def layout
         return @layout if defined?(@layout) && @layout
 
@@ -72,14 +138,26 @@ module PDF
         end
       end
 
+      # Page size.
+      #
+      # @return [Array<Numeric>] a two-element array containing width and height
+      #   of the page.
       def size
         defined?(@size) && @size || dimensions[2, 2]
       end
 
+      # Are we drawing to a stamp right now?
+      #
+      # @return [Boolean]
       def in_stamp_stream?
         !@stamp_stream.nil?
       end
 
+      # Draw to stamp.
+      #
+      # @param dictionary [PDF::Core::Reference<Hash>] stamp dictionary
+      # @yield outputs to the stamp
+      # @return [void]
       def stamp_stream(dictionary)
         @stamp_dictionary = dictionary
         @stamp_stream = @stamp_dictionary.stream
@@ -97,15 +175,26 @@ module PDF
         @stamp_dictionary = nil
       end
 
+      # Current content stream. Can be either the page content stream or a stamp
+      # content stream.
+      #
+      # @return [PDF::Core::Reference<Hash>]
       def content
         @stamp_stream || document.state.store[@content]
       end
 
+      # Current content dictionary. Can be either the page dictionary or a stamp
+      # dictionary.
+      #
+      # @return [PDF::Core::Reference<Hash>]
       def dictionary
         defined?(@stamp_dictionary) && @stamp_dictionary ||
           document.state.store[@dictionary]
       end
 
+      # Page resources dictionary.
+      #
+      # @return [Hash]
       def resources
         if dictionary.data[:Resources]
           document.deref(dictionary.data[:Resources])
@@ -114,6 +203,9 @@ module PDF
         end
       end
 
+      # Fonts dictionary.
+      #
+      # @return [Hash]
       def fonts
         if resources[:Font]
           document.deref(resources[:Font])
@@ -122,6 +214,9 @@ module PDF
         end
       end
 
+      # External objects dictionary.
+      #
+      # @return [Hash]
       def xobjects
         if resources[:XObject]
           document.deref(resources[:XObject])
@@ -130,6 +225,9 @@ module PDF
         end
       end
 
+      # Graphic state parameter dictionary.
+      #
+      # @return [Hash]
       def ext_gstates
         if resources[:ExtGState]
           document.deref(resources[:ExtGState])
@@ -138,6 +236,9 @@ module PDF
         end
       end
 
+      # Finalize page.
+      #
+      # @return [void]
       def finalize
         if dictionary.data[:Contents].is_a?(Array)
           dictionary.data[:Contents].each do |stream|
@@ -148,6 +249,9 @@ module PDF
         end
       end
 
+      # Page dimensions.
+      #
+      # @return [Array<Numeric>]
       def dimensions
         coords = PDF::Core::PageGeometry::SIZES[size] || size
         coords =
@@ -163,6 +267,11 @@ module PDF
         [0, 0].concat(coords)
       end
 
+      # A rectangle, expressed in default user space units, defining the extent
+      # of the page's meaningful content (including potential white space) as
+      # intended by the page's creator.
+      #
+      # @return [Array<Numeric>]
       def art_box
         left, bottom, right, top = dimensions
         [
@@ -173,6 +282,11 @@ module PDF
         ]
       end
 
+      # Page bleed box. A rectangle, expressed in default user space units,
+      # defining the region to which the contents of the page should be clipped
+      # when output in a production environment.
+      #
+      # @return [Array<Numeric>]
       def bleed_box
         left, bottom, right, top = dimensions
         [
@@ -183,6 +297,12 @@ module PDF
         ]
       end
 
+      # A rectangle, expressed in default user space units, defining the visible
+      # region of default user space. When the page is displayed or printed, its
+      # contents are to be clipped (cropped) to this rectangle and then imposed
+      # on the output medium in some implementation-defined manner.
+      #
+      # @return [Array<Numeric>]
       def crop_box
         left, bottom, right, top = dimensions
         [
@@ -193,6 +313,10 @@ module PDF
         ]
       end
 
+      # A rectangle, expressed in default user space units, defining the
+      # intended dimensions of the finished page after trimming.
+      #
+      # @return [Array<Numeric>]
       def trim_box
         left, bottom, right, top = dimensions
         [

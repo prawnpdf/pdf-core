@@ -8,10 +8,13 @@
 
 module PDF
   module Core
-    module Text # :nodoc:
+    # Low-level text rendering.
+    module Text
+      # Valid options of text drawing.
       # These should be used as a base. Extensions may build on this list
-      #
       VALID_OPTIONS = %i[kerning size style].freeze
+
+      # text rendering modes
       MODES = {
         fill: 0,
         stroke: 1,
@@ -23,17 +26,24 @@ module PDF
         clip: 7
       }.freeze
 
+      # Sygnals that a font doesn't have a name.
       class BadFontFamily < StandardError
         def initialize(message = 'Bad font family')
           super
         end
       end
 
+      # @deprecated
       attr_reader :skip_encoding
 
       # Low level call to set the current font style and extract text options
       # from an options hash. Should be called from within a save_font block
       #
+      # @param options [Hash]
+      # @option options :style [Symbol, String]
+      # @option options :kerning [Boolean]
+      # @option options :size [Numeric]
+      # @return [void]
       def process_text_options(options)
         if options[:style]
           raise BadFontFamily unless font.family
@@ -51,8 +61,9 @@ module PDF
 
       # Retrieve the current default kerning setting.
       #
-      # Defaults to true
+      # Defaults to `true`.
       #
+      # @return [Boolean]
       def default_kerning?
         return true unless defined?(@default_kerning)
 
@@ -63,12 +74,15 @@ module PDF
       # be overridden using the :kerning text option when drawing text or a text
       # box.
       #
+      # @example
       #   pdf.default_kerning = false
-      #   pdf.text('hello world')                   # text is not kerned
-      #   pdf.text('hello world', :kerning => true) # text is kerned
+      #   pdf.text('hello world')                # text is not kerned
+      #   pdf.text('hello world', kerning: true) # text is kerned
       #
-      def default_kerning(boolean)
-        @default_kerning = boolean
+      # @param value [Boolean]
+      # @return [void]
+      def default_kerning(value)
+        @default_kerning = value
       end
 
       alias default_kerning= default_kerning
@@ -79,12 +93,15 @@ module PDF
       # overridden using the :leading text option when drawing text or a text
       # box.
       #
+      # @example
       #   pdf.default_leading = 7
-      #   pdf.text('hello world')                # a leading of 7 is used
-      #   pdf.text('hello world', :leading => 0) # a leading of 0 is used
+      #   pdf.text('hello world')             # a leading of 7 is used
+      #   pdf.text('hello world', leading: 0) # a leading of 0 is used
       #
-      # Defaults to 0
+      # Defaults to 0.
       #
+      # @param number [Numeric]
+      # @return [Numeric]
       def default_leading(number = nil)
         if number.nil?
           defined?(@default_leading) && @default_leading || 0
@@ -101,20 +118,24 @@ module PDF
       # overridden using the :direction text option when drawing text or a text
       # box.
       #
+      # @example
       #   pdf.text_direction = :rtl
-      #   pdf.text('hello world')                     # prints 'dlrow olleh'
-      #   pdf.text('hello world', :direction => :ltr) # prints 'hello world'
+      #   pdf.text('hello world')                  # prints 'dlrow olleh'
+      #   pdf.text('hello world', direction: :ltr) # prints 'hello world'
       #
       # Valid directions are:
       #
-      # * :ltr             - left-to-right (default)
-      # * :rtl             - right-to-left
+      # * `:ltr` -- left-to-right (default)
+      # * `:rtl` -- right-to-left
       #
       # Side effects:
       #
-      # * When printing left-to-right, the default text alignment is :left
-      # * When printing right-to-left, the default text alignment is :right
+      # * When printing left-to-right, the default text alignment is `:left`
+      # * When printing right-to-left, the default text alignment is `:right`
       #
+      # @param direction [:ltr, :rtl]
+      # @return [:ltr]
+      # @return [:rtl]
       def text_direction(direction = nil)
         if direction.nil?
           defined?(@text_direction) && @text_direction || :ltr
@@ -133,30 +154,33 @@ module PDF
       # rendered using the first font that includes the glyph, starting with the
       # current font and then moving through :fallback_fonts from left to right.
       #
-      # Call with an empty array to turn off fallback fonts
+      # Call with an empty array to turn off fallback fonts.
       #
-      # file = "#{Prawn::DATADIR}/fonts/gkai00mp.ttf"
-      # font_families['Kai'] = {
-      #   :normal => { :file => file, :font => 'Kai' }
-      # }
-      # file = "#{Prawn::DATADIR}/fonts/Action Man.dfont"
-      # font_families['Action Man'] = {
-      #   :normal      => { :file => file, :font => 'ActionMan' },
-      # }
-      # fallback_fonts ['Times-Roman', 'Kai']
-      # font 'Action Man'
-      # text 'hello ƒ 你好'
-      # > hello prints in Action Man
-      # > ƒ prints in Times-Roman
-      # > 你好 prints in Kai
+      # @example
+      #   file = "#{Prawn::DATADIR}/fonts/gkai00mp.ttf"
+      #   font_families['Kai'] = {
+      #     normal: { file: file, font: 'Kai' }
+      #   }
+      #   file = "#{Prawn::DATADIR}/fonts/Action Man.dfont"
+      #   font_families['Action Man'] = {
+      #     normal: { file: file, font: 'ActionMan' },
+      #   }
+      #   fallback_fonts ['Times-Roman', 'Kai']
+      #   font 'Action Man'
+      #   text 'hello ƒ 你好'
+      #   # hello prints in Action Man
+      #   # ƒ prints in Times-Roman
+      #   # 你好 prints in Kai
       #
-      # fallback_fonts [] # clears document-wide fallback fonts
+      #   fallback_fonts [] # clears document-wide fallback fonts
       #
       # Side effects:
       #
       # * Increased overhead when fallback fonts are declared as each glyph is
       #   checked to see whether it exists in the current font
       #
+      # @param fallback_fonts [Array<String>]
+      # @return [Array<String>]
       def fallback_fonts(fallback_fonts = nil)
         if fallback_fonts.nil?
           defined?(@fallback_fonts) && @fallback_fonts || []
@@ -172,21 +196,27 @@ module PDF
       # Call with a symbol and block to temporarily change the current
       # text rendering mode.
       #
+      # Valid modes are:
+      #
+      # * `:fill`             - fill text (default)
+      # * `:stroke`           - stroke text
+      # * `:fill_stroke`      - fill, then stroke text
+      # * `:invisible`        - invisible text
+      # * `:fill_clip`        - fill text then add to path for clipping
+      # * `:stroke_clip`      - stroke text then add to path for clipping
+      # * `:fill_stroke_clip` - fill then stroke text, then add to path for
+      #                         clipping
+      # * `:clip`             - add text to path for clipping
+      #
+      # @example
       #   pdf.text_rendering_mode(:stroke) do
       #     pdf.text('Outlined Text')
       #   end
       #
-      # Valid modes are:
-      #
-      # * :fill             - fill text (default)
-      # * :stroke           - stroke text
-      # * :fill_stroke      - fill, then stroke text
-      # * :invisible        - invisible text
-      # * :fill_clip        - fill text then add to path for clipping
-      # * :stroke_clip      - stroke text then add to path for clipping
-      # * :fill_stroke_clip - fill then stroke text, then add to path for
-      #                       clipping
-      # * :clip             - add text to path for clipping
+      # @param mode [Symbol]
+      # @yield Temporariliy set text rendering mode
+      # @return [Symbol] if called withouth mode
+      # @return [void] otherwise
       def text_rendering_mode(mode = nil, &block)
         if mode.nil?
           return defined?(@text_rendering_mode) && @text_rendering_mode || :fill
@@ -204,14 +234,23 @@ module PDF
         end
       end
 
+      # Forget previously set text rendering mode.
+      #
+      # @return [void]
       def forget_text_rendering_mode!
         @text_rendering_mode = :unknown
       end
 
       # Increases or decreases the space between characters.
       # For horizontal text, a positive value will increase the space.
-      # For veritical text, a positive value will decrease the space.
+      # For vertical text, a positive value will decrease the space.
       #
+      # Call with no arguments to retrieve current character spacing.
+      #
+      # @param amount [Numeric]
+      # @yield Temporarily set character spacing
+      # @return [Numeric] if called without amount
+      # @return [void] otherwise
       def character_spacing(amount = nil, &block)
         if amount.nil?
           return defined?(@character_spacing) && @character_spacing || 0
@@ -226,8 +265,14 @@ module PDF
 
       # Increases or decreases the space between words.
       # For horizontal text, a positive value will increase the space.
-      # For veritical text, a positive value will decrease the space.
+      # For vertical text, a positive value will decrease the space.
       #
+      # Call with no arguments to retrieve current word spacing.
+      #
+      # @param amount [Numeric]
+      # @yield Temporarily set word spacing
+      # @return [Numeric] if called without amount
+      # @return [void] otherwise
       def word_spacing(amount = nil, &block)
         return defined?(@word_spacing) && @word_spacing || 0 if amount.nil?
 
@@ -238,8 +283,12 @@ module PDF
         end
       end
 
-      # Set the horizontal scaling. amount is a number specifying the
-      # percentage of the normal width.
+      # Set the horizontal scaling.
+      #
+      # @param amount [Numeric] the percentage of the normal width.
+      # @yield Temporarili set text scaling
+      # @return [Numeric] if called with no arguments
+      # @return [void] otherwise
       def horizontal_text_scaling(amount = nil, &block)
         if amount.nil?
           return defined?(@horizontal_text_scaling) && @horizontal_text_scaling || 100
@@ -253,9 +302,13 @@ module PDF
       end
 
       # Move the baseline up or down from its default location.
-      # Positive values move the baseline up, negative values
-      # move it down, and a zero value resets the baseline to
-      # its default location.
+      # Positive values move the baseline up, negative values move it down, and
+      # a zero value resets the baseline to its default location.
+      #
+      # @param amount [Numeric]
+      # @yield Temporarily set text rise
+      # @return [Numeric] if called with no arguments
+      # @return [void] otherwise
       def rise(amount = nil, &block)
         if amount.nil?
           return defined?(@rise) && @rise || 0
@@ -268,6 +321,14 @@ module PDF
         end
       end
 
+      # Add a text object to content stream.
+      #
+      # @param text [String]
+      # @param x [Numeric] horizontal position of the text origin on the page
+      # @param y [Numeric] vertical position of the text origin on the page
+      # @param options [Hash]
+      # @option options :rotate [Numeric] text rotation angle in degrees
+      # @option options :kerning [Boolean]
       def add_text_content(text, x, y, options)
         chunks = font.encode_text(text, options)
 

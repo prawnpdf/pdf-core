@@ -15,6 +15,8 @@ All notable changes to this project will be documented in this file.
   Peter Goldstein
 - Reduced memory allocations and enhanced performance
   Thomas Leitner
+- Updated documentation
+  Alexander Mankuta
 
 ### Fixed
 

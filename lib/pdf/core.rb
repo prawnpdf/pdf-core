@@ -20,18 +20,28 @@ require_relative 'core/outline_item'
 require_relative 'core/renderer'
 require_relative 'core/text'
 
+# Top level Module
 module PDF
+  # PDF::Core is concerned with low-level PDF functions such as serialization,
+  # content streams and such.
+  #
+  # It's extracted from Prawn but at the moment is not entirely independent.
   module Core
+    # PDF::Core-specific errors
     module Errors
-      # This error is raised when pdf_object() fails
-      FailedObjectConversion = Class.new(StandardError)
+      # This error indicates failure of {PDF::Core.pdf_object}
+      class FailedObjectConversion < StandardError
+      end
 
-      # This error is raise when trying to restore a graphic state that
-      EmptyGraphicStateStack = Class.new(StandardError)
+      # This error occurs when a graphic state is being restored but the graphic
+      # state stack is empty.
+      class EmptyGraphicStateStack < StandardError
+      end
 
-      # This error is raised when Document#page_layout is set to anything
-      # other than :portrait or :landscape
-      InvalidPageLayout = Class.new(StandardError)
+      # This error is raised when page layout is set to anything other than
+      # `:portrait` or `:landscape`
+      class InvalidPageLayout < StandardError
+      end
     end
   end
 end
