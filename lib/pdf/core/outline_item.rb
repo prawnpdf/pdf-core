@@ -65,11 +65,11 @@ module PDF
         hash = {
           Title: title,
           Parent: parent,
-          Count: closed ? -count : count
+          Count: closed ? -count : count,
         }
         [
           { First: first }, { Last: last }, { Next: defined?(@next) && @next },
-          { Prev: prev }, { Dest: dest }
+          { Prev: prev }, { Dest: dest },
         ].each do |h|
           unless h.values.first.nil?
             hash.merge!(h)

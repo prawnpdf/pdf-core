@@ -118,7 +118,7 @@ module PDF
         page_options = {
           size: options[:size] || last_page_size,
           layout: options[:layout] || last_page_layout,
-          margins: last_page_margins
+          margins: last_page_margins,
         }
         if last_page
           if last_page.graphic_state
@@ -165,7 +165,7 @@ module PDF
       # @return [void]
       def finalize_all_page_contents
         (1..page_count).each do |i|
-          go_to_page i
+          go_to_page(i)
           while graphic_stack.present?
             restore_graphics_state
           end
@@ -199,7 +199,7 @@ module PDF
         render_xref(buffer)
         render_trailer(buffer)
 
-        if output.respond_to? :<<
+        if output.respond_to?(:<<)
           output << buffer.string
         end
 
@@ -266,7 +266,7 @@ module PDF
         trailer_hash = {
           Size: state.store.size + 1,
           Root: state.store.root,
-          Info: state.store.info
+          Info: state.store.info,
         }
         trailer_hash.merge!(state.trailer) if state.trailer
 
@@ -281,14 +281,14 @@ module PDF
       #
       # @return [void]
       def open_graphics_state
-        add_content 'q'
+        add_content('q')
       end
 
       # Close current graphic state (restore previous) in the content stream.
       #
       # @return [void]
       def close_graphics_state
-        add_content 'Q'
+        add_content('Q')
       end
 
       # Save surrent graphic state both in the graphic state stack and in the

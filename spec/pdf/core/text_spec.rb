@@ -67,11 +67,11 @@ RSpec.describe PDF::Core::Text do
 
         # rubocop:disable RSpec/ExpectInHook
         before do
-          expect do
+          expect {
             mock.text_rendering_mode(:fill_stroke) do
               raise StandardError, error_message
             end
-          end.to raise_error StandardError, error_message
+          }.to raise_error(StandardError, error_message)
         end
         # rubocop:enable RSpec/ExpectInHook
 
@@ -117,11 +117,11 @@ RSpec.describe PDF::Core::Text do
 
         # rubocop:disable RSpec/ExpectInHook
         before do
-          expect do
+          expect {
             mock.horizontal_text_scaling(110) do
               raise StandardError, error_message
             end
-          end.to raise_error StandardError, error_message
+          }.to raise_error(StandardError, error_message)
         end
         # rubocop:enable RSpec/ExpectInHook
 
@@ -167,11 +167,11 @@ RSpec.describe PDF::Core::Text do
 
         # rubocop:disable RSpec/ExpectInHook
         before do
-          expect do
+          expect {
             mock.character_spacing(10) do
               raise StandardError, error_message
             end
-          end.to raise_error StandardError, error_message
+          }.to raise_error(StandardError, error_message)
         end
         # rubocop:enable RSpec/ExpectInHook
 
@@ -217,11 +217,11 @@ RSpec.describe PDF::Core::Text do
 
         # rubocop:disable RSpec/ExpectInHook
         before do
-          expect do
+          expect {
             mock.word_spacing(10) do
               raise StandardError, error_message
             end
-          end.to raise_error StandardError, error_message
+          }.to raise_error(StandardError, error_message)
         end
         # rubocop:enable RSpec/ExpectInHook
 
@@ -267,11 +267,11 @@ RSpec.describe PDF::Core::Text do
 
         # rubocop:disable RSpec/ExpectInHook
         before do
-          expect do
+          expect {
             mock.rise(5) do
               raise StandardError, error_message
             end
-          end.to raise_error StandardError, error_message
+          }.to raise_error(StandardError, error_message)
         end
         # rubocop:enable RSpec/ExpectInHook
 
@@ -288,7 +288,7 @@ RSpec.describe PDF::Core::Text do
 
   describe '#add_text_content' do
     it 'handles frozen strings' do
-      expect { mock.add_text_content 'text', 0, 0, {} }
+      expect { mock.add_text_content('text', 0, 0, {}) }
         .to_not raise_error
     end
   end

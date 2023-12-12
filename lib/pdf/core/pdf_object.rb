@@ -100,13 +100,13 @@ module PDF
         obj = utf8_to_utf16(obj) unless in_content_stream
         "<#{string_to_hex(obj)}>"
       when Symbol
-        (@symbol_str_cache ||= {})[obj] ||= (+'/') << obj.to_s.unpack('C*').map do |n|
+        (@symbol_str_cache ||= {})[obj] ||= (+'/') << obj.to_s.unpack('C*').map { |n|
           if ESCAPED_NAME_CHARACTERS.include?(n)
             "##{n.to_s(16).upcase}"
           else
             n.chr
           end
-        end.join
+        }.join
       when ::Hash
         output = +'<< '
         obj

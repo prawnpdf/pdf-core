@@ -58,7 +58,7 @@ module PDF
         left: 0,
         bottom: 0,
         right: 0,
-        top: 0
+        top: 0,
       }.freeze
 
       # @param document [Prawn::Document]
@@ -87,7 +87,7 @@ module PDF
           left: 36,
           right: 36,
           top: 36,
-          bottom: 36
+          bottom: 36,
         }
         @crops = options[:crops] || ZERO_INDENTS
         @bleeds = options[:bleeds] || ZERO_INDENTS
@@ -110,7 +110,7 @@ module PDF
           BleedBox: bleed_box,
           TrimBox: trim_box,
           ArtBox: art_box,
-          Contents: content
+          Contents: content,
         )
 
         resources[:ProcSet] = %i[PDF Text ImageB ImageC ImageI]
@@ -143,7 +143,7 @@ module PDF
       # @return [Array<Numeric>] a two-element array containing width and height
       #   of the page.
       def size
-        defined?(@size) && @size || dimensions[2, 2]
+        (defined?(@size) && @size) || dimensions[2, 2]
       end
 
       # Are we drawing to a stamp right now?
@@ -188,7 +188,7 @@ module PDF
       #
       # @return [PDF::Core::Reference<Hash>]
       def dictionary
-        defined?(@stamp_dictionary) && @stamp_dictionary ||
+        (defined?(@stamp_dictionary) && @stamp_dictionary) ||
           document.state.store[@dictionary]
       end
 
@@ -278,7 +278,7 @@ module PDF
           left + art_indents[:left],
           bottom + art_indents[:bottom],
           right - art_indents[:right],
-          top - art_indents[:top]
+          top - art_indents[:top],
         ]
       end
 
@@ -293,7 +293,7 @@ module PDF
           left + bleeds[:left],
           bottom + bleeds[:bottom],
           right - bleeds[:right],
-          top - bleeds[:top]
+          top - bleeds[:top],
         ]
       end
 
@@ -309,7 +309,7 @@ module PDF
           left + crops[:left],
           bottom + crops[:bottom],
           right - crops[:right],
-          top - crops[:top]
+          top - crops[:top],
         ]
       end
 
@@ -323,7 +323,7 @@ module PDF
           left + trims[:left],
           bottom + trims[:bottom],
           right - trims[:right],
-          top - trims[:top]
+          top - trims[:top],
         ]
       end
 

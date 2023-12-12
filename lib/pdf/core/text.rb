@@ -23,7 +23,7 @@ module PDF
         fill_clip: 4,
         stroke_clip: 5,
         fill_stroke_clip: 6,
-        clip: 7
+        clip: 7,
       }.freeze
 
       # Sygnals that a font doesn't have a name.
@@ -104,7 +104,7 @@ module PDF
       # @return [Numeric]
       def default_leading(number = nil)
         if number.nil?
-          defined?(@default_leading) && @default_leading || 0
+          (defined?(@default_leading) && @default_leading) || 0
         else
           @default_leading = number
         end
@@ -138,7 +138,7 @@ module PDF
       # @return [:rtl]
       def text_direction(direction = nil)
         if direction.nil?
-          defined?(@text_direction) && @text_direction || :ltr
+          (defined?(@text_direction) && @text_direction) || :ltr
         else
           @text_direction = direction
         end
@@ -183,7 +183,7 @@ module PDF
       # @return [Array<String>]
       def fallback_fonts(fallback_fonts = nil)
         if fallback_fonts.nil?
-          defined?(@fallback_fonts) && @fallback_fonts || []
+          (defined?(@fallback_fonts) && @fallback_fonts) || []
         else
           @fallback_fonts = fallback_fonts
         end
@@ -219,7 +219,7 @@ module PDF
       # @return [void] otherwise
       def text_rendering_mode(mode = nil, &block)
         if mode.nil?
-          return defined?(@text_rendering_mode) && @text_rendering_mode || :fill
+          return (defined?(@text_rendering_mode) && @text_rendering_mode) || :fill
         end
 
         unless MODES.key?(mode)
@@ -253,7 +253,7 @@ module PDF
       # @return [void] otherwise
       def character_spacing(amount = nil, &block)
         if amount.nil?
-          return defined?(@character_spacing) && @character_spacing || 0
+          return (defined?(@character_spacing) && @character_spacing) || 0
         end
 
         if character_spacing == amount
@@ -274,7 +274,7 @@ module PDF
       # @return [Numeric] if called without amount
       # @return [void] otherwise
       def word_spacing(amount = nil, &block)
-        return defined?(@word_spacing) && @word_spacing || 0 if amount.nil?
+        return (defined?(@word_spacing) && @word_spacing) || 0 if amount.nil?
 
         if word_spacing == amount
           yield
@@ -291,7 +291,7 @@ module PDF
       # @return [void] otherwise
       def horizontal_text_scaling(amount = nil, &block)
         if amount.nil?
-          return defined?(@horizontal_text_scaling) && @horizontal_text_scaling || 100
+          return (defined?(@horizontal_text_scaling) && @horizontal_text_scaling) || 100
         end
 
         if horizontal_text_scaling == amount
@@ -311,7 +311,7 @@ module PDF
       # @return [void] otherwise
       def rise(amount = nil, &block)
         if amount.nil?
-          return defined?(@rise) && @rise || 0
+          return (defined?(@rise) && @rise) || 0
         end
 
         if rise == amount
@@ -332,35 +332,37 @@ module PDF
       def add_text_content(text, x, y, options)
         chunks = font.encode_text(text, options)
 
-        add_content "\nBT"
+        add_content("\nBT")
 
         if options[:rotate]
-          rad = options[:rotate].to_f * Math::PI / 180
+          rad = Float(options[:rotate]) * Math::PI / 180
           array = [
             Math.cos(rad),
             Math.sin(rad),
             -Math.sin(rad),
             Math.cos(rad),
-            x, y
+            x, y,
           ]
-          add_content "#{PDF::Core.real_params(array)} Tm"
+          add_content("#{PDF::Core.real_params(array)} Tm")
         else
-          add_content "#{PDF::Core.real(x)} #{PDF::Core.real(y)} Td"
+          add_content("#{PDF::Core.real(x)} #{PDF::Core.real(y)} Td")
         end
 
         chunks.each do |(subset, string)|
           font.add_to_current_page(subset)
-          add_content [
-            PDF::Core.pdf_object(font.identifier_for(subset), true),
-            PDF::Core.pdf_object(font_size, true),
-            'Tf'
-          ].join(' ')
+          add_content(
+            [
+              PDF::Core.pdf_object(font.identifier_for(subset), true),
+              PDF::Core.pdf_object(font_size, true),
+              'Tf',
+            ].join(' '),
+          )
 
           operation = options[:kerning] && string.is_a?(Array) ? 'TJ' : 'Tj'
-          add_content "#{PDF::Core.pdf_object(string, true)} #{operation}"
+          add_content("#{PDF::Core.pdf_object(string, true)} #{operation}")
         end
 
-        add_content "ET\n"
+        add_content("ET\n")
       end
 
       private
@@ -378,7 +380,7 @@ module PDF
       end
 
       def update_text_rendering_mode_state
-        add_content "\n#{MODES[text_rendering_mode]} Tr"
+        add_content("\n#{MODES[text_rendering_mode]} Tr")
       end
 
       def wrap_and_restore_character_spacing(block_value)
@@ -394,7 +396,7 @@ module PDF
       end
 
       def update_character_spacing_state
-        add_content "\n#{PDF::Core.real(character_spacing)} Tc"
+        add_content("\n#{PDF::Core.real(character_spacing)} Tc")
       end
 
       def wrap_and_restore_word_spacing(block_value)
@@ -410,7 +412,7 @@ module PDF
       end
 
       def update_word_spacing_state
-        add_content "\n#{PDF::Core.real(word_spacing)} Tw"
+        add_content("\n#{PDF::Core.real(word_spacing)} Tw")
       end
 
       def wrap_and_restore_horizontal_text_scaling(block_value)
@@ -426,7 +428,7 @@ module PDF
       end
 
       def update_horizontal_text_scaling_state
-        add_content "\n#{PDF::Core.real(horizontal_text_scaling)} Tz"
+        add_content("\n#{PDF::Core.real(horizontal_text_scaling)} Tz")
       end
 
       def wrap_and_restore_rise(block_value)
@@ -442,7 +444,7 @@ module PDF
       end
 
       def update_rise_state
-        add_content "\n#{PDF::Core.real(rise)} Ts"
+        add_content("\n#{PDF::Core.real(rise)} Ts")
       end
     end
   end

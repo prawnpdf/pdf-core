@@ -24,7 +24,7 @@ module PDF
           if options[:print_scaling]
             PDF::Core::ObjectStore.new(
               info: options[:info],
-              print_scaling: options[:print_scaling]
+              print_scaling: options[:print_scaling],
             )
           else
             PDF::Core::ObjectStore.new(info: options[:info])
@@ -95,10 +95,10 @@ module PDF
 
         count = (1..@store.page_count)
         @pages =
-          count.map do |index|
+          count.map { |index|
             orig_dict_id = @store.object_id_for_page(index)
             PDF::Core::Page.new(document, object_id: orig_dict_id)
-          end
+          }
       end
 
       # Adds Prawn metadata to document info

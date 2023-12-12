@@ -1,25 +1,5 @@
 # frozen_string_literal: true
 
-require_relative 'core/pdf_object'
-require_relative 'core/annotations'
-require_relative 'core/byte_string'
-require_relative 'core/destinations'
-require_relative 'core/filters'
-require_relative 'core/stream'
-require_relative 'core/reference'
-require_relative 'core/literal_string'
-require_relative 'core/filter_list'
-require_relative 'core/page'
-require_relative 'core/object_store'
-require_relative 'core/document_state'
-require_relative 'core/name_tree'
-require_relative 'core/graphics_state'
-require_relative 'core/page_geometry'
-require_relative 'core/outline_root'
-require_relative 'core/outline_item'
-require_relative 'core/renderer'
-require_relative 'core/text'
-
 # Top level Module
 module PDF
   # PDF::Core is concerned with low-level PDF functions such as serialization,
@@ -45,3 +25,23 @@ module PDF
     end
   end
 end
+
+require_relative 'core/pdf_object'
+require_relative 'core/annotations'
+require_relative 'core/byte_string'
+require_relative 'core/destinations'
+require_relative 'core/filters'
+require_relative 'core/stream'
+require_relative 'core/reference'
+require_relative 'core/literal_string'
+require_relative 'core/filter_list'
+require_relative 'core/page'
+require_relative 'core/object_store'
+require_relative 'core/document_state'
+require_relative 'core/name_tree'
+require_relative 'core/graphics_state'
+require_relative 'core/page_geometry'
+require_relative 'core/outline_root'
+require_relative 'core/outline_item'
+require_relative 'core/renderer'
+require_relative 'core/text'

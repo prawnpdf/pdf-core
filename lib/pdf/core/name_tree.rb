@@ -152,8 +152,8 @@ module PDF
         # @return [Node]
         def deep_copy
           node = dup
-          node.instance_variable_set('@children', Utils.deep_clone(children))
-          node.instance_variable_set('@ref', node.ref ? node.ref.deep_copy : nil)
+          node.instance_variable_set(:@children, Utils.deep_clone(children))
+          node.instance_variable_set(:@ref, node.ref ? node.ref.deep_copy : nil)
           node
         end
 

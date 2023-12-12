@@ -116,8 +116,7 @@ module PDF
             [@dash[:dash], @dash[:space]]
           end
 
-        "[#{PDF::Core.real_params(array)}] "\
-          "#{PDF::Core.real(@dash[:phase])} d"
+        "[#{PDF::Core.real_params(array)}] #{PDF::Core.real(@dash[:phase])} d"
       end
 
       private

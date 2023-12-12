@@ -6,10 +6,10 @@ RSpec.describe PDF::Core::Stream do
   subject(:stream) { described_class.new }
 
   it 'compresses a stream upon request' do
-    stream << 'Hi There ' * 20
+    stream << ('Hi There ' * 20)
 
     cstream = described_class.new
-    cstream << 'Hi There ' * 20
+    cstream << ('Hi There ' * 20)
     cstream.compress!
 
     expect(cstream.filtered_stream.length).to be < stream.length

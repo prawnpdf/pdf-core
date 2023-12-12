@@ -15,7 +15,7 @@ module PDF
 
         def initialize(message = DEFAULT_MESSAGE, filter: nil)
           if filter
-            super format(MESSAGE_WITH_FILTER, filter: filter)
+            super(format(MESSAGE_WITH_FILTER, filter: filter))
           else
             super(message)
           end

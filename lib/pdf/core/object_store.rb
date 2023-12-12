@@ -100,7 +100,7 @@ module PDF
       # @return [void]
       def each
         @identifiers.each do |id|
-          yield @objects[id]
+          yield(@objects[id])
         end
       end
 

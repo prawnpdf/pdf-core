@@ -6,9 +6,9 @@ RSpec.describe PDF::Core::DocumentState do
   subject(:state) { described_class.new({}) }
 
   describe 'initialization' do
-    it { expect(state.compress).to eq(false) }
-    it { expect(state.encrypt).to eq(false) }
-    it { expect(state.skip_encoding).to eq(false) }
+    it { expect(state.compress).to be false }
+    it { expect(state.encrypt).to be false }
+    it { expect(state.skip_encoding).to be false }
     it { expect(state.trailer).to eq({}) }
   end
 
@@ -20,7 +20,7 @@ RSpec.describe PDF::Core::DocumentState do
   describe 'given a trailer ID with two values' do
     subject(:state) do
       described_class.new(
-        trailer: { ID: %w[myDoc versionA] }
+        trailer: { ID: %w[myDoc versionA] },
       )
     end
 

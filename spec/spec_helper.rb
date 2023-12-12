@@ -20,7 +20,7 @@ RSpec.configure do |config|
 end
 # rubocop: enable Style/SymbolProc
 
-RSpec::Matchers.define :have_parseable_xobjects do
+RSpec::Matchers.define(:have_parseable_xobjects) do
   match do |actual|
     expect { PDF::Inspector::XObject.analyze(actual.render) }.to_not raise_error
     true

@@ -68,7 +68,7 @@ RSpec.describe PDF::Core::NameTree do
     ref_count = pdf.object_store.length # save when root is split
     tree_add(node, ['five', 5], ['six', 6], ['seven', 7])
     expect(tree_dump(node)).to eq(
-      '[[five=5,four=4,one=1],[seven=7,six=6],[three=3,two=2]]'
+      '[[five=5,four=4,one=1],[seven=7,six=6],[three=3,two=2]]',
     )
     expect(pdf.object_store.length).to eq ref_count + 1
   end
@@ -78,7 +78,7 @@ RSpec.describe PDF::Core::NameTree do
     tree_add(node, ['one', 1], ['two', 2], ['three', 3], ['four', 4])
     tree_add(node, ['five', 5], ['six', 6], ['seven', 7], ['eight', 8])
     expect(tree_dump(node)).to eq(
-      '[[[eight=8,five=5],[four=4,one=1]],[[seven=7,six=6],[three=3,two=2]]]'
+      '[[[eight=8,five=5],[four=4,one=1]],[[seven=7,six=6],[three=3,two=2]]]',
     )
   end
 
@@ -87,7 +87,7 @@ RSpec.describe PDF::Core::NameTree do
     tree_add(node, ['eight', 8], ['five', 5], ['four', 4], ['one', 1])
     tree_add(node, ['seven', 7], ['six', 6], ['three', 3], ['two', 2])
     expect(tree_dump(node)).to eq(
-      '[[[eight=8,five=5],[four=4,one=1]],[[seven=7,six=6],[three=3,two=2]]]'
+      '[[[eight=8,five=5],[four=4,one=1]],[[seven=7,six=6],[three=3,two=2]]]',
     )
   end
 
@@ -96,8 +96,8 @@ RSpec.describe PDF::Core::NameTree do
     tree_add(node, ['one', 1], ['two', 2], ['three', 3])
     expect(node.to_hash).to eq(
       Names: [
-        tree_value('one', 1), tree_value('three', 3), tree_value('two', 2)
-      ]
+        tree_value('one', 1), tree_value('three', 3), tree_value('two', 2),
+      ],
     )
   end
 
@@ -112,7 +112,7 @@ RSpec.describe PDF::Core::NameTree do
     tree_add(node, ['one', 1], ['two', 2], ['three', 3], ['four', 4])
     expect(node.children.first.to_hash).to eq(
       Limits: %w[four one],
-      Names: [tree_value('four', 4), tree_value('one', 1)]
+      Names: [tree_value('four', 4), tree_value('one', 1)],
     )
   end
 
@@ -121,12 +121,10 @@ RSpec.describe PDF::Core::NameTree do
     tree_add(node, ['one', 1], ['two', 2], ['three', 3], ['four', 4])
     tree_add(node, ['five', 5], ['six', 6], ['seven', 7], ['eight', 8])
     tree_add(node, ['nine', 9], ['ten', 10], ['eleven', 11], ['twelve', 12])
-    tree_add(
-      node, ['thirteen', 13], ['fourteen', 14], ['fifteen', 15], ['sixteen', 16]
-    )
+    tree_add(node, ['thirteen', 13], ['fourteen', 14], ['fifteen', 15], ['sixteen', 16])
     expect(node.children.first.to_hash).to eq(
       Limits: %w[eight one],
-      Kids: node.children.first.children.map(&:ref)
+      Kids: node.children.first.children.map(&:ref),
     )
   end
 end

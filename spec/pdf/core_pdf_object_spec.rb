@@ -47,7 +47,7 @@ RSpec.describe PDF::Core, '.pdf_object' do
     expect(PDF::Inspector.parse(described_class.pdf_object(s, true))).to eq s
   end
 
-  it 'converts a Ruby string to a UTF-16 PDF string when outside of '\
+  it 'converts a Ruby string to a UTF-16 PDF string when outside of ' \
     'a content stream' do
     s = 'I can has a string'
     s_utf16 = "\xFE\xFF#{s.unpack('U*').pack('n*')}"
@@ -55,19 +55,19 @@ RSpec.describe PDF::Core, '.pdf_object' do
     expect(parsed_s).to eq s_utf16
   end
 
-  it 'converts a Ruby string with characters outside the BMP to its '\
-     'UTF-16 representation with a BOM' do
+  it 'converts a Ruby string with characters outside the BMP to its ' \
+    'UTF-16 representation with a BOM' do
     # U+10192 ROMAN SEMUNCIA SIGN
     semuncia = [65_938].pack('U')
     expect(described_class.pdf_object(semuncia, false).upcase)
       .to eq '<FEFFD800DD92>'
   end
 
-  it 'passes through bytes regardless of content stream status for '\
+  it 'passes through bytes regardless of content stream status for ' \
     'ByteString' do
     expect(
       described_class.pdf_object(PDF::Core::ByteString.new("\xDE\xAD\xBE\xEF"))
-        .upcase
+        .upcase,
     ).to eq '<DEADBEEF>'
   end
 
@@ -99,7 +99,7 @@ RSpec.describe PDF::Core, '.pdf_object' do
     expect(described_class.pdf_object(ls).size).to eq 9
   end
 
-  it 'escapes strings correctly when converting a LiteralString that is '\
+  it 'escapes strings correctly when converting a LiteralString that is ' \
     'not utf-8' do
     data = "\x43\xaf\xc9\x7f\xef\xf\xe6\xa8\xcb\x5c\xaf\xd0"
     ls = PDF::Core::LiteralString.new(data)
@@ -110,11 +110,11 @@ RSpec.describe PDF::Core, '.pdf_object' do
   it 'converts a Ruby symbol to PDF name' do
     expect(described_class.pdf_object(:my_symbol)).to eq '/my_symbol'
     expect(
-      described_class.pdf_object(:"A;Name_With-Various***Characters?")
+      described_class.pdf_object(:'A;Name_With-Various***Characters?'),
     ).to eq '/A;Name_With-Various***Characters?'
   end
 
-  it 'converts a whitespace or delimiter containing Ruby symbol to '\
+  it 'converts a whitespace or delimiter containing Ruby symbol to ' \
     'a PDF name' do
     expect(described_class.pdf_object(:'my symbol')).to eq '/my#20symbol'
     expect(described_class.pdf_object(:'my#symbol')).to eq '/my#23symbol'
@@ -129,8 +129,8 @@ RSpec.describe PDF::Core, '.pdf_object' do
     expect(described_class.pdf_object([1, 2, 3])).to eq '[1 2 3]'
     expect(
       PDF::Inspector.parse(
-        described_class.pdf_object([[1, 2], :foo, 'Bar'], true)
-      )
+        described_class.pdf_object([[1, 2], :foo, 'Bar'], true),
+      ),
     ).to eq [[1, 2], :foo, 'Bar']
   end
 
@@ -140,8 +140,8 @@ RSpec.describe PDF::Core, '.pdf_object' do
     bar = "\xFE\xFF\x00B\x00a\x00r"
     expect(
       PDF::Inspector.parse(
-        described_class.pdf_object([[1, 2], :foo, 'Bar'], false)
-      )
+        described_class.pdf_object([[1, 2], :foo, 'Bar'], false),
+      ),
     ).to eq [[1, 2], :foo, bar]
   end
 
@@ -150,9 +150,9 @@ RSpec.describe PDF::Core, '.pdf_object' do
       {
         :foo => :bar,
         'baz' => [1, 2, 3],
-        :bang => { a: 'what', b: %i[you say] }
+        :bang => { a: 'what', b: %i[you say] },
       },
-      true
+      true,
     )
 
     res = PDF::Inspector.parse(dict)
@@ -168,9 +168,9 @@ RSpec.describe PDF::Core, '.pdf_object' do
       {
         foo: :bar,
         'baz' => [1, 2, 3],
-        bang: { a: 'what', b: %i[you say] }
+        bang: { a: 'what', b: %i[you say] },
       },
-      false
+      false,
     )
 
     res = PDF::Inspector.parse(dict)
@@ -201,8 +201,8 @@ RSpec.describe PDF::Core, '.pdf_object' do
   it 'converts a NameTree::Node to a PDF hash' do
     # FIXME: Soft dependency on Prawn::Document exists in Node
     node = PDF::Core::NameTree::Node.new(nil, 10)
-    node.add 'hello', 1.0
-    node.add 'world', 2.0
+    node.add('hello', 1.0)
+    node.add('world', 2.0)
     data = described_class.pdf_object(node)
     res = PDF::Inspector.parse(data)
     expect(res).to eq(Names: ['hello', 1.0, 'world', 2.0])

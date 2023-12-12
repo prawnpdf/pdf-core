@@ -35,7 +35,7 @@ module PDF
       #
       # @return [void]
       def compress!
-        unless @filters.names.include? :FlateDecode
+        unless @filters.names.include?(:FlateDecode)
           @filtered_stream = nil
           @filters << :FlateDecode
         end
@@ -45,7 +45,7 @@ module PDF
       #
       # @return [Boolean]
       def compressed?
-        @filters.names.include? :FlateDecode
+        @filters.names.include?(:FlateDecode)
       end
 
       # Is there any data in this stream?
@@ -66,7 +66,7 @@ module PDF
             @filters.each do |(filter_name, params)|
               filter = PDF::Core::Filters.const_get(filter_name)
               if filter
-                @filtered_stream = filter.encode @filtered_stream, params
+                @filtered_stream = filter.encode(@filtered_stream, params)
               end
             end
           end
@@ -102,7 +102,7 @@ module PDF
           filter_params = @filters.decode_params
 
           d = {
-            Length: filtered_stream.length
+            Length: filtered_stream.length,
           }
           if filter_names.any?
             d[:Filter] = filter_names
@@ -122,12 +122,11 @@ module PDF
       # @return [String]
       def inspect
         format(
-          '#<%<class>s:0x%<object_id>014x '\
-            '@stream=%<stream>s, @filters=%<filters>s>',
+          '#<%<class>s:0x%<object_id>014x @stream=%<stream>s, @filters=%<filters>s>',
           class: self.class.name,
           object_id: object_id,
           stream: @stream.inspect,
-          filters: @filters.inspect
+          filters: @filters.inspect,
         )
       end
     end

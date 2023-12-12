@@ -20,7 +20,7 @@ module PDF
       # @see Prawn::Document::Internal#names
       def dests
         names.data[:Dests] ||= ref!(
-          PDF::Core::NameTree::Node.new(self, NAME_TREE_CHILDREN_LIMIT)
+          PDF::Core::NameTree::Node.new(self, NAME_TREE_CHILDREN_LIMIT),
         )
       end
 

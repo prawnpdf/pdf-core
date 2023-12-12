@@ -25,7 +25,7 @@ RSpec.describe PDF::Core::Page do
   end
 
   it 'embeds MediaBox' do
-    page = described_class.new doc, size: 'A4'
+    page = described_class.new(doc, size: 'A4')
 
     expect(page.dictionary.data[:MediaBox]).to eq [0, 0, 595.28, 841.89]
   end
@@ -34,7 +34,7 @@ RSpec.describe PDF::Core::Page do
     page = described_class.new(
       doc,
       size: 'A4',
-      crops: { left: 10, bottom: 20, right: 30, top: 40 }
+      crops: { left: 10, bottom: 20, right: 30, top: 40 },
     )
 
     expect(page.dictionary.data[:CropBox]).to eq [10, 20, 565.28, 801.89]
@@ -44,7 +44,7 @@ RSpec.describe PDF::Core::Page do
     page = described_class.new(
       doc,
       size: 'A4',
-      bleeds: { left: 10, bottom: 20, right: 30, top: 40 }
+      bleeds: { left: 10, bottom: 20, right: 30, top: 40 },
     )
 
     expect(page.dictionary.data[:BleedBox]).to eq [10, 20, 565.28, 801.89]
@@ -54,7 +54,7 @@ RSpec.describe PDF::Core::Page do
     page = described_class.new(
       doc,
       size: 'A4',
-      trims: { left: 10, bottom: 20, right: 30, top: 40 }
+      trims: { left: 10, bottom: 20, right: 30, top: 40 },
     )
 
     expect(page.dictionary.data[:TrimBox]).to eq [10, 20, 565.28, 801.89]
@@ -64,7 +64,7 @@ RSpec.describe PDF::Core::Page do
     page = described_class.new(
       doc,
       size: 'A4',
-      art_indents: { left: 10, bottom: 20, right: 30, top: 40 }
+      art_indents: { left: 10, bottom: 20, right: 30, top: 40 },
     )
 
     expect(page.dictionary.data[:ArtBox]).to eq [10, 20, 565.28, 801.89]
@@ -72,15 +72,15 @@ RSpec.describe PDF::Core::Page do
 
   describe 'stamp_stream' do
     it 'is writable' do
-      page = described_class.new doc, size: 'A4'
+      page = described_class.new(doc, size: 'A4')
 
       ref = PDF::Core::Reference.new(1, {})
 
-      expect do
+      expect {
         page.stamp_stream(ref) do
           page.content << 'test'
         end
-      end.to_not raise_error
+      }.to_not raise_error
       expect(ref.stream.filtered_stream).to eq 'test'
     end
   end
