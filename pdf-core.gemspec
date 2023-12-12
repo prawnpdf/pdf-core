@@ -33,6 +33,9 @@ Gem::Specification.new do |spec|
     'greenberg@entryway.net', 'jimmy@deefa.com',
   ]
   spec.licenses = %w[PRAWN GPL-2.0 GPL-3.0]
+  spec.metadata = {
+    'rubygems_mfa_required' => 'true',
+  }
   spec.add_development_dependency('pdf-inspector', '~> 1.1.0')
   spec.add_development_dependency('pdf-reader', '~>1.2')
   spec.add_development_dependency('prawn-dev', '~> 0.4.0')
