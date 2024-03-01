@@ -35,8 +35,8 @@ module PDF
       # @param data [Hash, Array, Numeric, String, Symbol, Date, Time, nil]
       #   object data
       # @return [Reference]
-      def ref(data, &block)
-        push(size + 1, data, &block)
+      def ref(data)
+        push(size + 1, data)
       end
 
       # Document info dict reference
@@ -79,12 +79,12 @@ module PDF
       #   @param data [Hash, Array, Numeric, String, Symbol, Date, Time, nil]
       #     object data
       #   @return [Reference] - the added reference
-      def push(*args, &block)
+      def push(*args)
         reference =
           if args.first.is_a?(PDF::Core::Reference)
             args.first
           else
-            PDF::Core::Reference.new(*args, &block)
+            PDF::Core::Reference.new(*args)
           end
 
         @objects[reference.identifier] = reference
