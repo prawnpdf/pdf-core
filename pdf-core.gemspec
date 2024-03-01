@@ -33,7 +33,7 @@ Gem::Specification.new do |spec|
   spec.licenses = %w[PRAWN GPL-2.0 GPL-3.0]
   spec.add_development_dependency('pdf-inspector', '~> 1.1.0')
   spec.add_development_dependency('pdf-reader', '~>1.2')
-  spec.add_development_dependency('prawn-dev', '~> 0.3.0')
+  spec.add_development_dependency('prawn-dev', '~> 0.4.0')
   spec.homepage = 'http://prawnpdf.org'
   spec.description = 'PDF::Core is used by Prawn to render PDF documents'
 end
