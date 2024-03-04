@@ -4,7 +4,8 @@ Gem::Specification.new do |spec|
   spec.name = 'pdf-core'
   spec.version = '0.9.0'
   spec.platform = Gem::Platform::RUBY
-  spec.summary = 'PDF::Core is used by Prawn to render PDF documents'
+  spec.summary = 'Low level PDF generator.'
+  spec.description = 'PDF::Core is used by Prawn to render PDF documents. It provides low-level format support.'
   spec.files =
     Dir.glob('lib/**/**/*') +
     %w[COPYING GPLv2 GPLv3 LICENSE] +
@@ -40,5 +41,4 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency('pdf-reader', '~>1.2')
   spec.add_development_dependency('prawn-dev', '~> 0.4.0')
   spec.homepage = 'http://prawnpdf.org'
-  spec.description = 'PDF::Core is used by Prawn to render PDF documents'
 end
