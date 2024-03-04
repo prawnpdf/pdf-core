@@ -6,6 +6,8 @@ All notable changes to this project will be documented in this file.
 
 ## Changed
 
+- Dropped Ruby 2.6
+  Alexander Mankuta
 - Improved serialization stability of PDF dicts
   Alexander Mankuta
 - Relaxed requirements for rendering output. Not it only needs to support single
