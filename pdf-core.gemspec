@@ -14,14 +14,14 @@ Gem::Specification.new do |spec|
   spec.required_ruby_version = '>= 2.7'
   spec.required_rubygems_version = '>= 1.3.6'
 
-  signing_key = File.expand_path('~/.gem/gem-private_key.pem')
-  if File.exist?(signing_key)
-    spec.cert_chain = ['certs/pointlessone.pem']
-    if $PROGRAM_NAME.end_with?('gem')
+  if File.basename($PROGRAM_NAME) == 'gem' && ARGV.include?('build')
+    signing_key = File.expand_path('~/.gem/gem-private_key.pem')
+    if File.exist?(signing_key)
+      spec.cert_chain = ['certs/pointlessone.pem']
       spec.signing_key = signing_key
+    else
+      warn 'WARNING: Signing key is missing. The gem is not signed and its authenticity can not be verified.'
     end
-  else
-    warn 'WARNING: Signing key is missing. The gem is not signed and its authenticity can not be verified.'
   end
 
   spec.authors = [
