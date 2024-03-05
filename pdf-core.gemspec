@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |spec|
   spec.name = 'pdf-core'
-  spec.version = '0.9.0'
+  spec.version = '0.10.0'
   spec.platform = Gem::Platform::RUBY
   spec.summary = 'Low level PDF generator.'
   spec.description = 'PDF::Core is used by Prawn to render PDF documents. It provides low-level format support.'
