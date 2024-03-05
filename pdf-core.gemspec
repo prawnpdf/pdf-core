@@ -33,11 +33,16 @@ Gem::Specification.new do |spec|
     'dnelson@bluejade.com', 'greenberg@entryway.net', 'jimmy@deefa.com',
   ]
   spec.licenses = %w[Nonstandard GPL-2.0-only GPL-3.0-only]
+  spec.homepage = 'http://prawnpdf.org/'
   spec.metadata = {
     'rubygems_mfa_required' => 'true',
+    'homepage_uri' => spec.homepage,
+    'changelog_uri' => "https://github.com/prawnpdf/pdf-core/blob/#{spec.version}/CHANGELOG.md",
+    'source_code_uri' => 'https://github.com/prawnpdf/pdf-core',
+    'documentation_uri' => "https://prawnpdf.org/docs/pdf-core/#{spec.version}/",
+    'bug_tracker_uri' => 'https://github.com/prawnpdf/pdf-core/issues',
   }
   spec.add_development_dependency('pdf-inspector', '~> 1.1.0')
   spec.add_development_dependency('pdf-reader', '~>1.2')
   spec.add_development_dependency('prawn-dev', '~> 0.4.0')
-  spec.homepage = 'http://prawnpdf.org'
 end
