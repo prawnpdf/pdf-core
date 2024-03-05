@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased
 
-## Changed
+### Changed
 
 - Dropped Ruby 2.6
   Alexander Mankuta
@@ -29,7 +29,7 @@ All notable changes to this project will be documented in this file.
 - Serialisation of literal strings and Time
   Thomas Leitner
 
-## [0.9.0][]
+## [0.9.0][] - 2020-10-24
 
 ## Changed
 
