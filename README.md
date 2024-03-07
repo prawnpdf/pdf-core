@@ -6,7 +6,7 @@
 This is an experimental gem that extracts low-level PDF functionality from
 Prawn. More details to come soon!
 
-## Refernce materials
+## Reference materials
 
 * [PDF 1.7 Reference][1] ([Archived][2])
 * [Errata to PDF 1.7][3] ([Archived][4])
