@@ -50,6 +50,16 @@ module PDF
           stream
         end
       end
+      
+      module JPXDecode
+        def self.encode(stream, params = nil)
+          stream
+        end
+
+        def self.decode(stream, params = nil)
+          stream
+        end
+      end
     end
   end
 end
