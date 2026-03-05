@@ -10,7 +10,7 @@ FILTERS = {
 }.freeze
 
 FILTERS.each do |filter_name, examples|
-  filter = PDF::Core::Filters.const_get(filter_name)
+  filter = PDF::Core::Filters.const_get(filter_name) # rubocop: disable RSpec/LeakyLocalVariable
 
   RSpec.describe "#{filter_name} filter" do
     it 'encodes stream' do

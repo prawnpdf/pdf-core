@@ -112,13 +112,13 @@ module PDF
         obj
           .sort_by { |k, _v| k.to_s }
           .each do |(k, v)|
-          unless k.is_a?(String) || k.is_a?(Symbol)
-            raise PDF::Core::Errors::FailedObjectConversion,
-              'A PDF Dictionary must be keyed by names'
+            unless k.is_a?(String) || k.is_a?(Symbol)
+              raise PDF::Core::Errors::FailedObjectConversion,
+                'A PDF Dictionary must be keyed by names'
+            end
+            output << pdf_object(k.to_sym, in_content_stream) << ' ' <<
+              pdf_object(v, in_content_stream) << "\n"
           end
-          output << pdf_object(k.to_sym, in_content_stream) << ' ' <<
-            pdf_object(v, in_content_stream) << "\n"
-        end
         output << '>>'
       when PDF::Core::Reference
         obj.to_s

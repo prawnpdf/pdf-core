@@ -44,5 +44,5 @@ Gem::Specification.new do |spec|
   }
   spec.add_development_dependency('pdf-inspector', '~> 1.1.0')
   spec.add_development_dependency('pdf-reader', '~>1.2')
-  spec.add_development_dependency('prawn-dev', '~> 0.4.0')
+  spec.add_development_dependency('prawn-dev', '~> 0.6.0')
 end

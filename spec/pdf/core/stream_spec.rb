@@ -48,6 +48,6 @@ RSpec.describe PDF::Core::Stream do
     stream << 'Hello'
     stream.filters << { FlateDecode: { Predictor: 15 } }
 
-    expect(stream.data[:DecodeParms]).to eq [Predictor: 15]
+    expect(stream.data[:DecodeParms]).to eq [{ Predictor: 15 }]
   end
 end
