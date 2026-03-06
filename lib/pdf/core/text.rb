@@ -330,7 +330,13 @@ module PDF
       # @option options :rotate [Numeric] text rotation angle in degrees
       # @option options :kerning [Boolean]
       def add_text_content(text, x, y, options)
-        chunks = font.encode_text(text, options)
+        if word_spacing == 0 or not font.full_font_embedding
+          chunks = font.encode_text text, options
+        else
+          # fully embedded fonts need explicit spacing, since Tw does not work
+          # for them, due to multibyte encoding
+          chunks = encode_with_spacing text, options
+        end
 
         add_content("\nBT")
 
@@ -412,6 +418,10 @@ module PDF
       end
 
       def update_word_spacing_state
+        # Tw does not work if the font is fully embedded, due to multibyte
+        # encoding.  For this case we add the spacing elsewhere, in TJ arrays.
+        return if font.full_font_embedding
+
         add_content("\n#{PDF::Core.real(word_spacing)} Tw")
       end
 
@@ -445,6 +455,35 @@ module PDF
 
       def update_rise_state
         add_content("\n#{PDF::Core.real(rise)} Ts")
+      end
+
+      def encode_with_spacing text, options
+        # since Tw does not work for fully embedded fonts, we have to add the
+        # spacing ourselves at every occurrence of a space character
+
+        # break into pieces based on space characters
+        pieces = text.split /(?=\ )/
+        # encode the pieces
+        encoded = pieces.map {|piece| font.encode_text piece, options}
+        # add spacing before each piece
+        converted_spacing = word_spacing * 1000.0 / font_size
+        encoded.each_with_index {|chunks, i|
+          # first piece might not start with a space, so check for that
+          next if pieces[i][0] != ' '
+          # negative sign means add spacing
+          chunks[0][1] = [-converted_spacing, *chunks[0][1]]
+        }
+        # merge adjacent pieces whose font is the same
+        flat = encoded.flatten 1
+        chunks = [flat[0]]
+        flat.each_cons(2) {|prev, cur|
+          if cur[0] == prev[0]
+            chunks[-1][1] = [*chunks[-1][1], *cur[1]]
+          else
+            chunks << cur
+          end
+        }
+        chunks
       end
     end
   end
