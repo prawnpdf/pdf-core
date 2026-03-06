@@ -23,10 +23,10 @@ module PDF
 
       # Append data to stream.
       #
-      # @param io [String]
+      # @param data [String]
       # @return [self]
-      def <<(io)
-        (@stream ||= +'') << io
+      def <<(data)
+        (@stream ||= ''.b) << data.dup.force_encoding(Encoding::BINARY)
         @filtered_stream = nil
         self
       end
