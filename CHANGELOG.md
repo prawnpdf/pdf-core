@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased
 
+### Fixed
+
+- Correctly handle multibyte-encoded string in streams
+  Alexander Mankuta
+
 ## [0.10.0][] - 2024-03-05
 
 ### Changed

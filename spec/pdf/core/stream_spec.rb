@@ -50,4 +50,10 @@ RSpec.describe PDF::Core::Stream do
 
     expect(stream.data[:DecodeParms]).to eq [{ Predictor: 15 }]
   end
+
+  it 'handles multibyte encoded strings correctly' do
+    stream << '♥'
+
+    expect(stream.data[:Length]).to eq 3
+  end
 end
