@@ -44,7 +44,7 @@ RSpec.describe PDF::Core::Stream do
     expect(stream.data[:Length]).to eq 11
   end
 
-  it 'corecly handles decode params' do
+  it 'correctly handles decode params' do
     stream << 'Hello'
     stream.filters << { FlateDecode: { Predictor: 15 } }
 
