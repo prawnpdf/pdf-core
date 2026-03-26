@@ -66,6 +66,8 @@ module PDF
       # @param tag [Symbol] structure type (e.g., :P, :H1, :Table, :TD)
       # @param attributes [Hash] additional attributes for the structure element
       # @option attributes [String] :Alt alternative text (for Figure, Formula)
+      # @option attributes [String] :ActualText replacement text for screen
+      #   readers (e.g., "required" instead of reading "*")
       # @option attributes [String] :Lang language tag
       # @option attributes [Symbol] :Scope TH scope (:Column, :Row, :Both)
       # @return [PDF::Core::Reference] the structure element reference
@@ -80,6 +82,7 @@ module PDF
         }
 
         elem_data[:Alt] = attributes[:Alt] if attributes[:Alt]
+        elem_data[:ActualText] = attributes[:ActualText] if attributes[:ActualText]
         elem_data[:Lang] = attributes[:Lang] if attributes[:Lang]
 
         if attributes[:Scope]
