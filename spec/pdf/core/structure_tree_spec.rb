@@ -81,6 +81,26 @@ RSpec.describe PDF::Core::StructureTree do
 
       expect(elem.data[:A]).to eq({ O: :Table, Scope: :Column })
     end
+
+    it 'supports ActualText attribute' do
+      elem = structure_tree.add_element(:Span, ActualText: 'required')
+
+      expect(elem.data[:ActualText]).to eq('required')
+    end
+
+    it 'includes ActualText in rendered PDF output' do
+      structure_tree.begin_element(:P)
+      span = structure_tree.begin_element(:Span, ActualText: 'selected')
+      structure_tree.mark_content(:Span) do
+        renderer.add_content('BT /F1 12 Tf (X) Tj ET')
+      end
+      structure_tree.end_element # Span
+      structure_tree.end_element # P
+
+      output = renderer.render
+
+      expect(output).to include('/ActualText')
+    end
   end
 
   describe '#begin_element / #end_element' do
