@@ -6,6 +6,8 @@ module PDF
   module Core
     # Document renderer serializes document into its binary representation.
     class Renderer
+      include PDF::Core::MarkedContent
+
       # @param state [PDF::Core::DocumentState]
       def initialize(state)
         @state = state
@@ -14,6 +16,24 @@ module PDF
         min_version(state.store.min_version) if state.store.min_version
 
         @page_number = 0
+
+        if state.store.marked?
+          @structure_tree = PDF::Core::StructureTree.new(self)
+          before_render { |_doc_state| @structure_tree.finalize! }
+          min_version(1.7)
+        end
+      end
+
+      # The structure tree for this document, if tagged.
+      #
+      # @return [PDF::Core::StructureTree, nil]
+      attr_reader :structure_tree
+
+      # Whether this document is marked (tagged for accessibility).
+      #
+      # @return [Boolean]
+      def marked?
+        state.store.marked?
       end
 
       # Document state

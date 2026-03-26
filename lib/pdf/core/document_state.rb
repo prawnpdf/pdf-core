@@ -20,15 +20,11 @@ module PDF
       def initialize(options)
         normalize_metadata(options)
 
-        @store =
-          if options[:print_scaling]
-            PDF::Core::ObjectStore.new(
-              info: options[:info],
-              print_scaling: options[:print_scaling],
-            )
-          else
-            PDF::Core::ObjectStore.new(info: options[:info])
-          end
+        store_opts = { info: options[:info] }
+        store_opts[:print_scaling] = options[:print_scaling] if options[:print_scaling]
+        store_opts[:marked] = options[:marked] if options[:marked]
+
+        @store = PDF::Core::ObjectStore.new(store_opts)
 
         @version = 1.3
         @pages = []

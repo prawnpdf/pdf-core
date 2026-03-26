@@ -16,6 +16,8 @@ module PDF
       # @option opts :info [Hash] Document info dict
       # @option opts :print_scaling [:none, nil] (nil) Print scaling viewer
       #   option
+      # @option opts :marked [Boolean] (false) Whether this is a tagged
+      #   (accessible) PDF
       def initialize(opts = {})
         @objects = {}
         @identifiers = []
@@ -25,9 +27,19 @@ module PDF
         if opts[:print_scaling] == :none
           root.data[:ViewerPreferences] = { PrintScaling: :None }
         end
+        if opts[:marked]
+          root.data[:MarkInfo] = { Marked: true }
+        end
         if pages.nil?
           root.data[:Pages] = ref(Type: :Pages, Count: 0, Kids: [])
         end
+      end
+
+      # Whether this document is marked (tagged for accessibility).
+      #
+      # @return [Boolean]
+      def marked?
+        root.data.key?(:MarkInfo) && root.data[:MarkInfo][:Marked] == true
       end
 
       # Wrap an object into a reference.
