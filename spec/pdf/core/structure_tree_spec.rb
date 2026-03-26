@@ -13,7 +13,7 @@ RSpec.describe PDF::Core::StructureTree do
 
   describe 'initialization' do
     it 'creates a structure tree when marked: true' do
-      expect(structure_tree).to be_a(PDF::Core::StructureTree)
+      expect(structure_tree).to be_a(described_class)
     end
 
     it 'does not create a structure tree when marked is not set' do
@@ -90,7 +90,7 @@ RSpec.describe PDF::Core::StructureTree do
 
     it 'includes ActualText in rendered PDF output' do
       structure_tree.begin_element(:P)
-      span = structure_tree.begin_element(:Span, ActualText: 'selected')
+      structure_tree.begin_element(:Span, ActualText: 'selected')
       structure_tree.mark_content(:Span) do
         renderer.add_content('BT /F1 12 Tf (X) Tj ET')
       end
@@ -142,7 +142,7 @@ RSpec.describe PDF::Core::StructureTree do
       structure_tree.end_element
 
       mcr = elem.data[:K].find { |k| k.is_a?(Hash) && k[:Type] == :MCR }
-      expect(mcr).not_to be_nil
+      expect(mcr).to_not(be_nil)
       expect(mcr[:MCID]).to eq(0)
     end
   end
@@ -185,7 +185,7 @@ RSpec.describe PDF::Core::StructureTree do
       structure_tree.end_element
 
       # Render triggers before_render callback which calls finalize!
-      output = renderer.render
+      renderer.render
 
       root_data = renderer.state.store.root.data
       expect(root_data[:StructTreeRoot]).to be_a(PDF::Core::Reference)
@@ -214,7 +214,7 @@ RSpec.describe PDF::Core::StructureTree do
       struct_root = renderer.state.store.root.data[:StructTreeRoot]
       parent_tree = struct_root.data[:ParentTree]
       expect(parent_tree).to be_a(PDF::Core::Reference)
-      expect(parent_tree.data[:Nums]).not_to be_empty
+      expect(parent_tree.data[:Nums]).to_not(be_empty)
     end
 
     it 'assigns StructParents to pages with marked content' do

@@ -163,7 +163,7 @@ module PDF
       def mark_artifact(artifact_type: nil)
         if artifact_type
           renderer.begin_marked_content_with_properties(
-            :Artifact, { Type: artifact_type }
+            :Artifact, { Type: artifact_type },
           )
         else
           renderer.begin_marked_content(:Artifact)
