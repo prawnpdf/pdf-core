@@ -65,6 +65,7 @@ module PDF
       # @return [void]
       def add_content(str)
         save_graphics_state if graphic_state.nil?
+        state.structure_tree&.mark(state.page)
         state.page.content << str << "\n"
       end
 
@@ -169,6 +170,7 @@ module PDF
           while graphic_stack.present?
             restore_graphics_state
           end
+          state.structure_tree&.close(state.page)
           state.page.finalize
         end
       end

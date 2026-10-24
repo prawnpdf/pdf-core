@@ -50,7 +50,9 @@ module PDF
       def annotate(options)
         state.page.dictionary.data[:Annots] ||= []
         options = sanitize_annotation_hash(options)
-        state.page.dictionary.data[:Annots] << ref!(options)
+        annotation = ref!(options)
+        state.page.dictionary.data[:Annots] << annotation
+        state.structure_tree&.annotate(state.page, annotation)
         options
       end
 

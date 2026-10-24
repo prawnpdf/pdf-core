@@ -17,6 +17,10 @@ module PDF
       #   document
       # @option options :encryption_key [String] (nil) Encryption key. Must be
       #   provided if `:encrypt` is `true`
+      # @option options :tagged [Boolean] (false) Whether to produce a tagged
+      #   PDF, with a logical structure for assistive technology
+      # @option options :language [String] (nil) Natural language of the
+      #   document as a BCP 47 tag, e.g. `'en-GB'`
       def initialize(options)
         normalize_metadata(options)
 
@@ -40,6 +44,13 @@ module PDF
         @skip_encoding = options.fetch(:skip_encoding, false)
         @before_render_callbacks = []
         @on_page_create_callback = nil
+
+        @store.root.data[:Lang] = options[:language] if options[:language]
+        if options[:tagged]
+          @structure_tree = PDF::Core::StructureTree.new(@store)
+          # The Tabs page entry needs 1.5
+          @version = 1.5
+        end
       end
 
       # Object store
@@ -57,6 +68,10 @@ module PDF
       # Current page
       # @return [PDF::Core::Page]
       attr_accessor :page
+
+      # Logical structure of a tagged document
+      # @return [PDF::Core::StructureTree, nil]
+      attr_reader :structure_tree
 
       # Document trailer dict
       # @return [Hash]
