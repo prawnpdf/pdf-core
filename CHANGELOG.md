@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased
 
+### Added
+
+- Tagged PDF: logical structure and marked content, and the document language
+  Yaroslav Shmarov
+
 ### Fixed
 
 - Correctly handle multibyte-encoded string in streams
